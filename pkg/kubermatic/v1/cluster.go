@@ -24,61 +24,37 @@ import (
 
 	machinecontroller "k8c.io/apis/v2/pkg/machine-controller"
 	"k8c.io/apis/v2/pkg/semver"
+	"k8c.io/apis/v2/pkg/types"
 
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/rand"
-	"k8s.io/apimachinery/pkg/util/sets"
+	netutils "k8s.io/utils/net"
 )
 
 const (
-	// ClusterResourceName represents "Resource" defined in Kubernetes.
-	ClusterResourceName = "clusters"
-
-	// ClusterKindName represents "Kind" defined in Kubernetes.
-	ClusterKindName = "Cluster"
-
-	// CredentialPrefix is the prefix used for the secrets containing cloud provider crednentials.
-	CredentialPrefix = "credential"
-
-	// ForceRestartAnnotation is key of the annotation used to restart machine deployments.
-	ForceRestartAnnotation = "forceRestart"
-
 	// PresetNameAnnotation is key of the annotation used to hold preset name if was used for the cluster creation.
 	PresetNameAnnotation = "presetName"
 
 	// PresetInvalidatedAnnotation is key of the annotation used to indicate why the preset was invalidated.
 	PresetInvalidatedAnnotation = "presetInvalidated"
-)
 
-const (
-	CCMMigrationNeededAnnotation = "ccm-migration.k8c.io/migration-needed"
-	CSIMigrationNeededAnnotation = "csi-migration.k8c.io/migration-needed"
-)
+	// credentialPrefix is the prefix used for the secrets containing cloud provider credentials.
+	credentialPrefix = "credential"
 
-const (
-	WorkerNameLabelKey         = "worker-name"
-	ProjectIDLabelKey          = "project-id"
-	ExternalClusterIDLabelKey  = "external-cluster-id"
-	UpdatedByVPALabelKey       = "updated-by-vpa"
-	IsCredentialPresetLabelKey = "is-credential-preset"
-
-	DefaultEtcdClusterSize = 3
-	MinEtcdClusterSize     = 3
-	MaxEtcdClusterSize     = 9
-
-	DefaultKonnectivityKeepaliveTime = "1m"
+	// ProjectIDLabelKey is the label on a Cluster resource that points to the project it belongs to.
+	ProjectIDLabelKey = "project-id"
 )
 
 // +kubebuilder:validation:Enum=standard;basic
 
 // Azure SKU for Load Balancers. Possible values are `basic` and `standard`.
-type LBSKU string
+type AzureLBSKU string
 
 const (
-	AzureStandardLBSKU = LBSKU("standard")
-	AzureBasicLBSKU    = LBSKU("basic")
+	AzureStandardLBSKU = AzureLBSKU("standard")
+	AzureBasicLBSKU    = AzureLBSKU("basic")
 )
 
 // +kubebuilder:validation:Enum=deleted;changed
@@ -88,10 +64,6 @@ const (
 	PresetDeleted = PresetInvalidationReason("deleted")
 	PresetChanged = PresetInvalidationReason("changed")
 )
-
-// ProtectedClusterLabels is a set of labels that must not be set by users on clusters,
-// as they are security relevant.
-var ProtectedClusterLabels = sets.New(WorkerNameLabelKey, ProjectIDLabelKey, IsCredentialPresetLabelKey)
 
 // +kubebuilder:resource:scope=Cluster
 // +kubebuilder:object:generate=true
@@ -159,7 +131,7 @@ type ClusterSpec struct {
 	MachineNetworks []MachineNetworkingConfig `json:"machineNetworks,omitempty"`
 
 	// ExposeStrategy is the strategy used to expose a cluster control plane.
-	ExposeStrategy ExposeStrategy `json:"exposeStrategy"`
+	ExposeStrategy types.ExposeStrategy `json:"exposeStrategy"`
 
 	// Optional: APIServerAllowedIPRanges is a list of IP ranges allowed to access the API server.
 	// Applicable only if the expose strategy of the cluster is LoadBalancer.
@@ -837,16 +809,28 @@ type ClusterNetworkingConfig struct {
 	TunnelingAgentIP string `json:"tunnelingAgentIP,omitempty"`
 }
 
+// IsIPv4Only returns true if the cluster networking is IPv4-only.
+func (c *ClusterNetworkingConfig) IsIPv4Only() bool {
+	return len(c.Pods.CIDRBlocks) == 1 && netutils.IsIPv4CIDRString(c.Pods.CIDRBlocks[0])
+}
+
+// IsIPv6Only returns true if the cluster networking is IPv6-only.
+func (c *ClusterNetworkingConfig) IsIPv6Only() bool {
+	return len(c.Pods.CIDRBlocks) == 1 && netutils.IsIPv6CIDRString(c.Pods.CIDRBlocks[0])
+}
+
+// IsDualStack returns true if the cluster networking is dual-stack (IPv4 + IPv6).
+func (c *ClusterNetworkingConfig) IsDualStack() bool {
+	res, err := netutils.IsDualStackCIDRStrings(c.Pods.CIDRBlocks)
+
+	return err == nil && res
+}
+
 // MachineNetworkingConfig specifies the networking parameters used for IPAM.
 type MachineNetworkingConfig struct {
 	CIDR       string   `json:"cidr"`
 	Gateway    string   `json:"gateway"`
 	DNSServers []string `json:"dnsServers"`
-}
-
-// NetworkRanges represents ranges of network addresses.
-type NetworkRanges struct {
-	CIDRBlocks []string `json:"cidrBlocks"`
 }
 
 // ClusterAddress stores access and address information of a cluster.
@@ -896,7 +880,7 @@ type CloudSpec struct {
 	BringYourOwn        *BringYourOwnCloudSpec        `json:"bringyourown,omitempty"`
 	AWS                 *AWSCloudSpec                 `json:"aws,omitempty"`
 	Azure               *AzureCloudSpec               `json:"azure,omitempty"`
-	Openstack           *OpenstackCloudSpec           `json:"openstack,omitempty"`
+	OpenStack           *OpenStackCloudSpec           `json:"openstack,omitempty"`
 	Packet              *PacketCloudSpec              `json:"packet,omitempty"`
 	Hetzner             *HetznerCloudSpec             `json:"hetzner,omitempty"`
 	VSphere             *VSphereCloudSpec             `json:"vsphere,omitempty"`
@@ -990,7 +974,7 @@ type AzureCloudSpec struct {
 	// will be updated to the generated availability set's name.
 	AvailabilitySet string `json:"availabilitySet"`
 
-	LoadBalancerSKU LBSKU `json:"loadBalancerSKU"` //nolint:tagliatelle
+	LoadBalancerSKU AzureLBSKU `json:"loadBalancerSKU"` //nolint:tagliatelle
 }
 
 // VSphereCredentials credentials represents a credential for accessing vSphere.
@@ -1126,8 +1110,8 @@ type AWSCloudSpec struct {
 	DisableIAMReconciling bool `json:"disableIAMReconciling,omitempty"` //nolint:tagliatelle
 }
 
-// OpenstackCloudSpec specifies access data to an OpenStack cloud.
-type OpenstackCloudSpec struct {
+// OpenStackCloudSpec specifies access data to an OpenStack cloud.
+type OpenStackCloudSpec struct {
 	CredentialsReference *machinecontroller.GlobalSecretKeySelector `json:"credentialsReference,omitempty"`
 
 	Username string `json:"username,omitempty"`
@@ -1179,7 +1163,7 @@ type OpenstackCloudSpec struct {
 	IPv6SubnetPool string `json:"ipv6SubnetPool,omitempty"`
 	// Whether or not to use Octavia for LoadBalancer type of Service
 	// implementation instead of using Neutron-LBaaS.
-	// Attention:Openstack CCM use Octavia as default load balancer
+	// Attention:OpenStack CCM use Octavia as default load balancer
 	// implementation since v1.17.0
 	//
 	// Takes precedence over the 'use_octavia' flag provided at datacenter
@@ -1187,7 +1171,7 @@ type OpenstackCloudSpec struct {
 	// +optional
 	UseOctavia *bool `json:"useOctavia,omitempty"`
 
-	// Enable the `enable-ingress-hostname` cloud provider option on the Openstack CCM. Can only be used with the
+	// Enable the `enable-ingress-hostname` cloud provider option on the OpenStack CCM. Can only be used with the
 	// external CCM and might be deprecated and removed in future versions as it is considered a workaround for the PROXY
 	// protocol to preserve client IPs.
 	// +optional
@@ -1431,65 +1415,45 @@ func (cluster *Cluster) GetSecretName() string {
 	}
 
 	if cluster.Spec.Cloud.AWS != nil {
-		return fmt.Sprintf("%s-aws-%s", CredentialPrefix, clusterName)
+		return fmt.Sprintf("%s-aws-%s", credentialPrefix, clusterName)
 	}
 	if cluster.Spec.Cloud.Azure != nil {
-		return fmt.Sprintf("%s-azure-%s", CredentialPrefix, clusterName)
+		return fmt.Sprintf("%s-azure-%s", credentialPrefix, clusterName)
 	}
 	if cluster.Spec.Cloud.Digitalocean != nil {
-		return fmt.Sprintf("%s-digitalocean-%s", CredentialPrefix, clusterName)
+		return fmt.Sprintf("%s-digitalocean-%s", credentialPrefix, clusterName)
 	}
 	if cluster.Spec.Cloud.GCP != nil {
-		return fmt.Sprintf("%s-gcp-%s", CredentialPrefix, clusterName)
+		return fmt.Sprintf("%s-gcp-%s", credentialPrefix, clusterName)
 	}
 	if cluster.Spec.Cloud.Hetzner != nil {
-		return fmt.Sprintf("%s-hetzner-%s", CredentialPrefix, clusterName)
+		return fmt.Sprintf("%s-hetzner-%s", credentialPrefix, clusterName)
 	}
-	if cluster.Spec.Cloud.Openstack != nil {
-		return fmt.Sprintf("%s-openstack-%s", CredentialPrefix, clusterName)
+	if cluster.Spec.Cloud.OpenStack != nil {
+		return fmt.Sprintf("%s-openstack-%s", credentialPrefix, clusterName)
 	}
 	if cluster.Spec.Cloud.Packet != nil {
-		return fmt.Sprintf("%s-packet-%s", CredentialPrefix, clusterName)
+		return fmt.Sprintf("%s-packet-%s", credentialPrefix, clusterName)
 	}
 	if cluster.Spec.Cloud.Kubevirt != nil {
-		return fmt.Sprintf("%s-kubevirt-%s", CredentialPrefix, clusterName)
+		return fmt.Sprintf("%s-kubevirt-%s", credentialPrefix, clusterName)
 	}
 	if cluster.Spec.Cloud.VSphere != nil {
-		return fmt.Sprintf("%s-vsphere-%s", CredentialPrefix, clusterName)
+		return fmt.Sprintf("%s-vsphere-%s", credentialPrefix, clusterName)
 	}
 	if cluster.Spec.Cloud.Alibaba != nil {
-		return fmt.Sprintf("%s-alibaba-%s", CredentialPrefix, clusterName)
+		return fmt.Sprintf("%s-alibaba-%s", credentialPrefix, clusterName)
 	}
 	if cluster.Spec.Cloud.Anexia != nil {
-		return fmt.Sprintf("%s-anexia-%s", CredentialPrefix, clusterName)
+		return fmt.Sprintf("%s-anexia-%s", credentialPrefix, clusterName)
 	}
 	if cluster.Spec.Cloud.Nutanix != nil {
-		return fmt.Sprintf("%s-nutanix-%s", CredentialPrefix, clusterName)
+		return fmt.Sprintf("%s-nutanix-%s", credentialPrefix, clusterName)
 	}
 	if cluster.Spec.Cloud.VMwareCloudDirector != nil {
-		return fmt.Sprintf("%s-vmware-cloud-director-%s", CredentialPrefix, clusterName)
+		return fmt.Sprintf("%s-vmware-cloud-director-%s", credentialPrefix, clusterName)
 	}
 	return ""
-}
-
-func (cluster *Cluster) GetUserClusterMLAResourceRequirements() map[string]*corev1.ResourceRequirements {
-	if cluster.Spec.MLA == nil {
-		return nil
-	}
-	return map[string]*corev1.ResourceRequirements{
-		"monitoring": cluster.Spec.MLA.MonitoringResources,
-		"logging":    cluster.Spec.MLA.LoggingResources,
-	}
-}
-
-func (cluster *Cluster) GetUserClusterOPAResourceRequirements() map[string]*corev1.ResourceRequirements {
-	if cluster.Spec.OPAIntegration == nil {
-		return nil
-	}
-	return map[string]*corev1.ResourceRequirements{
-		"controller": cluster.Spec.OPAIntegration.ControllerResources,
-		"audit":      cluster.Spec.OPAIntegration.AuditResources,
-	}
 }
 
 // IsEncryptionConfigurationEnabled returns whether encryption-at-rest is configured on this cluster.

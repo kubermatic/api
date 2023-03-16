@@ -22,9 +22,6 @@ import (
 )
 
 const (
-	// ResourceQuotaKindName represents "Kind" defined in Kubernetes.
-	ResourceQuotaKindName = "ResourceQuota"
-
 	ResourceQuotaSubjectNameLabelKey = "subject-name"
 	ResourceQuotaSubjectKindLabelKey = "subject-kind"
 
@@ -86,8 +83,12 @@ type ResourceDetails struct {
 	Storage *resource.Quantity `json:"storage,omitempty"`
 }
 
-func (r ResourceDetails) IsEmpty() bool {
-	return (r.CPU == nil || r.CPU.IsZero()) && (r.Memory == nil || r.Memory.IsZero()) && (r.Storage == nil || r.Storage.IsZero())
+func emptyQuantity(q *resource.Quantity) bool {
+	return q == nil || q.IsZero()
+}
+
+func (r *ResourceDetails) IsEmpty() bool {
+	return r == nil || (emptyQuantity(r.CPU) && emptyQuantity(r.Memory) && emptyQuantity(r.Storage))
 }
 
 // +kubebuilder:object:generate=true
@@ -99,12 +100,4 @@ type ResourceQuotaList struct {
 	metav1.ListMeta `json:"metadata,omitempty"`
 
 	Items []ResourceQuota `json:"items"`
-}
-
-func NewResourceDetails(cpu, memory, storage resource.Quantity) *ResourceDetails {
-	return &ResourceDetails{
-		CPU:     &cpu,
-		Memory:  &memory,
-		Storage: &storage,
-	}
 }

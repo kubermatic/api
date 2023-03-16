@@ -14,8 +14,20 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package v1
+package helper
 
-// DefaultNodeAccessNetwork is the default CIDR used for the VPNs
-// transit network through which we route the ControlPlane -> Node/Pod traffic.
-const DefaultNodeAccessNetwork = "10.254.0.0/16"
+import kubermaticv1 "k8c.io/apis/v2/pkg/kubermatic/v1"
+
+// SetSeedDefaults applies seed-level proxy settings to all datacenters,
+// if the datacenters have no settings on their own.
+func SetSeedDefaults(s *kubermaticv1.Seed) {
+	if !s.Spec.ProxySettings.Empty() {
+		for key, dc := range s.Spec.Datacenters {
+			if dc.Node == nil {
+				dc.Node = &kubermaticv1.NodeSettings{}
+			}
+			s.Spec.ProxySettings.Merge(&dc.Node.ProxySettings)
+			s.Spec.Datacenters[key] = dc
+		}
+	}
+}

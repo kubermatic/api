@@ -21,14 +21,6 @@ import (
 	"k8s.io/apimachinery/pkg/util/sets"
 )
 
-const (
-	// SSHKeyResourceName represents "Resource" defined in Kubernetes.
-	SSHKeyResourceName = "usersshkeies"
-
-	// SSHKeyKind represents "Kind" defined in Kubernetes.
-	SSHKeyKind = "UserSSHKey"
-)
-
 // +kubebuilder:resource:scope=Cluster
 // +kubebuilder:object:generate=true
 // +kubebuilder:object:root=true

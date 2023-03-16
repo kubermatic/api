@@ -18,14 +18,6 @@ package v1
 
 import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
-const (
-	// AllowedRegistryResourceName represents "Resource" defined in Kubernetes.
-	AllowedRegistryResourceName = "allowedregistry"
-
-	// AllowedRegistryKindName represents "Kind" defined in Kubernetes.
-	AllowedRegistryKindName = "AllowedRegistry"
-)
-
 // +kubebuilder:resource:scope=Cluster
 // +kubebuilder:object:generate=true
 // +kubebuilder:object:root=true

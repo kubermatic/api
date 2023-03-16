@@ -31,17 +31,17 @@ func init() {
 	}
 }
 
-var (
-	SchemeBuilder = runtime.NewSchemeBuilder(addKnownTypes)
-	AddToScheme   = SchemeBuilder.AddToScheme
-)
-
 // GroupName is the group name use in this package.
 const GroupName = "apps.kubermatic.k8c.io"
 const GroupVersion = "v1"
 
-// SchemeGroupVersion is group version used to register these objects.
-var SchemeGroupVersion = schema.GroupVersion{Group: GroupName, Version: GroupVersion}
+var (
+	SchemeBuilder = runtime.NewSchemeBuilder(addKnownTypes)
+	AddToScheme   = SchemeBuilder.AddToScheme
+
+	// SchemeGroupVersion is group version used to register these objects.
+	SchemeGroupVersion = schema.GroupVersion{Group: GroupName, Version: GroupVersion}
+)
 
 // Resource takes an unqualified resource and returns a Group qualified GroupResource.
 func Resource(resource string) schema.GroupResource {

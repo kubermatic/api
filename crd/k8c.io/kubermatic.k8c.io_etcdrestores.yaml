@@ -25,7 +25,7 @@ spec:
     name: v1
     schema:
       openAPIV3Schema:
-        description: EtcdRestore specifies a add-on.
+        description: EtcdRestore specifies how to restore an etcd backup for a usercluster.
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation

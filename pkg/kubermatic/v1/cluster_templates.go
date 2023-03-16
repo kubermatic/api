@@ -36,14 +36,6 @@ const (
 	ClusterTemplateHumanReadableNameLabelKey = "name"
 )
 
-const (
-	// ClusterTemplateResourceName represents "Resource" defined in Kubernetes.
-	ClusterTemplateResourceName = "clustertemplates"
-
-	// ClusterTemplateKindName represents "Kind" defined in Kubernetes.
-	ClusterTemplateKindName = "ClusterTemplate"
-)
-
 // +kubebuilder:resource:scope=Cluster
 // +kubebuilder:object:generate=true
 // +kubebuilder:object:root=true

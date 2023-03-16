@@ -18,14 +18,6 @@ package v1
 
 import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
-const (
-	// ClusterTemplateInstanceResourceName represents "Resource" defined in Kubernetes.
-	ClusterTemplateInstanceResourceName = "clustertemplateinstances"
-
-	// ClusterTemplateInstanceKindName represents "Kind" defined in Kubernetes.
-	ClusterTemplateInstanceKindName = "ClusterTemplateInstance"
-)
-
 // ClusterTemplateInstanceOwnerAnnotationKey represents the user cluster owner.
 const ClusterTemplateInstanceOwnerAnnotationKey = "owner"
 

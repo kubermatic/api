@@ -26,22 +26,14 @@ type ProjectPhase string
 
 // These are the valid phases of a project.
 const (
-	// ProjectActive means the project is available for use in the system.
-	ProjectActive ProjectPhase = "Active"
+	// ProjectPhaseActive means the project is available for use in the system.
+	ProjectPhaseActive ProjectPhase = "Active"
 
-	// ProjectInactive means the project is inactive and requires further initialization.
-	ProjectInactive ProjectPhase = "Inactive"
+	// ProjectPhaseInactive means the project is inactive and requires further initialization.
+	ProjectPhaseInactive ProjectPhase = "Inactive"
 
-	// ProjectTerminating means the project is undergoing graceful termination.
-	ProjectTerminating ProjectPhase = "Terminating"
-)
-
-const (
-	// ProjectResourceName represents "Resource" defined in Kubernetes.
-	ProjectResourceName = "projects"
-
-	// ProjectKindName represents "Kind" defined in Kubernetes.
-	ProjectKindName = "Project"
+	// ProjectPhaseTerminating means the project is undergoing graceful termination.
+	ProjectPhaseTerminating ProjectPhase = "Terminating"
 )
 
 // +kubebuilder:resource:scope=Cluster

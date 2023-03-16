@@ -22,14 +22,11 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 )
 
+// +kubebuilder:validation:Enum=AddonResourcesCreatedSuccessfully
+type AddonConditionType string
+
 const (
-	// AddonResourceName represents "Resource" defined in Kubernetes.
-	AddonResourceName = "addons"
-
-	// AddonKindName represents "Kind" defined in Kubernetes.
-	AddonKindName = "Addon"
-
-	AddonResourcesCreated AddonConditionType = "AddonResourcesCreatedSuccessfully"
+	AddonConditionResourcesCreated AddonConditionType = "AddonResourcesCreatedSuccessfully"
 )
 
 // +kubebuilder:object:generate=true
@@ -96,10 +93,6 @@ type AddonList struct {
 type AddonStatus struct {
 	Conditions map[AddonConditionType]AddonCondition `json:"conditions,omitempty"`
 }
-
-// +kubebuilder:validation:Enum=AddonResourcesCreatedSuccessfully
-
-type AddonConditionType string
 
 type AddonCondition struct {
 	// Status of the condition, one of True, False, Unknown.

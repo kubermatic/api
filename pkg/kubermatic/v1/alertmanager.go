@@ -21,14 +21,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-const (
-	// AlertmanagerResourceName represents "Resource" defined in Kubernetes.
-	AlertmanagerResourceName = "alertmanagers"
-
-	// AlertmanagerKindName represents "Kind" defined in Kubernetes.
-	AlertmanagerKindName = "Alertmanager"
-)
-
 // +kubebuilder:object:generate=true
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status

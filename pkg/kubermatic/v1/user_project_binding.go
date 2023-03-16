@@ -20,14 +20,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-const (
-	// UserProjectBindingResourceName represents "Resource" defined in Kubernetes.
-	UserProjectBindingResourceName = "userprojectbindings"
-
-	// UserProjectBindingKind represents "Kind" defined in Kubernetes.
-	UserProjectBindingKind = "UserProjectBinding"
-)
-
 // +kubebuilder:resource:scope=Cluster
 // +kubebuilder:object:generate=true
 // +kubebuilder:object:root=true

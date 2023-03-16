@@ -218,7 +218,7 @@ spec:
                   configurations on dashboard.
                 properties:
                   openStack:
-                    description: OpenStack are the configurations for openstack provider.
+                    description: OpenStack are the configurations for OpenStack provider.
                     properties:
                       enforceCustomDisk:
                         description: EnforceCustomDisk will enforce the custom disk

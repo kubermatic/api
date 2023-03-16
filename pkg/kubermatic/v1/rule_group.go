@@ -21,14 +21,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-const (
-	// RuleGroupResourceName represents "Resource" defined in Kubernetes.
-	RuleGroupResourceName = "rulegroups"
-
-	// RuleGroupKindName represents "Kind" defined in Kubernetes.
-	RuleGroupKindName = "RuleGroup"
-)
-
 // +kubebuilder:object:generate=true
 // +kubebuilder:object:root=true
 // +kubebuilder:printcolumn:JSONPath=".metadata.creationTimestamp",name="Age",type="date"

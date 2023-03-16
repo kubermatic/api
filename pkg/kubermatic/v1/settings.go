@@ -20,8 +20,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-const GlobalSettingsName = "globalsettings"
-
 // +kubebuilder:resource:scope=Cluster
 // +kubebuilder:object:generate=true
 // +kubebuilder:object:root=true
@@ -69,22 +67,22 @@ type SettingSpec struct {
 
 	// CleanupOptions control what happens when a cluster is deleted via the dashboard.
 	// +optional
-	CleanupOptions CleanupOptions `json:"cleanupOptions,omitempty"`
+	CleanupOptions *CleanupOptions `json:"cleanupOptions,omitempty"`
 	// +optional
-	OpaOptions OpaOptions `json:"opaOptions,omitempty"`
+	OpaOptions *OpaOptions `json:"opaOptions,omitempty"`
 	// +optional
-	MlaOptions MlaOptions `json:"mlaOptions,omitempty"`
+	MlaOptions *MlaOptions `json:"mlaOptions,omitempty"`
 
 	MlaAlertmanagerPrefix string `json:"mlaAlertmanagerPrefix"`
 	MlaGrafanaPrefix      string `json:"mlaGrafanaPrefix"`
 
 	// Notifications are the configuration for notifications on dashboard.
 	// +optional
-	Notifications NotificationsOptions `json:"notifications,omitempty"`
+	Notifications *NotificationsOptions `json:"notifications,omitempty"`
 
 	// ProviderConfiguration are the cloud provider specific configurations on dashboard.
 	// +optional
-	ProviderConfiguration ProviderConfiguration `json:"providerConfiguration,omitempty"`
+	ProviderConfiguration *ProviderConfiguration `json:"providerConfiguration,omitempty"`
 
 	// MachineDeploymentVMResourceQuota is used to filter out allowed machine flavors based on the specified resource limits like CPU, Memory, and GPU etc.
 	MachineDeploymentVMResourceQuota *MachineFlavorFilter `json:"machineDeploymentVMResourceQuota,omitempty"`
@@ -139,8 +137,8 @@ type NotificationsOptions struct {
 }
 
 type ProviderConfiguration struct {
-	// OpenStack are the configurations for openstack provider.
-	OpenStack OpenStack `json:"openStack,omitempty"`
+	// OpenStack are the configurations for OpenStack provider.
+	OpenStack *OpenStack `json:"openStack,omitempty"`
 }
 
 type OpenStack struct {
@@ -151,7 +149,7 @@ type OpenStack struct {
 // DefaultProjectResourceQuota contains the default resource quota which will be set for all
 // projects that do not have a custom quota already set.
 type DefaultProjectResourceQuota struct {
-	Quota ResourceDetails `json:"quota,omitempty"`
+	Quota *ResourceDetails `json:"quota,omitempty"`
 }
 
 // +kubebuilder:object:generate=true

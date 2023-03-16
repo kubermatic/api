@@ -18,6 +18,7 @@ package v1
 
 import (
 	"k8c.io/apis/v2/pkg/semver"
+	"k8c.io/apis/v2/pkg/types"
 
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -102,7 +103,7 @@ type KubermaticConfigurationSpec struct {
 	// ExposeStrategy is the strategy to expose the cluster with.
 	// Note: The `seed_dns_overwrite` setting of a Seed's datacenter doesn't have any effect
 	// if this is set to LoadBalancerStrategy.
-	ExposeStrategy ExposeStrategy `json:"exposeStrategy,omitempty"`
+	ExposeStrategy types.ExposeStrategy `json:"exposeStrategy,omitempty"`
 	// Ingress contains settings for making the API and UI accessible remotely.
 	Ingress KubermaticIngressConfiguration `json:"ingress,omitempty"`
 	// Versions configures the available and default Kubernetes versions and updates.
@@ -381,17 +382,8 @@ type KubermaticVersioningConfiguration struct {
 	ProviderIncompatibilities []Incompatibility `json:"providerIncompatibilities,omitempty"`
 
 	// ExternalClusters contains the available and default Kubernetes versions and updates for ExternalClusters.
-	ExternalClusters map[ExternalClusterProviderType]ExternalClusterProviderVersioningConfiguration `json:"externalClusters,omitempty"`
+	ExternalClusters map[types.ExternalClusterProvider]ExternalClusterProviderVersioningConfiguration `json:"externalClusters,omitempty"`
 }
-
-// ExternalClusterProviderType is used to indicate ExternalCluster Provider Types.
-type ExternalClusterProviderType string
-
-const (
-	EKSProviderType ExternalClusterProviderType = "eks"
-	GKEProviderType ExternalClusterProviderType = "gke"
-	AKSProviderType ExternalClusterProviderType = "aks"
-)
 
 // ExternalClusterProviderVersioningConfiguration configures the available and default Kubernetes versions for ExternalCluster Providers.
 type ExternalClusterProviderVersioningConfiguration struct {

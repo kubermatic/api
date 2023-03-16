@@ -80,8 +80,6 @@ spec:
                     items:
                       type: string
                     type: array
-                required:
-                - cidrBlocks
                 type: object
               applicationSettings:
                 description: 'Optional: ApplicationSettings contains the settings
@@ -367,8 +365,6 @@ spec:
                             items:
                               type: string
                             type: array
-                        required:
-                        - cidrBlocks
                         type: object
                       roleARN:
                         description: The IAM role, the control plane will use. The
@@ -481,8 +477,6 @@ spec:
                             items:
                               type: string
                             type: array
-                        required:
-                        - cidrBlocks
                         type: object
                       resourceGroup:
                         description: The resource group that will be used to look
@@ -671,8 +665,6 @@ spec:
                             items:
                               type: string
                             type: array
-                        required:
-                        - cidrBlocks
                         type: object
                       serviceAccount:
                         description: The Google Service Account (JSON format), encoded
@@ -944,7 +936,7 @@ spec:
                     - clusterName
                     type: object
                   openstack:
-                    description: OpenstackCloudSpec specifies access data to an OpenStack
+                    description: OpenStackCloudSpec specifies access data to an OpenStack
                       cloud.
                     properties:
                       applicationCredentialID:
@@ -996,7 +988,7 @@ spec:
                         type: string
                       enableIngressHostname:
                         description: Enable the `enable-ingress-hostname` cloud provider
-                          option on the Openstack CCM. Can only be used with the external
+                          option on the OpenStack CCM. Can only be used with the external
                           CCM and might be deprecated and removed in future versions
                           as it is considered a workaround for the PROXY protocol
                           to preserve client IPs.
@@ -1051,8 +1043,6 @@ spec:
                             items:
                               type: string
                             type: array
-                        required:
-                        - cidrBlocks
                         type: object
                       password:
                         type: string
@@ -1074,7 +1064,7 @@ spec:
                       useOctavia:
                         description: "Whether or not to use Octavia for LoadBalancer
                           type of Service implementation instead of using Neutron-LBaaS.
-                          Attention:Openstack CCM use Octavia as default load balancer
+                          Attention:OpenStack CCM use Octavia as default load balancer
                           implementation since v1.17.0 \n Takes precedence over the
                           'use_octavia' flag provided at datacenter level if both
                           are specified."
@@ -1412,8 +1402,6 @@ spec:
                         items:
                           type: string
                         type: array
-                    required:
-                    - cidrBlocks
                     type: object
                   proxyMode:
                     default: ipvs
@@ -1435,8 +1423,6 @@ spec:
                         items:
                           type: string
                         type: array
-                    required:
-                    - cidrBlocks
                     type: object
                   tunnelingAgentIP:
                     description: TunnelingAgentIP is the address used by the tunneling

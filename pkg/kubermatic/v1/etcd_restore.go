@@ -21,13 +21,12 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+// +kubebuilder:validation:Enum=Started;StsRebuilding;Completed;EtcdLauncherNotEnabled
+
+// EtcdRestorePhase represents the lifecycle phase of an EtcdRestore.
+type EtcdRestorePhase string
+
 const (
-	// EtcdRestoreResourceName represents "Resource" defined in Kubernetes.
-	EtcdRestoreResourceName = "etcdrestores"
-
-	// EtcdRestoreKindName represents "Kind" defined in Kubernetes.
-	EtcdRestoreKindName = "EtcdRestore"
-
 	// EtcdRestorePhaseStarted value indicating that the restore has started.
 	EtcdRestorePhaseStarted EtcdRestorePhase = "Started"
 
@@ -41,18 +40,13 @@ const (
 	EtcdRestorePhaseEtcdLauncherNotEnabled EtcdRestorePhase = "EtcdLauncherNotEnabled"
 )
 
-// +kubebuilder:validation:Enum=Started;StsRebuilding;Completed;EtcdLauncherNotEnabled
-
-// EtcdRestorePhase represents the lifecycle phase of an EtcdRestore.
-type EtcdRestorePhase string
-
 // +kubebuilder:object:generate=true
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:JSONPath=".status.phase",name="Phase",type="string"
 // +kubebuilder:printcolumn:JSONPath=".metadata.creationTimestamp",name="Age",type="date"
 
-// EtcdRestore specifies a add-on.
+// EtcdRestore specifies how to restore an etcd backup for a usercluster.
 type EtcdRestore struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`

@@ -22,15 +22,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-const (
-
-	// ConstraintResourceName represents "Resource" defined in Kubernetes.
-	ConstraintResourceName = "constraints"
-
-	// ConstraintKind represents "Kind" defined in Kubernetes.
-	ConstraintKind = "Constraint"
-)
-
 // +kubebuilder:object:generate=true
 // +kubebuilder:object:root=true
 // +kubebuilder:printcolumn:JSONPath=".metadata.creationTimestamp",name="Age",type="date"

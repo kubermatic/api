@@ -16,21 +16,8 @@ limitations under the License.
 
 package v1
 
-import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-
-const (
-
-	// GroupProjectBindingResourceName represents "Resource" defined in Kubernetes.
-	GroupProjectBindingResourceName = "groupprojectbindings"
-
-	// GroupProjectBindingKind represents "Kind" defined in Kubernetes.
-	GroupProjectBindingKind = "GroupProjectBinding"
-
-	// AuthZRoleLabel is the label used by rbac-controller and group-rbac-controller to identify the KKP role a ClusterRole or Role were created for.
-	AuthZRoleLabel = "authz.k8c.io/role"
-
-	// AuthZGroupProjectBindingLabel references the GroupProjectBinding resource that a ClusterRole/Role was created for.
-	AuthZGroupProjectBindingLabel = "authz.k8c.io/group-project-binding"
+import (
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 // +kubebuilder:resource:scope=Cluster

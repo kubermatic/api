@@ -20,14 +20,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-const (
-	// MLAAdminSettingResourceName represents "Resource" defined in Kubernetes.
-	MLAAdminSettingResourceName = "mlaadminsettings"
-
-	// MLAAdminSettingKindName represents "Kind" defined in Kubernetes.
-	MLAAdminSettingKindName = "MLAAdminSetting"
-)
-
 // +kubebuilder:object:generate=true
 // +kubebuilder:object:root=true
 // +kubebuilder:printcolumn:JSONPath=".metadata.creationTimestamp",name="Age",type="date"

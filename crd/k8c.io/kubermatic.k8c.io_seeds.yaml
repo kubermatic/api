@@ -1098,7 +1098,7 @@ spec:
                           - images
                           type: object
                         openstack:
-                          description: Openstack configures an Openstack datacenter.
+                          description: OpenStack configures an OpenStack datacenter.
                           properties:
                             authURL:
                               type: string
@@ -2132,9 +2132,8 @@ spec:
                   Logging & Alerting) stack settings.'
                 properties:
                   userClusterMLAEnabled:
-                    description: 'Optional: UserClusterMLAEnabled controls whether
-                      the user cluster MLA (Monitoring, Logging & Alerting) stack
-                      is enabled in the seed.'
+                    description: 'Optional: controls whether the user cluster MLA
+                      (Monitoring, Logging & Alerting) stack is enabled in the seed.'
                     type: boolean
                 type: object
               nodeportProxy:

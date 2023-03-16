@@ -20,148 +20,149 @@ import (
 	"fmt"
 
 	kubermaticv1 "k8c.io/apis/v2/pkg/kubermatic/v1"
+	"k8c.io/apis/v2/pkg/types"
 )
 
 // ExternalClusterCloudProviderName returns the provider name for the given ExternalClusterCloudSpec.
-func ExternalClusterCloudProviderName(spec kubermaticv1.ExternalClusterCloudSpec) (string, error) {
-	var clouds []kubermaticv1.ExternalClusterProvider
+func ExternalClusterCloudProviderName(spec kubermaticv1.ExternalClusterCloudSpec) (types.ExternalClusterProvider, error) {
+	var providers []types.ExternalClusterProvider
 	if spec.AKS != nil {
-		clouds = append(clouds, kubermaticv1.ExternalClusterAKSProvider)
+		providers = append(providers, types.ExternalClusterProviderAKS)
 	}
 	if spec.EKS != nil {
-		clouds = append(clouds, kubermaticv1.ExternalClusterEKSProvider)
+		providers = append(providers, types.ExternalClusterProviderEKS)
 	}
 	if spec.GKE != nil {
-		clouds = append(clouds, kubermaticv1.ExternalClusterGKEProvider)
+		providers = append(providers, types.ExternalClusterProviderGKE)
 	}
 	if spec.KubeOne != nil {
-		clouds = append(clouds, kubermaticv1.ExternalClusterKubeOneProvider)
+		providers = append(providers, types.ExternalClusterProviderKubeOne)
 	}
 	if spec.BringYourOwn != nil {
-		clouds = append(clouds, kubermaticv1.ExternalClusterBringYourOwnProvider)
+		providers = append(providers, types.ExternalClusterProviderBringYourOwn)
 	}
-	if len(clouds) == 0 {
+	if len(providers) == 0 {
 		return "", nil
 	}
-	if len(clouds) != 1 {
-		return "", fmt.Errorf("only one cloud provider can be set in ExternalClusterCloudSpec, but found the following providers: %v", clouds)
+	if len(providers) != 1 {
+		return "", fmt.Errorf("only one cloud provider can be set in ExternalClusterCloudSpec, but found the following providers: %v", providers)
 	}
-	return string(clouds[0]), nil
+	return providers[0], nil
 }
 
 // ClusterCloudProviderName returns the provider name for the given CloudSpec.
-func ClusterCloudProviderName(spec kubermaticv1.CloudSpec) (string, error) {
-	var clouds []kubermaticv1.ProviderType
+func ClusterCloudProviderName(spec kubermaticv1.CloudSpec) (types.CloudProvider, error) {
+	var providers []types.CloudProvider
 	if spec.AWS != nil {
-		clouds = append(clouds, kubermaticv1.AWSCloudProvider)
+		providers = append(providers, types.CloudProviderAWS)
 	}
 	if spec.Alibaba != nil {
-		clouds = append(clouds, kubermaticv1.AlibabaCloudProvider)
+		providers = append(providers, types.CloudProviderAlibaba)
 	}
 	if spec.Anexia != nil {
-		clouds = append(clouds, kubermaticv1.AnexiaCloudProvider)
+		providers = append(providers, types.CloudProviderAnexia)
 	}
 	if spec.Azure != nil {
-		clouds = append(clouds, kubermaticv1.AzureCloudProvider)
+		providers = append(providers, types.CloudProviderAzure)
 	}
 	if spec.BringYourOwn != nil {
-		clouds = append(clouds, kubermaticv1.BringYourOwnCloudProvider)
+		providers = append(providers, types.CloudProviderBringYourOwn)
 	}
 	if spec.Digitalocean != nil {
-		clouds = append(clouds, kubermaticv1.DigitaloceanCloudProvider)
+		providers = append(providers, types.CloudProviderDigitalocean)
 	}
 	if spec.Fake != nil {
-		clouds = append(clouds, kubermaticv1.FakeCloudProvider)
+		providers = append(providers, types.CloudProviderFake)
 	}
 	if spec.GCP != nil {
-		clouds = append(clouds, kubermaticv1.GCPCloudProvider)
+		providers = append(providers, types.CloudProviderGCP)
 	}
 	if spec.Hetzner != nil {
-		clouds = append(clouds, kubermaticv1.HetznerCloudProvider)
+		providers = append(providers, types.CloudProviderHetzner)
 	}
 	if spec.Kubevirt != nil {
-		clouds = append(clouds, kubermaticv1.KubevirtCloudProvider)
+		providers = append(providers, types.CloudProviderKubevirt)
 	}
-	if spec.Openstack != nil {
-		clouds = append(clouds, kubermaticv1.OpenstackCloudProvider)
+	if spec.OpenStack != nil {
+		providers = append(providers, types.CloudProviderOpenStack)
 	}
 	if spec.Packet != nil {
-		clouds = append(clouds, kubermaticv1.PacketCloudProvider)
+		providers = append(providers, types.CloudProviderPacket)
 	}
 	if spec.VSphere != nil {
-		clouds = append(clouds, kubermaticv1.VSphereCloudProvider)
+		providers = append(providers, types.CloudProviderVSphere)
 	}
 	if spec.Nutanix != nil {
-		clouds = append(clouds, kubermaticv1.NutanixCloudProvider)
+		providers = append(providers, types.CloudProviderNutanix)
 	}
 	if spec.VMwareCloudDirector != nil {
-		clouds = append(clouds, kubermaticv1.VMwareCloudDirectorCloudProvider)
+		providers = append(providers, types.CloudProviderVMwareCloudDirector)
 	}
-	if len(clouds) == 0 {
+	if len(providers) == 0 {
 		return "", nil
 	}
-	if len(clouds) != 1 {
-		return "", fmt.Errorf("only one cloud provider can be set in CloudSpec, but found the following providers: %v", clouds)
+	if len(providers) != 1 {
+		return "", fmt.Errorf("only one cloud provider can be set in CloudSpec, but found the following providers: %v", providers)
 	}
-	return string(clouds[0]), nil
+	return providers[0], nil
 }
 
 // DatacenterCloudProviderName returns the provider name for the given Datacenter.
-func DatacenterCloudProviderName(spec *kubermaticv1.DatacenterSpec) (string, error) {
+func DatacenterCloudProviderName(spec *kubermaticv1.DatacenterSpec) (types.CloudProvider, error) {
 	if spec == nil {
 		return "", nil
 	}
-	var clouds []kubermaticv1.ProviderType
+	var providers []types.CloudProvider
 	if spec.BringYourOwn != nil {
-		clouds = append(clouds, kubermaticv1.BringYourOwnCloudProvider)
+		providers = append(providers, types.CloudProviderBringYourOwn)
 	}
 	if spec.Digitalocean != nil {
-		clouds = append(clouds, kubermaticv1.DigitaloceanCloudProvider)
+		providers = append(providers, types.CloudProviderDigitalocean)
 	}
 	if spec.AWS != nil {
-		clouds = append(clouds, kubermaticv1.AWSCloudProvider)
+		providers = append(providers, types.CloudProviderAWS)
 	}
-	if spec.Openstack != nil {
-		clouds = append(clouds, kubermaticv1.OpenstackCloudProvider)
+	if spec.OpenStack != nil {
+		providers = append(providers, types.CloudProviderOpenStack)
 	}
 	if spec.Packet != nil {
-		clouds = append(clouds, kubermaticv1.PacketCloudProvider)
+		providers = append(providers, types.CloudProviderPacket)
 	}
 	if spec.Hetzner != nil {
-		clouds = append(clouds, kubermaticv1.HetznerCloudProvider)
+		providers = append(providers, types.CloudProviderHetzner)
 	}
 	if spec.VSphere != nil {
-		clouds = append(clouds, kubermaticv1.VSphereCloudProvider)
+		providers = append(providers, types.CloudProviderVSphere)
 	}
 	if spec.Azure != nil {
-		clouds = append(clouds, kubermaticv1.AzureCloudProvider)
+		providers = append(providers, types.CloudProviderAzure)
 	}
 	if spec.GCP != nil {
-		clouds = append(clouds, kubermaticv1.GCPCloudProvider)
+		providers = append(providers, types.CloudProviderGCP)
 	}
 	if spec.Fake != nil {
-		clouds = append(clouds, kubermaticv1.FakeCloudProvider)
+		providers = append(providers, types.CloudProviderFake)
 	}
 	if spec.Kubevirt != nil {
-		clouds = append(clouds, kubermaticv1.KubevirtCloudProvider)
+		providers = append(providers, types.CloudProviderKubevirt)
 	}
 	if spec.Alibaba != nil {
-		clouds = append(clouds, kubermaticv1.AlibabaCloudProvider)
+		providers = append(providers, types.CloudProviderAlibaba)
 	}
 	if spec.Anexia != nil {
-		clouds = append(clouds, kubermaticv1.AnexiaCloudProvider)
+		providers = append(providers, types.CloudProviderAnexia)
 	}
 	if spec.Nutanix != nil {
-		clouds = append(clouds, kubermaticv1.NutanixCloudProvider)
+		providers = append(providers, types.CloudProviderNutanix)
 	}
 	if spec.VMwareCloudDirector != nil {
-		clouds = append(clouds, kubermaticv1.VMwareCloudDirectorCloudProvider)
+		providers = append(providers, types.CloudProviderVMwareCloudDirector)
 	}
-	if len(clouds) == 0 {
+	if len(providers) == 0 {
 		return "", nil
 	}
-	if len(clouds) != 1 {
+	if len(providers) != 1 {
 		return "", fmt.Errorf("only one cloud provider can be set in DatacenterSpec: %+v", spec)
 	}
-	return string(clouds[0]), nil
+	return providers[0], nil
 }

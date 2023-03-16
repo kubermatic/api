@@ -20,12 +20,21 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-const (
-	// IPAMPoolResourceName represents "Resource" defined in Kubernetes.
-	IPAMPoolResourceName = "ipampool"
+// +kubebuilder:validation:Pattern="((^((([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]))/([0-9]|[1-2][0-9]|3[0-2])$)|(^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:))/([0-9]|[0-9][0-9]|1[0-1][0-9]|12[0-8])$))"
 
-	// IPAMPoolKindName represents "Kind" defined in Kubernetes.
-	IPAMPoolKindName = "IPAMPool"
+// SubnetCIDR is used to store IPv4/IPv6 CIDR.
+type SubnetCIDR string
+
+// +kubebuilder:validation:Enum=prefix;range
+
+// IPAMPoolAllocationType defines the type of allocation to be used.
+type IPAMPoolAllocationType string
+
+const (
+	// IPAMPoolAllocationTypePrefix corresponds to prefix allocation type.
+	IPAMPoolAllocationTypePrefix IPAMPoolAllocationType = "prefix"
+	// IPAMPoolAllocationTypeRange corresponds to range allocation type.
+	IPAMPoolAllocationTypeRange IPAMPoolAllocationType = "range"
 )
 
 // +kubebuilder:resource:scope=Cluster
@@ -78,26 +87,6 @@ type IPAMPoolDatacenterSettings struct {
 	// Can be used when "type=range".
 	ExcludeRanges []string `json:"excludeRanges,omitempty"`
 }
-
-// +kubebuilder:validation:Pattern="((^((([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]))/([0-9]|[1-2][0-9]|3[0-2])$)|(^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:))/([0-9]|[0-9][0-9]|1[0-1][0-9]|12[0-8])$))"
-// SubnetCIDR is used to store IPv4/IPv6 CIDR.
-type SubnetCIDR string
-
-// +kubebuilder:validation:Enum=prefix;range
-// IPAMPoolAllocationType defines the type of allocation to be used.
-// Possible values are `prefix` and `range`.
-type IPAMPoolAllocationType string
-
-func (t IPAMPoolAllocationType) String() string {
-	return string(t)
-}
-
-const (
-	// IPAMPoolAllocationTypePrefix corresponds to prefix allocation type.
-	IPAMPoolAllocationTypePrefix IPAMPoolAllocationType = "prefix"
-	// IPAMPoolAllocationTypeRange corresponds to range allocation type.
-	IPAMPoolAllocationTypeRange IPAMPoolAllocationType = "range"
-)
 
 // +kubebuilder:object:generate=true
 // +kubebuilder:object:root=true

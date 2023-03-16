@@ -20,14 +20,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-const (
-	// IPAMAllocationResourceName represents "Resource" defined in Kubernetes.
-	IPAMAllocationResourceName = "ipamallocation"
-
-	// IPAMAllocationKindName represents "Kind" defined in Kubernetes.
-	IPAMAllocationKindName = "IPAMAllocation"
-)
-
 // +kubebuilder:object:generate=true
 // +kubebuilder:object:root=true
 // +kubebuilder:printcolumn:JSONPath=".metadata.creationTimestamp",name="Age",type="date"

@@ -16,33 +16,11 @@ limitations under the License.
 
 package v1
 
-// +kubebuilder:validation:Enum=NodePort;LoadBalancer;Tunneling
+import (
+	"fmt"
+	"net"
 
-// ExposeStrategy is the strategy used to expose a cluster control plane.
-// Possible values are `NodePort`, `LoadBalancer` or `Tunneling` (requires a feature gate).
-type ExposeStrategy string
-
-const (
-	// ExposeStrategyNodePort creates a NodePort with a "nodeport-proxy.k8s.io/expose": "true" annotation to expose
-	// all clusters on one central Service of type LoadBalancer via the NodePort proxy.
-	ExposeStrategyNodePort ExposeStrategy = "NodePort"
-	// ExposeStrategyLoadBalancer creates a LoadBalancer service per cluster.
-	ExposeStrategyLoadBalancer ExposeStrategy = "LoadBalancer"
-	// ExposeStrategyTunneling allows to reach the control plane components by
-	// tunneling L4 traffic (TCP only is supported at the moment).
-	// The traffic is encapsulated by mean of an agent deployed on the worker
-	// nodes.
-	// The traffic is decapsulated and forwarded to the recipients by
-	// mean of a proxy deployed on the Seed Cluster.
-	// The same proxy is also capable of routing TLS traffic without
-	// termination, this is to allow the Kubelet to reach the control plane
-	// before the agents are running.
-	//
-	// This strategy has the inconvenience of requiring an agent on worker
-	// nodes, but has the notable advantage of requiring one single entry point
-	// (e.g. Service of type LoadBalancer) without consuming one or more ports
-	// for each user cluster.
-	ExposeStrategyTunneling ExposeStrategy = "Tunneling"
+	netutils "k8s.io/utils/net"
 )
 
 // Finalizers should be kept to their controllers. Only if a finalizer is
@@ -107,4 +85,72 @@ type MachineFlavorFilter struct {
 
 	// Include VMs with GPU
 	EnableGPU bool `json:"enableGPU"` //nolint:tagliatelle
+}
+
+// NetworkRanges represents ranges of network addresses.
+type NetworkRanges struct {
+	CIDRBlocks []string `json:"cidrBlocks,omitempty"`
+}
+
+// Validate validates the network ranges. Returns nil if valid, error otherwise.
+func (r *NetworkRanges) Validate() error {
+	if r == nil {
+		return nil
+	}
+	for _, cidr := range r.CIDRBlocks {
+		if _, _, err := net.ParseCIDR(cidr); err != nil {
+			return fmt.Errorf("unable to parse CIDR %q: %w", cidr, err)
+		}
+	}
+	return nil
+}
+
+// GetIPv4CIDR returns the first found IPv4 CIDR in the network ranges, or an empty string if no IPv4 CIDR is found.
+func (r *NetworkRanges) GetIPv4CIDR() string {
+	for _, cidr := range r.CIDRBlocks {
+		if netutils.IsIPv4CIDRString(cidr) {
+			return cidr
+		}
+	}
+	return ""
+}
+
+// GetIPv4CIDRs returns all IPv4 CIDRs in the network ranges, or an empty string if no IPv4 CIDR is found.
+func (r *NetworkRanges) GetIPv4CIDRs() (res []string) {
+	for _, cidr := range r.CIDRBlocks {
+		if netutils.IsIPv4CIDRString(cidr) {
+			res = append(res, cidr)
+		}
+	}
+	return
+}
+
+// HasIPv4CIDR returns true if the network ranges contain any IPv4 CIDR, false otherwise.
+func (r *NetworkRanges) HasIPv4CIDR() bool {
+	return r.GetIPv4CIDR() != ""
+}
+
+// GetIPv6CIDR returns the first found IPv6 CIDR in the network ranges, or an empty string if no IPv6 CIDR is found.
+func (r *NetworkRanges) GetIPv6CIDR() string {
+	for _, cidr := range r.CIDRBlocks {
+		if netutils.IsIPv6CIDRString(cidr) {
+			return cidr
+		}
+	}
+	return ""
+}
+
+// GetIPv6CIDRs returns all IPv6 CIDRs in the network ranges, or an empty string if no IPv6 CIDR is found.
+func (r *NetworkRanges) GetIPv6CIDRs() (res []string) {
+	for _, cidr := range r.CIDRBlocks {
+		if netutils.IsIPv6CIDRString(cidr) {
+			res = append(res, cidr)
+		}
+	}
+	return
+}
+
+// HasIPv6CIDR returns true if the network ranges contain any IPv6 CIDR, false otherwise.
+func (r *NetworkRanges) HasIPv6CIDR() bool {
+	return r.GetIPv6CIDR() != ""
 }

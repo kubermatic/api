@@ -21,24 +21,34 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+// +kubebuilder:validation:Enum=Running;Completed;Failed
+
+// EtcdBackupStatusPhase is used to indicate the type of a EtcdBackupConfig condition.
+// For all condition types, the `true` value must indicate success.
+type EtcdBackupStatusPhase string
+
 const (
-	// EtcdBackupConfigResourceName represents "Resource" defined in Kubernetes.
-	EtcdBackupConfigResourceName = "etcdbackupconfigs"
-
-	// EtcdBackupConfigKindName represents "Kind" defined in Kubernetes.
-	EtcdBackupConfigKindName = "EtcdBackupConfig"
-
-	DefaultKeptBackupsCount = 20
-	MaxKeptBackupsCount     = 50
-
 	// BackupStatusPhase value indicating that the corresponding job has started.
-	BackupStatusPhaseRunning = "Running"
+	BackupStatusPhaseRunning EtcdBackupStatusPhase = "Running"
 
 	// BackupStatusPhase value indicating that the corresponding job has completed successfully.
-	BackupStatusPhaseCompleted = "Completed"
+	BackupStatusPhaseCompleted EtcdBackupStatusPhase = "Completed"
 
 	// BackupStatusPhase value indicating that the corresponding job has completed with an error.
-	BackupStatusPhaseFailed = "Failed"
+	BackupStatusPhaseFailed EtcdBackupStatusPhase = "Failed"
+)
+
+// +kubebuilder:validation:Enum=SchedulingActive
+
+// EtcdBackupConfigConditionType is used to indicate the type of a EtcdBackupConfig condition. For all condition
+// types, the `true` value must indicate success. All condition types must be registered within
+// the `AllClusterConditionTypes` variable.
+type EtcdBackupConfigConditionType string
+
+const (
+	// EtcdBackupConfigConditionSchedulingActive indicates that the EtcdBackupConfig is active, i.e.
+	// new backups are being scheduled according to the config's schedule.
+	EtcdBackupConfigConditionSchedulingActive EtcdBackupConfigConditionType = "SchedulingActive"
 )
 
 // +kubebuilder:object:generate=true
@@ -95,8 +105,6 @@ type EtcdBackupConfigStatus struct {
 	CleanupRunning bool `json:"cleanupRunning,omitempty"`
 }
 
-type BackupStatusPhase string
-
 type BackupStatus struct {
 	// ScheduledTime will always be set when the BackupStatus is created, so it'll never be nil
 	// +optional
@@ -106,16 +114,16 @@ type BackupStatus struct {
 	// +optional
 	BackupStartTime metav1.Time `json:"backupStartTime,omitempty"`
 	// +optional
-	BackupFinishedTime metav1.Time       `json:"backupFinishedTime,omitempty"`
-	BackupPhase        BackupStatusPhase `json:"backupPhase,omitempty"`
-	BackupMessage      string            `json:"backupMessage,omitempty"`
-	DeleteJobName      string            `json:"deleteJobName,omitempty"`
+	BackupFinishedTime metav1.Time           `json:"backupFinishedTime,omitempty"`
+	BackupPhase        EtcdBackupStatusPhase `json:"backupPhase,omitempty"`
+	BackupMessage      string                `json:"backupMessage,omitempty"`
+	DeleteJobName      string                `json:"deleteJobName,omitempty"`
 	// +optional
 	DeleteStartTime metav1.Time `json:"deleteStartTime,omitempty"`
 	// +optional
-	DeleteFinishedTime metav1.Time       `json:"deleteFinishedTime,omitempty"`
-	DeletePhase        BackupStatusPhase `json:"deletePhase,omitempty"`
-	DeleteMessage      string            `json:"deleteMessage,omitempty"`
+	DeleteFinishedTime metav1.Time           `json:"deleteFinishedTime,omitempty"`
+	DeletePhase        EtcdBackupStatusPhase `json:"deletePhase,omitempty"`
+	DeleteMessage      string                `json:"deleteMessage,omitempty"`
 }
 
 type EtcdBackupConfigCondition struct {
@@ -132,30 +140,4 @@ type EtcdBackupConfigCondition struct {
 	// Human readable message indicating details about last transition.
 	// +optional
 	Message string `json:"message,omitempty"`
-}
-
-// +kubebuilder:validation:Enum=SchedulingActive
-
-// EtcdBackupConfigConditionType is used to indicate the type of a EtcdBackupConfig condition. For all condition
-// types, the `true` value must indicate success. All condition types must be registered within
-// the `AllClusterConditionTypes` variable.
-type EtcdBackupConfigConditionType string
-
-const (
-	// EtcdBackupConfigConditionSchedulingActive indicates that the EtcdBackupConfig is active, i.e.
-	// new backups are being scheduled according to the config's schedule.
-	EtcdBackupConfigConditionSchedulingActive EtcdBackupConfigConditionType = "SchedulingActive"
-)
-
-func (bc *EtcdBackupConfig) GetKeptBackupsCount() int {
-	if bc.Spec.Keep == nil {
-		return DefaultKeptBackupsCount
-	}
-	if *bc.Spec.Keep <= 0 {
-		return 1
-	}
-	if *bc.Spec.Keep > MaxKeptBackupsCount {
-		return MaxKeptBackupsCount
-	}
-	return *bc.Spec.Keep
 }

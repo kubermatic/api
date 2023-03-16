@@ -17,47 +17,11 @@ limitations under the License.
 package v1
 
 import (
-	"fmt"
-
 	machinecontroller "k8c.io/apis/v2/pkg/machine-controller"
 	"k8c.io/apis/v2/pkg/semver"
+	"k8c.io/apis/v2/pkg/types"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-)
-
-const (
-	// ExternalClusterResourceName represents "Resource" defined in Kubernetes.
-	ExternalClusterResourceName = "externalclusters"
-
-	// ExternalClusterKind represents "Kind" defined in Kubernetes.
-	ExternalClusterKind = "ExternalCluster"
-
-	// ExternalCluster Kubeconfig secret prefix.
-	ExternalClusterKubeconfigPrefix = "kubeconfig-external-cluster"
-
-	// KubeOneNamespacePrefix is the kubeone namespace prefix.
-	KubeOneNamespacePrefix = "kubeone"
-
-	// don't change this as these prefixes are used for rbac generation.
-	// KubeOne ssh secret prefixes.
-	KubeOneSSHSecretPrefix = "ssh-kubeone-external-cluster"
-
-	// KubeOne manifest secret prefixes.
-	KubeOneManifestSecretPrefix = "manifest-kubeone-external-cluster"
-)
-
-// +kubebuilder:validation:Enum=aks;bringyourown;eks;gke;kubeone
-
-// ExternalClusterProvider is the identifier for the cloud provider that hosts
-// the external cluster control plane.
-type ExternalClusterProvider string
-
-const (
-	ExternalClusterAKSProvider          ExternalClusterProvider = "aks"
-	ExternalClusterBringYourOwnProvider ExternalClusterProvider = "bringyourown"
-	ExternalClusterEKSProvider          ExternalClusterProvider = "eks"
-	ExternalClusterGKEProvider          ExternalClusterProvider = "gke"
-	ExternalClusterKubeOneProvider      ExternalClusterProvider = "kubeone"
 )
 
 // +kubebuilder:resource:scope=Cluster
@@ -168,7 +132,7 @@ type ExternalClusterNetworkRanges struct {
 
 // ExternalClusterCloudSpec mutually stores access data to a cloud provider.
 type ExternalClusterCloudSpec struct {
-	ProviderName ExternalClusterProvider               `json:"providerName"`
+	ProviderName types.ExternalClusterProvider         `json:"providerName"`
 	GKE          *ExternalClusterGKECloudSpec          `json:"gke,omitempty"`
 	EKS          *ExternalClusterEKSCloudSpec          `json:"eks,omitempty"`
 	AKS          *ExternalClusterAKSCloudSpec          `json:"aks,omitempty"`
@@ -189,9 +153,9 @@ const (
 	// node software. Details can be found in the `StatusMessage` field.
 	ExternalClusterPhaseReconciling ExternalClusterPhase = "Reconciling"
 
-	KubeOnePhaseReconcilingUpgrade ExternalClusterPhase = "ReconcilingUpgrade"
+	KubeOneClusterPhaseReconcilingUpgrade ExternalClusterPhase = "ReconcilingUpgrade"
 
-	KubeOnePhaseReconcilingMigrate ExternalClusterPhase = "ReconcilingMigrate"
+	KubeOneClusterPhaseReconcilingMigrate ExternalClusterPhase = "ReconcilingMigrate"
 
 	// ExternalClusterPhaseDeleting status indicates the cluster is being deleted.
 	ExternalClusterPhaseDeleting ExternalClusterPhase = "Deleting"
@@ -300,52 +264,4 @@ type ExternalClusterAKSCloudSpec struct {
 	// If set to empty string at cluster creation, a new resource group will be created and this field will be updated to
 	// the generated resource group's name.
 	ResourceGroup string `json:"resourceGroup"`
-}
-
-func (i *ExternalCluster) GetKubeconfigSecretName() string {
-	return fmt.Sprintf("%s-%s", ExternalClusterKubeconfigPrefix, i.Name)
-}
-
-func (i *ExternalCluster) GetCredentialsSecretName() string {
-	// The kubermatic cluster `GetSecretName` method is used to get credential secret name for external cluster
-	// The same is used for the external cluster creation when secret is created
-	cluster := &Cluster{
-		ObjectMeta: metav1.ObjectMeta{
-			Name: i.Name,
-		},
-		Spec: ClusterSpec{
-			Cloud: CloudSpec{},
-		},
-	}
-	cloud := i.Spec.CloudSpec
-	if cloud.ProviderName == ExternalClusterBringYourOwnProvider {
-		return ""
-	}
-	if cloud.GKE != nil {
-		cluster.Spec.Cloud.GCP = &GCPCloudSpec{}
-	}
-	if cloud.EKS != nil {
-		cluster.Spec.Cloud.AWS = &AWSCloudSpec{}
-	}
-	if cloud.AKS != nil {
-		cluster.Spec.Cloud.Azure = &AzureCloudSpec{}
-	}
-	return cluster.GetSecretName()
-}
-
-func (i *ExternalCluster) GetKubeOneCredentialsSecretName() string {
-	providerName := i.Spec.CloudSpec.KubeOne.ProviderName
-	return fmt.Sprintf("%s-%s-%s", CredentialPrefix, providerName, i.Name)
-}
-
-func (i *ExternalCluster) GetKubeOneSSHSecretName() string {
-	return fmt.Sprintf("%s-%s", KubeOneSSHSecretPrefix, i.Name)
-}
-
-func (i *ExternalCluster) GetKubeOneManifestSecretName() string {
-	return fmt.Sprintf("%s-%s", KubeOneManifestSecretPrefix, i.Name)
-}
-
-func (i *ExternalCluster) GetKubeOneNamespaceName() string {
-	return fmt.Sprintf("%s-%s", KubeOneNamespacePrefix, i.Name)
 }

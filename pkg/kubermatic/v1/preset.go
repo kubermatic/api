@@ -49,24 +49,24 @@ type Preset struct {
 
 // Presets specifies default presets for supported providers.
 type PresetSpec struct {
-	Digitalocean        *Digitalocean        `json:"digitalocean,omitempty"`
-	Hetzner             *Hetzner             `json:"hetzner,omitempty"`
-	Azure               *Azure               `json:"azure,omitempty"`
-	VSphere             *VSphere             `json:"vsphere,omitempty"`
-	AWS                 *AWS                 `json:"aws,omitempty"`
-	Openstack           *Openstack           `json:"openstack,omitempty"`
-	Packet              *Packet              `json:"packet,omitempty"`
-	GCP                 *GCP                 `json:"gcp,omitempty"`
-	Kubevirt            *Kubevirt            `json:"kubevirt,omitempty"`
-	Alibaba             *Alibaba             `json:"alibaba,omitempty"`
-	Anexia              *Anexia              `json:"anexia,omitempty"`
-	Nutanix             *Nutanix             `json:"nutanix,omitempty"`
-	VMwareCloudDirector *VMwareCloudDirector `json:"vmwareclouddirector,omitempty"`
-	GKE                 *GKE                 `json:"gke,omitempty"`
-	EKS                 *EKS                 `json:"eks,omitempty"`
-	AKS                 *AKS                 `json:"aks,omitempty"`
+	Digitalocean        *DigitaloceanPreset        `json:"digitalocean,omitempty"`
+	Hetzner             *HetznerPreset             `json:"hetzner,omitempty"`
+	Azure               *AzurePreset               `json:"azure,omitempty"`
+	VSphere             *VSpherePreset             `json:"vsphere,omitempty"`
+	AWS                 *AWSPreset                 `json:"aws,omitempty"`
+	OpenStack           *OpenStackPreset           `json:"openstack,omitempty"`
+	Packet              *PacketPreset              `json:"packet,omitempty"`
+	GCP                 *GCPPreset                 `json:"gcp,omitempty"`
+	Kubevirt            *KubevirtPreset            `json:"kubevirt,omitempty"`
+	Alibaba             *AlibabaPreset             `json:"alibaba,omitempty"`
+	Anexia              *AnexiaPreset              `json:"anexia,omitempty"`
+	Nutanix             *NutanixPreset             `json:"nutanix,omitempty"`
+	VMwareCloudDirector *VMwareCloudDirectorPreset `json:"vmwareclouddirector,omitempty"`
+	GKE                 *GKEPreset                 `json:"gke,omitempty"`
+	EKS                 *EKSPreset                 `json:"eks,omitempty"`
+	AKS                 *AKSPreset                 `json:"aks,omitempty"`
 
-	Fake *Fake `json:"fake,omitempty"`
+	Fake *FakePreset `json:"fake,omitempty"`
 
 	// RequiredEmails is a list of e-mail addresses that this presets should
 	// be restricted to. Each item in the list can be either a full e-mail
@@ -81,18 +81,6 @@ type PresetSpec struct {
 	Enabled *bool `json:"enabled,omitempty"`
 }
 
-func (s PresetSpec) IsEnabled() bool {
-	if s.Enabled == nil {
-		return true
-	}
-
-	return *s.Enabled
-}
-
-func (s *PresetSpec) SetEnabled(enabled bool) {
-	s.Enabled = &enabled
-}
-
 type ProviderPreset struct {
 	// Only enabled presets will be available in the KKP dashboard.
 	Enabled *bool `json:"enabled,omitempty"`
@@ -101,26 +89,18 @@ type ProviderPreset struct {
 	Datacenter string `json:"datacenter,omitempty"`
 }
 
-func (s ProviderPreset) IsEnabled() bool {
-	if s.Enabled == nil {
-		return true
-	}
-
-	return *s.Enabled
-}
-
-type Digitalocean struct {
+type DigitaloceanPreset struct {
 	ProviderPreset `json:",inline"`
 
 	// Token is used to authenticate with the DigitalOcean API.
 	Token string `json:"token"`
 }
 
-func (s Digitalocean) IsValid() bool {
+func (s DigitaloceanPreset) IsValid() bool {
 	return len(s.Token) > 0
 }
 
-type Hetzner struct {
+type HetznerPreset struct {
 	ProviderPreset `json:",inline"`
 
 	// Token is used to authenticate with the Hetzner API.
@@ -133,11 +113,11 @@ type Hetzner struct {
 	Network string `json:"network,omitempty"`
 }
 
-func (s Hetzner) IsValid() bool {
+func (s HetznerPreset) IsValid() bool {
 	return len(s.Token) > 0
 }
 
-type Azure struct {
+type AzurePreset struct {
 	ProviderPreset `json:",inline"`
 
 	TenantID       string `json:"tenantID"`
@@ -152,17 +132,17 @@ type Azure struct {
 	RouteTableName    string `json:"routeTable,omitempty"`
 	SecurityGroup     string `json:"securityGroup,omitempty"`
 	// LoadBalancerSKU sets the LB type that will be used for the Azure cluster, possible values are "basic" and "standard", if empty, "basic" will be used
-	LoadBalancerSKU LBSKU `json:"loadBalancerSKU"` //nolint:tagliatelle
+	LoadBalancerSKU AzureLBSKU `json:"loadBalancerSKU"` //nolint:tagliatelle
 }
 
-func (s Azure) IsValid() bool {
+func (s AzurePreset) IsValid() bool {
 	return len(s.TenantID) > 0 &&
 		len(s.SubscriptionID) > 0 &&
 		len(s.ClientID) > 0 &&
 		len(s.ClientSecret) > 0
 }
 
-type VSphere struct {
+type VSpherePreset struct {
 	ProviderPreset `json:",inline"`
 
 	Username string `json:"username"`
@@ -174,11 +154,11 @@ type VSphere struct {
 	ResourcePool     string `json:"resourcePool,omitempty"`
 }
 
-func (s VSphere) IsValid() bool {
+func (s VSpherePreset) IsValid() bool {
 	return len(s.Username) > 0 && len(s.Password) > 0
 }
 
-type VMwareCloudDirector struct {
+type VMwareCloudDirectorPreset struct {
 	ProviderPreset `json:",inline"`
 
 	Username     string `json:"username"`
@@ -188,7 +168,7 @@ type VMwareCloudDirector struct {
 	OVDCNetwork  string `json:"ovdcNetwork"`
 }
 
-func (s VMwareCloudDirector) IsValid() bool {
+func (s VMwareCloudDirectorPreset) IsValid() bool {
 	return len(s.Username) > 0 &&
 		len(s.Password) > 0 &&
 		len(s.VDC) > 0 &&
@@ -196,7 +176,7 @@ func (s VMwareCloudDirector) IsValid() bool {
 		len(s.OVDCNetwork) > 0
 }
 
-type AWS struct {
+type AWSPreset struct {
 	ProviderPreset `json:",inline"`
 
 	// Access Key ID to authenticate against AWS.
@@ -223,11 +203,11 @@ type AWS struct {
 	ControlPlaneRoleARN string `json:"roleARN,omitempty"` //nolint:tagliatelle
 }
 
-func (s AWS) IsValid() bool {
+func (s AWSPreset) IsValid() bool {
 	return len(s.AccessKeyID) > 0 && len(s.SecretAccessKey) > 0
 }
 
-type Openstack struct {
+type OpenStackPreset struct {
 	ProviderPreset `json:",inline"`
 
 	UseToken bool `json:"useToken,omitempty"`
@@ -248,7 +228,7 @@ type Openstack struct {
 	SubnetID       string `json:"subnetID,omitempty"`
 }
 
-func (s Openstack) IsValid() bool {
+func (s OpenStackPreset) IsValid() bool {
 	if s.UseToken {
 		return true
 	}
@@ -263,7 +243,7 @@ func (s Openstack) IsValid() bool {
 		len(s.Domain) > 0
 }
 
-type Packet struct {
+type PacketPreset struct {
 	ProviderPreset `json:",inline"`
 
 	APIKey    string `json:"apiKey"`
@@ -272,11 +252,11 @@ type Packet struct {
 	BillingCycle string `json:"billingCycle,omitempty"`
 }
 
-func (s Packet) IsValid() bool {
+func (s PacketPreset) IsValid() bool {
 	return len(s.APIKey) > 0 && len(s.ProjectID) > 0
 }
 
-type GCP struct {
+type GCPPreset struct {
 	ProviderPreset `json:",inline"`
 
 	ServiceAccount string `json:"serviceAccount"`
@@ -285,31 +265,31 @@ type GCP struct {
 	Subnetwork string `json:"subnetwork,omitempty"`
 }
 
-func (s GCP) IsValid() bool {
+func (s GCPPreset) IsValid() bool {
 	return len(s.ServiceAccount) > 0
 }
 
-type Fake struct {
+type FakePreset struct {
 	ProviderPreset `json:",inline"`
 
 	Token string `json:"token"`
 }
 
-func (s Fake) IsValid() bool {
+func (s FakePreset) IsValid() bool {
 	return len(s.Token) > 0
 }
 
-type Kubevirt struct {
+type KubevirtPreset struct {
 	ProviderPreset `json:",inline"`
 
 	Kubeconfig string `json:"kubeconfig"`
 }
 
-func (s Kubevirt) IsValid() bool {
+func (s KubevirtPreset) IsValid() bool {
 	return len(s.Kubeconfig) > 0
 }
 
-type Alibaba struct {
+type AlibabaPreset struct {
 	ProviderPreset `json:",inline"`
 
 	// Access Key ID to authenticate against Alibaba.
@@ -318,23 +298,23 @@ type Alibaba struct {
 	AccessKeySecret string `json:"accessKeySecret"`
 }
 
-func (s Alibaba) IsValid() bool {
+func (s AlibabaPreset) IsValid() bool {
 	return len(s.AccessKeyID) > 0 &&
 		len(s.AccessKeySecret) > 0
 }
 
-type Anexia struct {
+type AnexiaPreset struct {
 	ProviderPreset `json:",inline"`
 
 	// Token is used to authenticate with the Anexia API.
 	Token string `json:"token"`
 }
 
-func (s Anexia) IsValid() bool {
+func (s AnexiaPreset) IsValid() bool {
 	return len(s.Token) > 0
 }
 
-type Nutanix struct {
+type NutanixPreset struct {
 	ProviderPreset `json:",inline"`
 
 	// ProxyURL is used to optionally configure a HTTP proxy to access Nutanix Prism Central.
@@ -363,21 +343,21 @@ type Nutanix struct {
 	CSIPort *int32 `json:"csiPort,omitempty"`
 }
 
-func (s Nutanix) IsValid() bool {
+func (s NutanixPreset) IsValid() bool {
 	return len(s.Username) > 0 && len(s.Password) > 0
 }
 
-type GKE struct {
+type GKEPreset struct {
 	ProviderPreset `json:",inline"`
 
 	ServiceAccount string `json:"serviceAccount"`
 }
 
-func (s GKE) IsValid() bool {
+func (s GKEPreset) IsValid() bool {
 	return len(s.ServiceAccount) > 0
 }
 
-type EKS struct {
+type EKSPreset struct {
 	ProviderPreset `json:",inline"`
 
 	AccessKeyID          string `json:"accessKeyID"`
@@ -386,12 +366,12 @@ type EKS struct {
 	AssumeRoleExternalID string `json:"assumeRoleExternalID,omitempty"`
 }
 
-func (s EKS) IsValid() bool {
+func (s EKSPreset) IsValid() bool {
 	return len(s.AccessKeyID) > 0 &&
 		len(s.SecretAccessKey) > 0
 }
 
-type AKS struct {
+type AKSPreset struct {
 	ProviderPreset `json:",inline"`
 
 	TenantID       string `json:"tenantID"`
@@ -400,7 +380,7 @@ type AKS struct {
 	ClientSecret   string `json:"clientSecret"`
 }
 
-func (s AKS) IsValid() bool {
+func (s AKSPreset) IsValid() bool {
 	return len(s.TenantID) > 0 &&
 		len(s.SubscriptionID) > 0 &&
 		len(s.ClientID) > 0 &&

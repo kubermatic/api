@@ -31,17 +31,17 @@ func init() {
 	}
 }
 
-var (
-	SchemeBuilder = runtime.NewSchemeBuilder(addKnownTypes)
-	AddToScheme   = SchemeBuilder.AddToScheme
-)
-
 // GroupName is the group name use in this package.
 const GroupName = "kubermatic.k8c.io"
 const GroupVersion = "v1"
 
-// SchemeGroupVersion is group version used to register these objects.
-var SchemeGroupVersion = schema.GroupVersion{Group: GroupName, Version: GroupVersion}
+var (
+	SchemeBuilder = runtime.NewSchemeBuilder(addKnownTypes)
+	AddToScheme   = SchemeBuilder.AddToScheme
+
+	// SchemeGroupVersion is group version used to register these objects.
+	SchemeGroupVersion = schema.GroupVersion{Group: GroupName, Version: GroupVersion}
+)
 
 // Resource takes an unqualified resource and returns a Group qualified GroupResource.
 func Resource(resource string) schema.GroupResource {
@@ -51,60 +51,60 @@ func Resource(resource string) schema.GroupResource {
 // Adds the list of known types to api.Scheme.
 func addKnownTypes(scheme *runtime.Scheme) error {
 	scheme.AddKnownTypes(SchemeGroupVersion,
-		&UserSSHKey{},
-		&UserSSHKeyList{},
-		&Cluster{},
-		&ClusterList{},
-		&EtcdBackupConfig{},
-		&EtcdBackupConfigList{},
-		&EtcdRestore{},
-		&EtcdRestoreList{},
-		&User{},
-		&UserList{},
-		&Project{},
-		&ProjectList{},
-		&Addon{},
-		&AddonList{},
-		&UserProjectBinding{},
-		&UserProjectBindingList{},
-		&Seed{},
-		&SeedList{},
-		&KubermaticSetting{},
-		&KubermaticSettingList{},
 		&AddonConfig{},
 		&AddonConfigList{},
-		&Preset{},
-		&PresetList{},
+		&Addon{},
+		&AddonList{},
 		&AdmissionPlugin{},
 		&AdmissionPluginList{},
-		&ExternalCluster{},
-		&ExternalClusterList{},
-		&ConstraintTemplate{},
-		&ConstraintTemplateList{},
-		&Constraint{},
-		&ConstraintList{},
 		&Alertmanager{},
 		&AlertmanagerList{},
+		&AllowedRegistry{},
+		&AllowedRegistryList{},
+		&Cluster{},
+		&ClusterList{},
 		&ClusterTemplate{},
 		&ClusterTemplateList{},
 		&ClusterTemplateInstance{},
 		&ClusterTemplateInstanceList{},
-		&RuleGroup{},
-		&RuleGroupList{},
-		&AllowedRegistry{},
-		&AllowedRegistryList{},
-		&MLAAdminSetting{},
-		&MLAAdminSettingList{},
-		&KubermaticConfiguration{},
-		&KubermaticConfigurationList{},
+		&Constraint{},
+		&ConstraintList{},
+		&ConstraintTemplate{},
+		&ConstraintTemplateList{},
+		&EtcdBackupConfig{},
+		&EtcdBackupConfigList{},
+		&EtcdRestore{},
+		&EtcdRestoreList{},
+		&ExternalCluster{},
+		&ExternalClusterList{},
+		&GroupProjectBinding{},
+		&GroupProjectBindingList{},
 		&IPAMPool{},
 		&IPAMPoolList{},
 		&IPAMAllocation{},
 		&IPAMAllocationList{},
+		&KubermaticConfiguration{},
+		&KubermaticConfigurationList{},
+		&KubermaticSetting{},
+		&KubermaticSettingList{},
+		&MLAAdminSetting{},
+		&MLAAdminSettingList{},
+		&Preset{},
+		&PresetList{},
+		&Project{},
+		&ProjectList{},
 		&ResourceQuota{},
 		&ResourceQuotaList{},
-		&GroupProjectBinding{},
-		&GroupProjectBindingList{},
+		&RuleGroup{},
+		&RuleGroupList{},
+		&Seed{},
+		&SeedList{},
+		&User{},
+		&UserList{},
+		&UserProjectBinding{},
+		&UserProjectBindingList{},
+		&UserSSHKey{},
+		&UserSSHKeyList{},
 	)
 
 	metav1.AddToGroupVersion(scheme, SchemeGroupVersion)
