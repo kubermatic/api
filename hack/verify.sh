@@ -16,7 +16,8 @@
 
 set -euo pipefail
 
-cd $(dirname $0)/../..
+cd $(dirname $0)/..
+source hack/lib.sh
 
 EXIT_CODE=0
 
@@ -50,10 +51,9 @@ try() {
   echo
 }
 
+try "Verify go.mod" make check-dependencies
+try "Verify boilerplate" ./hack/verify-boilerplate.sh
 try "Verify code generation" ./hack/verify-codegen.sh
 try "Verify license compatibility" ./hack/verify-licenses.sh
-try "Verify boilerplate" ./hack/verify-boilerplate.sh
-
-try "Verify go.mod" make check-dependencies
 
 exit $EXIT_CODE
