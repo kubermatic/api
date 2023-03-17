@@ -21,6 +21,7 @@ import (
 
 	kubermaticv1 "k8c.io/apis/v2/pkg/kubermatic/v1"
 	"k8c.io/apis/v2/pkg/test/diff"
+
 	"k8s.io/utils/pointer"
 )
 

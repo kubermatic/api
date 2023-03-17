@@ -18,6 +18,7 @@ package v1
 
 import (
 	openpolicyagent "k8c.io/apis/v2/pkg/open-policy-agent"
+
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
