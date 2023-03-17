@@ -1,3 +1,8 @@
+<p align="center">
+  <img src="https://raw.githubusercontent.com/kubermatic/kubermatic/main/docs/kkp-logo.png#gh-light-mode-only" width="700px" />
+  <img src="https://raw.githubusercontent.com/kubermatic/kubermatic/main/docs/kkp-logo-dark.png#gh-dark-mode-only" width="700px" />
+</p>
+
 # Kubermatic Kubernetes Platform APIs
 
 This repository contains the Kube APIs (CRDs) for the  [Kubermatic Kubernetes Platform (KKP)](https://github.com/kubermatic/kubermatic), both for the Community and Enterprise Editions.
