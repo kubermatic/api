@@ -16,7 +16,7 @@ limitations under the License.
 
 package helper
 
-import kubermaticv1 "k8c.io/apis/v2/pkg/kubermatic/v1"
+import kubermaticv1 "k8c.io/api/v2/pkg/kubermatic/v1"
 
 // SetSeedDefaults applies seed-level proxy settings to all datacenters,
 // if the datacenters have no settings on their own.

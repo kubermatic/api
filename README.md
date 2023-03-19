@@ -22,10 +22,10 @@ Feedback and discussion are available on [the mailing list][11].
 
 * We welcome pull requests. Feel free to dig through the [issues][1] and jump in.
 
-[1]: https://github.com/kubermatic/apis/issues
-[2]: https://github.com/kubermatic/apis/blob/master/CONTRIBUTING.md
-[3]: https://github.com/kubermatic/apis/releases
-[4]: https://github.com/kubermatic/apis/blob/master/CODE_OF_CONDUCT.md
+[1]: https://github.com/kubermatic/api/issues
+[2]: https://github.com/kubermatic/api/blob/master/CONTRIBUTING.md
+[3]: https://github.com/kubermatic/api/releases
+[4]: https://github.com/kubermatic/api/blob/master/CODE_OF_CONDUCT.md
 
 [11]: https://groups.google.com/forum/#!forum/kubermatic-dev
 [15]: http://slack.kubermatic.io/

@@ -22,9 +22,9 @@ import (
 	"fmt"
 	"strings"
 
-	machinecontroller "k8c.io/apis/v2/pkg/machine-controller"
-	"k8c.io/apis/v2/pkg/semver"
-	"k8c.io/apis/v2/pkg/types"
+	machinecontroller "k8c.io/api/v2/pkg/machine-controller"
+	"k8c.io/api/v2/pkg/semver"
+	"k8c.io/api/v2/pkg/types"
 
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"

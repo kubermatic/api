@@ -17,8 +17,8 @@ limitations under the License.
 package helper
 
 import (
-	kubermaticv1 "k8c.io/apis/v2/pkg/kubermatic/v1"
-	"k8c.io/apis/v2/pkg/types"
+	kubermaticv1 "k8c.io/api/v2/pkg/kubermatic/v1"
+	"k8c.io/api/v2/pkg/types"
 )
 
 var (

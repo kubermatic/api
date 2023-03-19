@@ -23,10 +23,10 @@ package v1
 
 import (
 	"encoding/json"
-	machine_controller "k8c.io/apis/v2/pkg/machine-controller"
-	open_policy_agent "k8c.io/apis/v2/pkg/open-policy-agent"
-	"k8c.io/apis/v2/pkg/semver"
-	"k8c.io/apis/v2/pkg/types"
+	machine_controller "k8c.io/api/v2/pkg/machine-controller"
+	open_policy_agent "k8c.io/api/v2/pkg/open-policy-agent"
+	"k8c.io/api/v2/pkg/semver"
+	"k8c.io/api/v2/pkg/types"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"

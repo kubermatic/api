@@ -17,9 +17,9 @@ limitations under the License.
 package v1
 
 import (
-	machinecontroller "k8c.io/apis/v2/pkg/machine-controller"
-	"k8c.io/apis/v2/pkg/semver"
-	"k8c.io/apis/v2/pkg/types"
+	machinecontroller "k8c.io/api/v2/pkg/machine-controller"
+	"k8c.io/api/v2/pkg/semver"
+	"k8c.io/api/v2/pkg/types"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
