@@ -153,6 +153,10 @@ type KubermaticUIConfiguration struct {
 	//nolint:staticcheck
 	//lint:ignore SA5008 omitgenyaml is used by the example-yaml-generator
 	DockerTag string `json:"dockerTag,omitempty,omitgenyaml"`
+	// DockerTagSuffix is appended to the KKP version used for referring to the custom dashboard image.
+	// If left empty, either the `DockerTag` if specified or the original dashboard Docker image tag will be used.
+	// With DockerTagSuffix the tag becomes <KKP_VERSION:SUFFIX> i.e. "v2.15.0-SUFFIX".
+	DockerTagSuffix string `json:"dockerTagSuffix,omitempty"`
 	// Config sets flags for various dashboard features.
 	Config string `json:"config,omitempty"`
 	// Resources describes the requested and maximum allowed CPU/memory usage.
