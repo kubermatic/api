@@ -17,7 +17,7 @@ limitations under the License.
 package v1
 
 import (
-	machinecontroller "k8c.io/apis/v2/pkg/machine-controller"
+	machinecontroller "k8c.io/api/v2/pkg/apis/machine-controller"
 
 	corev1 "k8s.io/api/core/v1"
 	networkingv1 "k8s.io/api/networking/v1"

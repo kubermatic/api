@@ -17,8 +17,7 @@ limitations under the License.
 package v1
 
 import (
-	"k8c.io/apis/v2/pkg/semver"
-	"k8c.io/apis/v2/pkg/types"
+	"k8c.io/api/v2/pkg/semver"
 
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -103,7 +102,7 @@ type KubermaticConfigurationSpec struct {
 	// ExposeStrategy is the strategy to expose the cluster with.
 	// Note: The `seed_dns_overwrite` setting of a Seed's datacenter doesn't have any effect
 	// if this is set to LoadBalancerStrategy.
-	ExposeStrategy types.ExposeStrategy `json:"exposeStrategy,omitempty"`
+	ExposeStrategy ExposeStrategy `json:"exposeStrategy,omitempty"`
 	// Ingress contains settings for making the API and UI accessible remotely.
 	Ingress KubermaticIngressConfiguration `json:"ingress,omitempty"`
 	// Versions configures the available and default Kubernetes versions and updates.
@@ -382,7 +381,7 @@ type KubermaticVersioningConfiguration struct {
 	ProviderIncompatibilities []Incompatibility `json:"providerIncompatibilities,omitempty"`
 
 	// ExternalClusters contains the available and default Kubernetes versions and updates for ExternalClusters.
-	ExternalClusters map[types.ExternalClusterProvider]ExternalClusterProviderVersioningConfiguration `json:"externalClusters,omitempty"`
+	ExternalClusters map[ExternalClusterProvider]ExternalClusterProviderVersioningConfiguration `json:"externalClusters,omitempty"`
 }
 
 // ExternalClusterProviderVersioningConfiguration configures the available and default Kubernetes versions for ExternalCluster Providers.

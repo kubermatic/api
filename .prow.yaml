@@ -13,10 +13,10 @@
 # limitations under the License.
 
 presubmits:
-  - name: pre-kubermatic-apis-lint
+  - name: pre-kubermatic-api-lint
     run_if_changed: '^(pkg)'
     decorate: true
-    clone_uri: "ssh://git@github.com/kubermatic/apis.git"
+    clone_uri: "ssh://git@github.com/kubermatic/api.git"
     labels:
       preset-goproxy: "true"
     spec:
@@ -31,10 +31,10 @@ presubmits:
               memory: 4Gi
               cpu: 2
 
-  - name: pre-kubermatic-apis-test
+  - name: pre-kubermatic-api-test
     run_if_changed: "^(hack|pkg)/"
     decorate: true
-    clone_uri: "ssh://git@github.com/kubermatic/apis.git"
+    clone_uri: "ssh://git@github.com/kubermatic/api.git"
     labels:
       preset-goproxy: "true"
     spec:
@@ -49,10 +49,10 @@ presubmits:
               memory: 2Gi
               cpu: 1
 
-  - name: pre-kubermatic-apis-verify
+  - name: pre-kubermatic-api-verify
     always_run: true
     decorate: true
-    clone_uri: "ssh://git@github.com/kubermatic/apis.git"
+    clone_uri: "ssh://git@github.com/kubermatic/api.git"
     spec:
       containers:
         - image: quay.io/kubermatic/build:go-1.20-node-18-3

@@ -17,8 +17,6 @@ limitations under the License.
 package v1
 
 import (
-	"k8c.io/apis/v2/pkg/types"
-
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -181,7 +179,7 @@ type SeedSpec struct {
 	// worker nodes in user clusters. However, proxy settings on nodes take precedence.
 	ProxySettings *ProxySettings `json:"proxySettings,omitempty"`
 	// Optional: ExposeStrategy explicitly sets the expose strategy for this seed cluster, if not set, the default provided by the master is used.
-	ExposeStrategy types.ExposeStrategy `json:"exposeStrategy,omitempty"`
+	ExposeStrategy ExposeStrategy `json:"exposeStrategy,omitempty"`
 	// Optional: MLA allows configuring seed level MLA (Monitoring, Logging & Alerting) stack settings.
 	MLA *SeedMLASettings `json:"mla,omitempty"`
 	// DefaultComponentSettings are default values to set for newly created clusters.

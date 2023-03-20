@@ -22,9 +22,8 @@ import (
 	"fmt"
 	"strings"
 
-	machinecontroller "k8c.io/apis/v2/pkg/machine-controller"
-	"k8c.io/apis/v2/pkg/semver"
-	"k8c.io/apis/v2/pkg/types"
+	machinecontroller "k8c.io/api/v2/pkg/apis/machine-controller"
+	"k8c.io/api/v2/pkg/semver"
 
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
@@ -131,7 +130,7 @@ type ClusterSpec struct {
 	MachineNetworks []MachineNetworkingConfig `json:"machineNetworks,omitempty"`
 
 	// ExposeStrategy is the strategy used to expose a cluster control plane.
-	ExposeStrategy types.ExposeStrategy `json:"exposeStrategy"`
+	ExposeStrategy ExposeStrategy `json:"exposeStrategy"`
 
 	// Optional: APIServerAllowedIPRanges is a list of IP ranges allowed to access the API server.
 	// Applicable only if the expose strategy of the cluster is LoadBalancer.

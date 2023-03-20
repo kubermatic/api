@@ -19,8 +19,8 @@ package helper
 import (
 	"testing"
 
-	kubermaticv1 "k8c.io/apis/v2/pkg/kubermatic/v1"
-	"k8c.io/apis/v2/pkg/test/diff"
+	kubermaticv1 "k8c.io/api/v2/pkg/apis/kubermatic/v1"
+	"k8c.io/api/v2/pkg/test/diff"
 
 	"k8s.io/utils/pointer"
 )

@@ -27,7 +27,7 @@ lint:
 	golangci-lint run \
 		--verbose \
 		--config .golangci.apis.yml \
-		./pkg/kubermatic/... ./pkg/apps.kubermatic/...
+		./pkg/apis/kubermatic/... ./pkg/apis/apps.kubermatic/...
 
 	golangci-lint run \
 		--verbose \

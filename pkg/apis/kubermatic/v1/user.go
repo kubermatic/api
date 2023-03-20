@@ -19,7 +19,7 @@ package v1
 import (
 	"fmt"
 
-	machinecontroller "k8c.io/apis/v2/pkg/machine-controller"
+	machinecontroller "k8c.io/api/v2/pkg/apis/machine-controller"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
