@@ -20,6 +20,7 @@ import (
 	"testing"
 
 	kubermaticv1 "k8c.io/api/v2/pkg/apis/kubermatic/v1"
+
 	"k8s.io/apimachinery/pkg/util/sets"
 )
 
@@ -38,7 +39,7 @@ func TestMapCloudProvider(t *testing.T) {
 
 			mapped, err := CloudProviderToKKP(mcProvider)
 			if err != nil {
-				t.Fatalf("Cannot map cloud provider %q (orginally %q) back to KKP: %v", mcProvider, kkpProvider, err)
+				t.Fatalf("Cannot map cloud provider %q (originally %q) back to KKP: %v", mcProvider, kkpProvider, err)
 			}
 
 			if mapped != kkpProvider {
@@ -58,7 +59,7 @@ func TestMapOperatingSystem(t *testing.T) {
 
 			mapped, err := OperatingSystemToKKP(mcOperatingSystem)
 			if err != nil {
-				t.Fatalf("Cannot map operating system %q (orginally %q) back to KKP: %v", mcOperatingSystem, kkpOperatingSystem, err)
+				t.Fatalf("Cannot map operating system %q (originally %q) back to KKP: %v", mcOperatingSystem, kkpOperatingSystem, err)
 			}
 
 			if mapped != kkpOperatingSystem {
