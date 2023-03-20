@@ -205,7 +205,7 @@ spec:
                               - network
                             type: object
                           kubevirt:
-                            description: Kubevirt configures a KubeVirt datacenter.
+                            description: KubeVirt configures a KubeVirt datacenter.
                             properties:
                               customNetworkPolicies:
                                 description: CustomNetworkPolicies (optional) allows to add some extra custom NetworkPolicies, that are deployed in the dedicated infra KubeVirt cluster. They are added to the defaults.

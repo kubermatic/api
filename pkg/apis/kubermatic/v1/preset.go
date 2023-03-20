@@ -57,7 +57,7 @@ type PresetSpec struct {
 	OpenStack           *OpenStackPreset           `json:"openstack,omitempty"`
 	Packet              *PacketPreset              `json:"packet,omitempty"`
 	GCP                 *GCPPreset                 `json:"gcp,omitempty"`
-	Kubevirt            *KubevirtPreset            `json:"kubevirt,omitempty"`
+	KubeVirt            *KubeVirtPreset            `json:"kubevirt,omitempty"`
 	Alibaba             *AlibabaPreset             `json:"alibaba,omitempty"`
 	Anexia              *AnexiaPreset              `json:"anexia,omitempty"`
 	Nutanix             *NutanixPreset             `json:"nutanix,omitempty"`
@@ -279,13 +279,13 @@ func (s FakePreset) IsValid() bool {
 	return len(s.Token) > 0
 }
 
-type KubevirtPreset struct {
+type KubeVirtPreset struct {
 	ProviderPreset `json:",inline"`
 
 	Kubeconfig string `json:"kubeconfig"`
 }
 
-func (s KubevirtPreset) IsValid() bool {
+func (s KubeVirtPreset) IsValid() bool {
 	return len(s.Kubeconfig) > 0
 }
 

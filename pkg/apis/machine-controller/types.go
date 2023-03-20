@@ -23,9 +23,63 @@ import (
 	"strconv"
 
 	corev1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/util/sets"
 )
 
-// OperatingSystem defines the host operating system.
+// CloudProvider defines the cloud provider where the a cluster's nodes are running.
+// Note that these constants may match KKP's constant, but don't have to.
+// Use the functions in the helper package to translate between the two.
+type CloudProvider string
+
+const (
+	CloudProviderFake                CloudProvider = "fake"
+	CloudProviderAlibaba             CloudProvider = "alibaba"
+	CloudProviderAnexia              CloudProvider = "anexia"
+	CloudProviderAWS                 CloudProvider = "aws"
+	CloudProviderAzure               CloudProvider = "azure"
+	CloudProviderBaremetal           CloudProvider = "baremetal"
+	CloudProviderDigitalocean        CloudProvider = "digitalocean"
+	CloudProviderEquinixMetal        CloudProvider = "equinixmetal"
+	CloudProviderExternal            CloudProvider = "external"
+	CloudProviderGoogle              CloudProvider = "gce"
+	CloudProviderHetzner             CloudProvider = "hetzner"
+	CloudProviderKubeVirt            CloudProvider = "kubevirt"
+	CloudProviderLinode              CloudProvider = "linode"
+	CloudProviderNutanix             CloudProvider = "nutanix"
+	CloudProviderOpenStack           CloudProvider = "openstack"
+	CloudProviderPacket              CloudProvider = "packet"
+	CloudProviderScaleway            CloudProvider = "scaleway"
+	CloudProviderVMwareCloudDirector CloudProvider = "vmware-cloud-director"
+	CloudProviderVSphere             CloudProvider = "vsphere"
+	CloudProviderVultr               CloudProvider = "vultr"
+)
+
+var AllCloudProviders = sets.New(
+	CloudProviderFake,
+	CloudProviderAlibaba,
+	CloudProviderAnexia,
+	CloudProviderAWS,
+	CloudProviderAzure,
+	CloudProviderBaremetal,
+	CloudProviderDigitalocean,
+	CloudProviderEquinixMetal,
+	CloudProviderExternal,
+	CloudProviderGoogle,
+	CloudProviderHetzner,
+	CloudProviderKubeVirt,
+	CloudProviderLinode,
+	CloudProviderNutanix,
+	CloudProviderOpenStack,
+	CloudProviderPacket,
+	CloudProviderScaleway,
+	CloudProviderVMwareCloudDirector,
+	CloudProviderVSphere,
+	CloudProviderVultr,
+)
+
+// OperatingSystem defines the a node's operating system. Note that these constants may
+// match KKP's constant, but don't have to. Use the functions in the helper package to
+// translate between the two.
 type OperatingSystem string
 
 const (
@@ -35,6 +89,15 @@ const (
 	OperatingSystemRHEL         OperatingSystem = "rhel"
 	OperatingSystemFlatcar      OperatingSystem = "flatcar"
 	OperatingSystemRockyLinux   OperatingSystem = "rockylinux"
+)
+
+var AllOperatingSystems = sets.New(
+	OperatingSystemUbuntu,
+	OperatingSystemCentOS,
+	OperatingSystemAmazonLinux2,
+	OperatingSystemRHEL,
+	OperatingSystemFlatcar,
+	OperatingSystemRockyLinux,
 )
 
 // GlobalObjectKeySelector is needed as we can not use v1.SecretKeySelector

@@ -872,7 +872,7 @@ type CloudSpec struct {
 	// ProviderName is the name of the cloud provider used for this cluster.
 	// This must match the given provider spec (e.g. if the providerName is
 	// "aws", then the `aws` field must be set).
-	ProviderName string `json:"providerName"`
+	ProviderName CloudProvider `json:"providerName"`
 
 	Fake                *FakeCloudSpec                `json:"fake,omitempty"`
 	Digitalocean        *DigitaloceanCloudSpec        `json:"digitalocean,omitempty"`
@@ -884,7 +884,7 @@ type CloudSpec struct {
 	Hetzner             *HetznerCloudSpec             `json:"hetzner,omitempty"`
 	VSphere             *VSphereCloudSpec             `json:"vsphere,omitempty"`
 	GCP                 *GCPCloudSpec                 `json:"gcp,omitempty"`
-	Kubevirt            *KubevirtCloudSpec            `json:"kubevirt,omitempty"`
+	KubeVirt            *KubeVirtCloudSpec            `json:"kubevirt,omitempty"`
 	Alibaba             *AlibabaCloudSpec             `json:"alibaba,omitempty"`
 	Anexia              *AnexiaCloudSpec              `json:"anexia,omitempty"`
 	Nutanix             *NutanixCloudSpec             `json:"nutanix,omitempty"`
@@ -1206,8 +1206,8 @@ type GCPCloudSpec struct {
 	NodePortsAllowedIPRanges *NetworkRanges `json:"nodePortsAllowedIPRanges,omitempty"`
 }
 
-// KubevirtCloudSpec specifies the access data to Kubevirt.
-type KubevirtCloudSpec struct {
+// KubeVirtCloudSpec specifies the access data to KubeVirt.
+type KubeVirtCloudSpec struct {
 	CredentialsReference *machinecontroller.GlobalSecretKeySelector `json:"credentialsReference,omitempty"`
 
 	// The cluster's kubeconfig file, encoded with base64.
@@ -1434,7 +1434,7 @@ func (cluster *Cluster) GetSecretName() string {
 	if cluster.Spec.Cloud.Packet != nil {
 		return fmt.Sprintf("%s-packet-%s", credentialPrefix, clusterName)
 	}
-	if cluster.Spec.Cloud.Kubevirt != nil {
+	if cluster.Spec.Cloud.KubeVirt != nil {
 		return fmt.Sprintf("%s-kubevirt-%s", credentialPrefix, clusterName)
 	}
 	if cluster.Spec.Cloud.VSphere != nil {

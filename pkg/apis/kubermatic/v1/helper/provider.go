@@ -79,8 +79,8 @@ func ClusterCloudProviderName(spec kubermaticv1.CloudSpec) (kubermaticv1.CloudPr
 	if spec.Hetzner != nil {
 		providers = append(providers, kubermaticv1.CloudProviderHetzner)
 	}
-	if spec.Kubevirt != nil {
-		providers = append(providers, kubermaticv1.CloudProviderKubevirt)
+	if spec.KubeVirt != nil {
+		providers = append(providers, kubermaticv1.CloudProviderKubeVirt)
 	}
 	if spec.OpenStack != nil {
 		providers = append(providers, kubermaticv1.CloudProviderOpenStack)
@@ -142,8 +142,8 @@ func DatacenterCloudProviderName(spec *kubermaticv1.DatacenterSpec) (kubermaticv
 	if spec.Fake != nil {
 		providers = append(providers, kubermaticv1.CloudProviderFake)
 	}
-	if spec.Kubevirt != nil {
-		providers = append(providers, kubermaticv1.CloudProviderKubevirt)
+	if spec.KubeVirt != nil {
+		providers = append(providers, kubermaticv1.CloudProviderKubeVirt)
 	}
 	if spec.Alibaba != nil {
 		providers = append(providers, kubermaticv1.CloudProviderAlibaba)
