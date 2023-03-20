@@ -17,8 +17,6 @@ limitations under the License.
 package v1
 
 import (
-	machinecontroller "k8c.io/api/v2/pkg/apis/machine-controller"
-
 	corev1 "k8s.io/api/core/v1"
 	networkingv1 "k8s.io/api/networking/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -63,8 +61,8 @@ type DatacenterSpec struct {
 	VMwareCloudDirector *DatacenterSpecVMwareCloudDirector `json:"vmwareclouddirector,omitempty"`
 	// GCP configures a Google Cloud Platform (GCP) datacenter.
 	GCP *DatacenterSpecGCP `json:"gcp,omitempty"`
-	// Kubevirt configures a KubeVirt datacenter.
-	Kubevirt *DatacenterSpecKubevirt `json:"kubevirt,omitempty"`
+	// KubeVirt configures a KubeVirt datacenter.
+	KubeVirt *DatacenterSpecKubeVirt `json:"kubevirt,omitempty"`
 	// Alibaba configures an Alibaba Cloud datacenter.
 	Alibaba *DatacenterSpecAlibaba `json:"alibaba,omitempty"`
 	// Anexia configures an Anexia datacenter.
@@ -107,16 +105,16 @@ type DatacenterSpec struct {
 }
 
 // ImageList defines a map of operating system and the image to use.
-type ImageList map[machinecontroller.OperatingSystem]string
+type ImageList map[OperatingSystem]string
 
 // ImageListWithVersions defines a map of operating system with their versions to use.
-type ImageListWithVersions map[machinecontroller.OperatingSystem]OSVersions
+type ImageListWithVersions map[OperatingSystem]OSVersions
 
 // OSVersions defines a map of OS version and the source to download the image.
 type OSVersions map[string]string
 
 // OperatingSystemProfileList defines a map of operating system and the OperatingSystemProfile to use.
-type OperatingSystemProfileList map[machinecontroller.OperatingSystem]string
+type OperatingSystemProfileList map[OperatingSystem]string
 
 // DatacenterSpecHetzner describes a Hetzner cloud datacenter.
 type DatacenterSpecHetzner struct {
@@ -283,8 +281,8 @@ type DatacenterSpecFake struct {
 	FakeProperty string `json:"fakeProperty,omitempty"`
 }
 
-// DatacenterSpecKubevirt describes a kubevirt datacenter.
-type DatacenterSpecKubevirt struct {
+// DatacenterSpecKubeVirt describes a kubevirt datacenter.
+type DatacenterSpecKubeVirt struct {
 	// +kubebuilder:validation:Enum=ClusterFirstWithHostNet;ClusterFirst;Default;None
 	// +kubebuilder:default=ClusterFirst
 
@@ -329,12 +327,12 @@ type CustomNetworkPolicy struct {
 }
 
 var (
-	SupportedKubeVirtOS = map[machinecontroller.OperatingSystem]*struct{}{
-		machinecontroller.OperatingSystemCentOS:     nil,
-		machinecontroller.OperatingSystemUbuntu:     nil,
-		machinecontroller.OperatingSystemRHEL:       nil,
-		machinecontroller.OperatingSystemFlatcar:    nil,
-		machinecontroller.OperatingSystemRockyLinux: nil,
+	SupportedKubeVirtOS = map[OperatingSystem]*struct{}{
+		OperatingSystemCentOS:     nil,
+		OperatingSystemUbuntu:     nil,
+		OperatingSystemRHEL:       nil,
+		OperatingSystemFlatcar:    nil,
+		OperatingSystemRockyLinux: nil,
 	}
 )
 
@@ -347,7 +345,7 @@ type KubeVirtImageSources struct {
 // KubeVirtHTTPSource represents list of images and their versions that can be downloaded over HTTP.
 type KubeVirtHTTPSource struct {
 	// OperatingSystems represents list of supported operating-systems with their URLs.
-	OperatingSystems map[machinecontroller.OperatingSystem]OSVersions `json:"operatingSystems"`
+	OperatingSystems map[OperatingSystem]OSVersions `json:"operatingSystems"`
 }
 
 // DatacenterSpecNutanix describes a Nutanix datacenter.

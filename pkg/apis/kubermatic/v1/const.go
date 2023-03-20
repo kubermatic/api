@@ -17,9 +17,12 @@ limitations under the License.
 package v1
 
 import (
-	"strings"
+	"k8s.io/apimachinery/pkg/util/sets"
 )
 
+// CloudProvider defines the cloud provider where the a cluster's nodes are running.
+// Note that these constants may match the machine-controller's constant, but don't
+// have to. Use the functions in the helper package to translate between the two.
 type CloudProvider string
 
 const (
@@ -32,7 +35,7 @@ const (
 	CloudProviderDigitalocean        CloudProvider = "digitalocean"
 	CloudProviderGCP                 CloudProvider = "gcp"
 	CloudProviderHetzner             CloudProvider = "hetzner"
-	CloudProviderKubevirt            CloudProvider = "kubevirt"
+	CloudProviderKubeVirt            CloudProvider = "kubevirt"
 	CloudProviderNutanix             CloudProvider = "nutanix"
 	CloudProviderOpenStack           CloudProvider = "openstack"
 	CloudProviderPacket              CloudProvider = "packet"
@@ -40,35 +43,23 @@ const (
 	CloudProviderVSphere             CloudProvider = "vsphere"
 )
 
-var (
-	AllCloudProviders = []CloudProvider{
-		CloudProviderFake,
-		CloudProviderAlibaba,
-		CloudProviderAnexia,
-		CloudProviderAWS,
-		CloudProviderAzure,
-		CloudProviderBringYourOwn,
-		CloudProviderDigitalocean,
-		CloudProviderGCP,
-		CloudProviderHetzner,
-		CloudProviderKubevirt,
-		CloudProviderNutanix,
-		CloudProviderOpenStack,
-		CloudProviderPacket,
-		CloudProviderVMwareCloudDirector,
-		CloudProviderVSphere,
-	}
+var AllCloudProviders = sets.New(
+	CloudProviderFake,
+	CloudProviderAlibaba,
+	CloudProviderAnexia,
+	CloudProviderAWS,
+	CloudProviderAzure,
+	CloudProviderBringYourOwn,
+	CloudProviderDigitalocean,
+	CloudProviderGCP,
+	CloudProviderHetzner,
+	CloudProviderKubeVirt,
+	CloudProviderNutanix,
+	CloudProviderOpenStack,
+	CloudProviderPacket,
+	CloudProviderVMwareCloudDirector,
+	CloudProviderVSphere,
 )
-
-func IsValidCloudProvider(name string) bool {
-	for _, provider := range AllCloudProviders {
-		if strings.EqualFold(name, string(provider)) {
-			return true
-		}
-	}
-
-	return false
-}
 
 type ExternalClusterProvider string
 
@@ -80,27 +71,17 @@ const (
 	ExternalClusterProviderKubeOne      ExternalClusterProvider = "kubeone"
 )
 
-var (
-	AllExternalClusterProviders = []ExternalClusterProvider{
-		ExternalClusterProviderAKS,
-		ExternalClusterProviderEKS,
-		ExternalClusterProviderGKE,
-		ExternalClusterProviderBringYourOwn,
-		ExternalClusterProviderKubeOne,
-	}
+var AllExternalClusterProviders = sets.New(
+	ExternalClusterProviderAKS,
+	ExternalClusterProviderEKS,
+	ExternalClusterProviderGKE,
+	ExternalClusterProviderBringYourOwn,
+	ExternalClusterProviderKubeOne,
 )
 
-func IsValidExternalClusterProvider(name string) bool {
-	for _, provider := range AllExternalClusterProviders {
-		if strings.EqualFold(name, string(provider)) {
-			return true
-		}
-	}
-
-	return false
-}
-
-// OperatingSystem defines the a node's operating system.
+// OperatingSystem defines the a node's operating system. Note that these constants may
+// match the machine-controller's constant, but don't have to. Use the functions in
+// the helper package to translate between the two.
 type OperatingSystem string
 
 const (
@@ -112,26 +93,14 @@ const (
 	OperatingSystemRockyLinux   OperatingSystem = "rockylinux"
 )
 
-var (
-	AllOperatingSystems = []OperatingSystem{
-		OperatingSystemUbuntu,
-		OperatingSystemCentOS,
-		OperatingSystemAmazonLinux2,
-		OperatingSystemRHEL,
-		OperatingSystemFlatcar,
-		OperatingSystemRockyLinux,
-	}
+var AllOperatingSystems = sets.New(
+	OperatingSystemUbuntu,
+	OperatingSystemCentOS,
+	OperatingSystemAmazonLinux2,
+	OperatingSystemRHEL,
+	OperatingSystemFlatcar,
+	OperatingSystemRockyLinux,
 )
-
-func IsValidOperatingSystem(name string) bool {
-	for _, os := range AllOperatingSystems {
-		if strings.EqualFold(name, string(os)) {
-			return true
-		}
-	}
-
-	return false
-}
 
 // +kubebuilder:validation:Enum=NodePort;LoadBalancer;Tunneling
 
@@ -163,18 +132,8 @@ const (
 )
 
 // AllExposeStrategies is a set containing all the expose strategies.
-var AllExposeStrategies = []ExposeStrategy{
+var AllExposeStrategies = sets.New(
 	ExposeStrategyNodePort,
 	ExposeStrategyLoadBalancer,
 	ExposeStrategyTunneling,
-}
-
-func IsValidExposeStrategy(name string) bool {
-	for _, os := range AllExposeStrategies {
-		if name == string(os) {
-			return true
-		}
-	}
-
-	return false
-}
+)
