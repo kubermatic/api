@@ -20,10 +20,16 @@ import (
 	"k8s.io/apimachinery/pkg/util/sets"
 )
 
+// +kubebuilder:validation:Enum=alibaba;anexia;aws;azure;bringyourown;digitalocean;gcp;hetzner;kubevirt;nutanix;openstack;packet;vmwareclouddirector;vsphere
+
 // CloudProvider defines the cloud provider where the a cluster's nodes are running.
 // Note that these constants may match the machine-controller's constant, but don't
 // have to. Use the functions in the helper package to translate between the two.
 type CloudProvider string
+
+func (p CloudProvider) String() string {
+	return string(p)
+}
 
 const (
 	CloudProviderFake                CloudProvider = "fake"
@@ -61,7 +67,13 @@ var AllCloudProviders = sets.New(
 	CloudProviderVSphere,
 )
 
+// +kubebuilder:validation:Enum=aks;eks;gke;bringyourown;kubeone
+
 type ExternalClusterProvider string
+
+func (p ExternalClusterProvider) String() string {
+	return string(p)
+}
 
 const (
 	ExternalClusterProviderAKS          ExternalClusterProvider = "aks"
@@ -79,10 +91,16 @@ var AllExternalClusterProviders = sets.New(
 	ExternalClusterProviderKubeOne,
 )
 
+// +kubebuilder:validation:Enum=ubuntu;centos;amzn2;rhel;flatcar;rockylinux
+
 // OperatingSystem defines the a node's operating system. Note that these constants may
 // match the machine-controller's constant, but don't have to. Use the functions in
 // the helper package to translate between the two.
 type OperatingSystem string
+
+func (o OperatingSystem) String() string {
+	return string(o)
+}
 
 const (
 	OperatingSystemUbuntu       OperatingSystem = "ubuntu"
@@ -107,6 +125,10 @@ var AllOperatingSystems = sets.New(
 // ExposeStrategy is the strategy used to expose a cluster control plane.
 // Possible values are `NodePort`, `LoadBalancer` or `Tunneling` (requires a feature gate).
 type ExposeStrategy string
+
+func (s ExposeStrategy) String() string {
+	return string(s)
+}
 
 const (
 	// ExposeStrategyNodePort creates a NodePort with a "nodeport-proxy.k8s.io/expose": "true" annotation to expose
@@ -136,4 +158,26 @@ var AllExposeStrategies = sets.New(
 	ExposeStrategyNodePort,
 	ExposeStrategyLoadBalancer,
 	ExposeStrategyTunneling,
+)
+
+// +kubebuilder:validation:Enum=canal;cilium;none
+
+// CNIPluginType defines the type of CNI plugin installed.
+type CNIPluginType string
+
+func (c CNIPluginType) String() string {
+	return string(c)
+}
+
+const (
+	// CNIPluginTypeCanal corresponds to Canal CNI plugin (i.e. Flannel +
+	// Calico for policy enforcement).
+	CNIPluginTypeCanal CNIPluginType = "canal"
+
+	// CNIPluginTypeCilium corresponds to Cilium CNI plugin.
+	CNIPluginTypeCilium CNIPluginType = "cilium"
+
+	// CNIPluginTypeNone corresponds to no CNI plugin managed by KKP
+	// (cluster users are responsible for managing the CNI in the cluster themselves).
+	CNIPluginTypeNone CNIPluginType = "none"
 )

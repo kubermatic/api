@@ -72,7 +72,7 @@ spec:
                   properties:
                     kind:
                       default: project
-                      description: Kind of the quota subject. For now the only possible kind is project.
+                      description: Kind of the quota subject.
                       enum:
                         - project
                       type: string

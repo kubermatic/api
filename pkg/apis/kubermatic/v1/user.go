@@ -120,6 +120,7 @@ type ProjectGroup struct {
 	Group string `json:"group"`
 }
 
+// TODO: Replace this in KKP 3.x with a field in the UserStatus.
 func (u *User) GetInvalidTokensReferenceSecretName() string {
 	// "token-blacklist-" is the legacy prefix; changing this would mean existing
 	// secrets would need to be migrated first

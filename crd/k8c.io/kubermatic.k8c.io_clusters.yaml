@@ -90,7 +90,6 @@ spec:
                     policyPreset:
                       description: 'Optional: PolicyPreset can be set to utilize a pre-defined set of audit policy rules.'
                       enum:
-                        - ""
                         - metadata
                         - recommended
                         - minimal
@@ -826,6 +825,21 @@ spec:
                       type: object
                     providerName:
                       description: ProviderName is the name of the cloud provider used for this cluster. This must match the given provider spec (e.g. if the providerName is "aws", then the `aws` field must be set).
+                      enum:
+                        - alibaba
+                        - anexia
+                        - aws
+                        - azure
+                        - bringyourown
+                        - digitalocean
+                        - gcp
+                        - hetzner
+                        - kubevirt
+                        - nutanix
+                        - openstack
+                        - packet
+                        - vmwareclouddirector
+                        - vsphere
                       type: string
                     vmwareclouddirector:
                       description: VMwareCloudDirectorCloudSpec specifies access data to VMware Cloud Director cloud.
@@ -1069,7 +1083,7 @@ spec:
                     - version
                   type: object
                 componentsOverride:
-                  description: 'Optional: Component specific overrides that allow customization of control plane components.'
+                  description: Component specific overrides that allow customization of control plane components.
                   properties:
                     apiserver:
                       description: Apiserver configures kube-apiserver settings.
@@ -1510,8 +1524,6 @@ spec:
                     - apiserver
                     - controllerManager
                     - etcd
-                    - nodePortProxyEnvoy
-                    - prometheus
                     - scheduler
                   type: object
                 containerRuntime:
@@ -2026,7 +2038,6 @@ spec:
                   required:
                     - activeKey
                     - encryptedResources
-                    - phase
                   type: object
                 errorMessage:
                   description: ErrorMessage contains a default error message in case the controller encountered an error. Will be reset if the error was resolved.

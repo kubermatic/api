@@ -122,7 +122,7 @@ spec:
                       backupName:
                         type: string
                       backupPhase:
-                        description: EtcdBackupStatusPhase is used to indicate the type of a EtcdBackupConfig condition. For all condition types, the `true` value must indicate success.
+                        description: EtcdBackupPhase is used to indicate the type of a EtcdBackupConfig condition. For all condition types, the `true` value must indicate success.
                         enum:
                           - Running
                           - Completed
@@ -139,7 +139,7 @@ spec:
                       deleteMessage:
                         type: string
                       deletePhase:
-                        description: EtcdBackupStatusPhase is used to indicate the type of a EtcdBackupConfig condition. For all condition types, the `true` value must indicate success.
+                        description: EtcdBackupPhase is used to indicate the type of a EtcdBackupConfig condition. For all condition types, the `true` value must indicate success.
                         enum:
                           - Running
                           - Completed

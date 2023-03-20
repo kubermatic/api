@@ -21,6 +21,17 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+// +kubebuilder:validation:Enum=Metrics;Logs
+
+type RuleGroupType string
+
+const (
+	// RuleGroupTypeMetrics means the RuleGroup defines the rules to generate alerts from metrics.
+	RuleGroupTypeMetrics RuleGroupType = "Metrics"
+	// RuleGroupTypeLogs means the RuleGroup defines the rules to generate alerts from logs.
+	RuleGroupTypeLogs RuleGroupType = "Logs"
+)
+
 // +kubebuilder:object:generate=true
 // +kubebuilder:object:root=true
 // +kubebuilder:printcolumn:JSONPath=".metadata.creationTimestamp",name="Age",type="date"
@@ -43,17 +54,6 @@ type RuleGroupSpec struct {
 	// Data contains the RuleGroup data. Ref: https://prometheus.io/docs/prometheus/latest/configuration/recording_rules/#rule_group
 	Data []byte `json:"data"`
 }
-
-// +kubebuilder:validation:Enum=Metrics;Logs
-
-type RuleGroupType string
-
-const (
-	// RuleGroupTypeMetrics means the RuleGroup defines the rules to generate alerts from metrics.
-	RuleGroupTypeMetrics RuleGroupType = "Metrics"
-	// RuleGroupTypeLogs means the RuleGroup defines the rules to generate alerts from logs.
-	RuleGroupTypeLogs RuleGroupType = "Logs"
-)
 
 // +kubebuilder:object:generate=true
 // +kubebuilder:object:root=true

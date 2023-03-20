@@ -29,6 +29,7 @@ import (
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/rand"
+	"k8s.io/apimachinery/pkg/util/sets"
 	netutils "k8s.io/utils/net"
 )
 
@@ -44,6 +45,17 @@ const (
 
 	// ProjectIDLabelKey is the label on a Cluster resource that points to the project it belongs to.
 	ProjectIDLabelKey = "project-id"
+
+	IsCredentialPresetLabelKey = "is-credential-preset"
+)
+
+// ProtectedClusterLabels is a set of labels that must not be set on clusters manually by users,
+// as they are relevant for the correct functioning of and security in KKP.
+var ProtectedClusterLabels = sets.New(ProjectIDLabelKey, IsCredentialPresetLabelKey)
+
+const (
+	CCMMigrationNeededAnnotation = "ccm-migration.k8c.io/migration-needed"
+	CSIMigrationNeededAnnotation = "csi-migration.k8c.io/migration-needed"
 )
 
 // +kubebuilder:validation:Enum=standard;basic
@@ -52,16 +64,16 @@ const (
 type AzureLBSKU string
 
 const (
-	AzureStandardLBSKU = AzureLBSKU("standard")
-	AzureBasicLBSKU    = AzureLBSKU("basic")
+	AzureLBSKUStandard AzureLBSKU = "standard"
+	AzureLBSKUBasic    AzureLBSKU = "basic"
 )
 
 // +kubebuilder:validation:Enum=deleted;changed
 type PresetInvalidationReason string
 
 const (
-	PresetDeleted = PresetInvalidationReason("deleted")
-	PresetChanged = PresetInvalidationReason("changed")
+	PresetInvalidationReasonDeleted PresetInvalidationReason = "deleted"
+	PresetInvalidationReasonChanged PresetInvalidationReason = "changed"
 )
 
 // +kubebuilder:resource:scope=Cluster
@@ -121,7 +133,8 @@ type ClusterSpec struct {
 	// ContainerRuntime to use, i.e. `docker` or `containerd`. By default `containerd` will be used.
 	ContainerRuntime string `json:"containerRuntime,omitempty"`
 
-	// Optional: ImagePullSecret references a secret with container registry credentials. This is passed to the machine-controller which sets the registry credentials on node level.
+	// Optional: ImagePullSecret references a secret with container registry credentials. This is
+	// passed to the machine-controller which sets the registry credentials on node level.
 	ImagePullSecret *corev1.SecretReference `json:"imagePullSecret,omitempty"`
 
 	CNIPlugin *CNIPluginSettings `json:"cniPlugin,omitempty"`
@@ -137,10 +150,10 @@ type ClusterSpec struct {
 	// If not configured, access to the API server is unrestricted.
 	APIServerAllowedIPRanges *NetworkRanges `json:"apiServerAllowedIPRanges,omitempty"`
 
-	// Optional: Component specific overrides that allow customization of control plane components.
+	// Component specific overrides that allow customization of control plane components.
 	ComponentsOverride ComponentSettings `json:"componentsOverride,omitempty"`
 
-	OIDC OIDCSettings `json:"oidc,omitempty"`
+	OIDC *OIDCSettings `json:"oidc,omitempty"`
 
 	// A map of optional or early-stage features that can be enabled for the user cluster.
 	// Some feature gates cannot be disabled after being enabled.
@@ -241,9 +254,9 @@ func (c ClusterSpec) GetVersionConditions() []ConditionType {
 	conditions := []ConditionType{}
 
 	if c.Features[ClusterFeatureExternalCloudProvider] {
-		conditions = append(conditions, ExternalCloudProviderCondition)
+		conditions = append(conditions, ConditionExternalCloudProvider)
 	} else {
-		conditions = append(conditions, InTreeCloudProviderCondition)
+		conditions = append(conditions, ConditionInTreeCloudProvider)
 	}
 
 	return conditions
@@ -256,29 +269,6 @@ type CNIPluginSettings struct {
 	// Version defines the CNI plugin version to be used. This varies by chosen CNI plugin type.
 	Version string `json:"version"`
 }
-
-// +kubebuilder:validation:Enum=canal;cilium;none
-
-// CNIPluginType defines the type of CNI plugin installed.
-// Possible values are `canal`, `cilium` or `none`.
-type CNIPluginType string
-
-func (c CNIPluginType) String() string {
-	return string(c)
-}
-
-const (
-	// CNIPluginTypeCanal corresponds to Canal CNI plugin (i.e. Flannel +
-	// Calico for policy enforcement).
-	CNIPluginTypeCanal CNIPluginType = "canal"
-
-	// CNIPluginTypeCilium corresponds to Cilium CNI plugin.
-	CNIPluginTypeCilium CNIPluginType = "cilium"
-
-	// CNIPluginTypeNone corresponds to no CNI plugin managed by KKP
-	// (cluster users are responsible for managing the CNI in the cluster themselves).
-	CNIPluginTypeNone CNIPluginType = "none"
-)
 
 const (
 	// ClusterFeatureExternalCloudProvider describes the external cloud provider feature. It is
@@ -315,16 +305,6 @@ const (
 	// Kubernetes data in etcd with a user-provided encryption key or KMS service.
 	ClusterFeatureEncryptionAtRest = "encryptionAtRest"
 )
-
-// This ENUM contains the misspelling CloudControllerReconcilledSuccessfully (double L);
-// this is so that KKP can slowly migrate and in KKP 2.22 we will remove the misspelling.
-
-// +kubebuilder:validation:Enum="";SeedResourcesUpToDate;ClusterControllerReconciledSuccessfully;AddonControllerReconciledSuccessfully;AddonInstallerControllerReconciledSuccessfully;BackupControllerReconciledSuccessfully;CloudControllerReconciledSuccessfully;CloudControllerReconcilledSuccessfully;UpdateControllerReconciledSuccessfully;MonitoringControllerReconciledSuccessfully;MachineDeploymentReconciledSuccessfully;MLAControllerReconciledSuccessfully;ClusterInitialized;EtcdClusterInitialized;CSIKubeletMigrationCompleted;ClusterUpdateSuccessful;ClusterUpdateInProgress;CSIKubeletMigrationSuccess;CSIKubeletMigrationInProgress;EncryptionControllerReconciledSuccessfully;IPAMControllerReconciledSuccessfully;
-
-// ClusterConditionType is used to indicate the type of a cluster condition. For all condition
-// types, the `true` value must indicate success. All condition types must be registered within
-// the `AllClusterConditionTypes` variable.
-type ClusterConditionType string
 
 // UpdateWindow allows defining windows for maintenance tasks related to OS updates.
 // This is only applied to cluster nodes using Flatcar Linux.
@@ -377,6 +357,16 @@ type SecretboxKey struct {
 	SecretRef *corev1.SecretKeySelector `json:"secretRef,omitempty"`
 }
 
+// This ENUM contains the misspelling CloudControllerReconcilledSuccessfully (double L);
+// this is so that KKP can slowly migrate and in KKP 2.22 we will remove the misspelling.
+
+// +kubebuilder:validation:Enum=SeedResourcesUpToDate;ClusterControllerReconciledSuccessfully;AddonControllerReconciledSuccessfully;AddonInstallerControllerReconciledSuccessfully;BackupControllerReconciledSuccessfully;CloudControllerReconciledSuccessfully;CloudControllerReconcilledSuccessfully;UpdateControllerReconciledSuccessfully;MonitoringControllerReconciledSuccessfully;MachineDeploymentReconciledSuccessfully;MLAControllerReconciledSuccessfully;ClusterInitialized;EtcdClusterInitialized;CSIKubeletMigrationCompleted;ClusterUpdateSuccessful;ClusterUpdateInProgress;CSIKubeletMigrationSuccess;CSIKubeletMigrationInProgress;EncryptionControllerReconciledSuccessfully;IPAMControllerReconciledSuccessfully;
+
+// ClusterConditionType is used to indicate the type of a cluster condition. For all condition
+// types, the `true` value must indicate success. All condition types must be registered within
+// the `AllClusterConditionTypes` variable.
+type ClusterConditionType string
+
 const (
 	// ClusterConditionSeedResourcesUpToDate indicates that all controllers have finished setting up the
 	// resources for a user clusters that run inside the seed cluster, i.e. this ignores
@@ -417,16 +407,6 @@ const (
 	ReasonClusterCCMMigrationInProgress       = "CSIKubeletMigrationInProgress"
 )
 
-var AllClusterConditionTypes = []ClusterConditionType{
-	ClusterConditionSeedResourcesUpToDate,
-	ClusterConditionClusterControllerReconcilingSuccess,
-	ClusterConditionAddonControllerReconcilingSuccess,
-	ClusterConditionBackupControllerReconcilingSuccess,
-	ClusterConditionCloudControllerReconcilingSuccess,
-	ClusterConditionUpdateControllerReconcilingSuccess,
-	ClusterConditionMonitoringControllerReconcilingSuccess,
-}
-
 type ClusterCondition struct {
 	// Status of the condition, one of True, False, Unknown.
 	Status corev1.ConditionStatus `json:"status"`
@@ -449,12 +429,12 @@ type ClusterCondition struct {
 
 type ClusterPhase string
 
-// These are the valid phases of a project.
+// These are the valid phases of a cluster.
 const (
-	ClusterCreating    ClusterPhase = "Creating"
-	ClusterUpdating    ClusterPhase = "Updating"
-	ClusterRunning     ClusterPhase = "Running"
-	ClusterTerminating ClusterPhase = "Terminating"
+	ClusterPhaseCreating    ClusterPhase = "Creating"
+	ClusterPhaseUpdating    ClusterPhase = "Updating"
+	ClusterPhaseRunning     ClusterPhase = "Running"
+	ClusterPhaseTerminating ClusterPhase = "Terminating"
 )
 
 // ClusterStatus stores status information about a cluster.
@@ -503,10 +483,10 @@ type ClusterStatus struct {
 	// controllers and the API.
 	// +optional
 	Conditions map[ClusterConditionType]ClusterCondition `json:"conditions,omitempty"`
+
 	// Phase is a description of the current cluster status, summarizing the various conditions,
 	// possible active updates etc. This field is for informational purpose only and no logic
 	// should be tied to the phase.
-	// +optional
 	Phase ClusterPhase `json:"phase,omitempty"`
 
 	// InheritedLabels are labels the cluster inherited from the project. They are read-only for users.
@@ -545,26 +525,14 @@ type ClusterVersionsStatus struct {
 	OldestNodeVersion *semver.Semver `json:"oldestNodeVersion,omitempty"`
 }
 
-// HasConditionValue returns true if the cluster status has the given condition with the given status.
-// It does not verify that the condition has been set by a certain Kubermatic version, it just checks
-// the existence.
-func (cs *ClusterStatus) HasConditionValue(conditionType ClusterConditionType, conditionStatus corev1.ConditionStatus) bool {
-	condition, exists := cs.Conditions[conditionType]
-	if !exists {
-		return false
-	}
-
-	return condition.Status == conditionStatus
-}
-
 // +kubebuilder:validation:Enum=InvalidConfiguration;UnsupportedChange;ReconcileError
 
 type ClusterStatusError string
 
 const (
-	InvalidConfigurationClusterError ClusterStatusError = "InvalidConfiguration"
-	UnsupportedChangeClusterError    ClusterStatusError = "UnsupportedChange"
-	ReconcileClusterError            ClusterStatusError = "ReconcileError"
+	ClusterStatusErrorInvalidConfiguration ClusterStatusError = "InvalidConfiguration"
+	ClusterStatusErrorUnsupportedChange    ClusterStatusError = "UnsupportedChange"
+	ClusterStatusErrorReconcile            ClusterStatusError = "ReconcileError"
 )
 
 // ClusterEncryptionStatus holds status information about the encryption-at-rest feature on the user cluster.
@@ -579,7 +547,7 @@ type ClusterEncryptionStatus struct {
 	// The current phase of the encryption process. Can be one of `Pending`, `Failed`, `Active` or `EncryptionNeeded`.
 	// The `encryption_controller` logic will process the cluster based on the current phase and issue necessary changes
 	// to make sure encryption on the cluster is active and updated with what the ClusterSpec defines.
-	Phase ClusterEncryptionPhase `json:"phase"`
+	Phase ClusterEncryptionPhase `json:"phase,omitempty"`
 }
 
 // +kubebuilder:validation:Enum=Pending;Failed;Active;EncryptionNeeded
@@ -673,13 +641,13 @@ type ComponentSettings struct {
 	// Etcd configures the etcd ring used to store Kubernetes data.
 	Etcd EtcdStatefulSetSettings `json:"etcd"`
 	// Prometheus configures the Prometheus instance deployed into the cluster control plane.
-	Prometheus StatefulSetSettings `json:"prometheus"`
+	Prometheus *StatefulSetSettings `json:"prometheus,omitempty"`
 	// NodePortProxyEnvoy configures the per-cluster nodeport-proxy-envoy that is deployed if
 	// the `LoadBalancer` expose strategy is used. This is not effective if a different expose
 	// strategy is configured.
-	NodePortProxyEnvoy NodeportProxyComponent `json:"nodePortProxyEnvoy"`
+	NodePortProxyEnvoy *NodeportProxyComponent `json:"nodePortProxyEnvoy,omitempty"`
 	// KonnectivityProxy configures konnectivity-server and konnectivity-agent components.
-	KonnectivityProxy KonnectivityProxySettings `json:"konnectivityProxy,omitempty"`
+	KonnectivityProxy *KonnectivityProxySettings `json:"konnectivityProxy,omitempty"`
 }
 
 type APIServerSettings struct {
@@ -1253,7 +1221,6 @@ type AnexiaCloudSpec struct {
 
 // NutanixCSIConfig contains credentials and the endpoint for the Nutanix Prism Element to which the CSI driver connects.
 type NutanixCSIConfig struct {
-
 	// Prism Element Username for csi driver
 	Username string `json:"username,omitempty"`
 
@@ -1307,9 +1274,9 @@ type NutanixCloudSpec struct {
 type HealthStatus string
 
 const (
-	HealthStatusDown         = HealthStatus("HealthStatusDown")
-	HealthStatusUp           = HealthStatus("HealthStatusUp")
-	HealthStatusProvisioning = HealthStatus("HealthStatusProvisioning")
+	HealthStatusDown         HealthStatus = "HealthStatusDown"
+	HealthStatusUp           HealthStatus = "HealthStatusUp"
+	HealthStatusProvisioning HealthStatus = "HealthStatusProvisioning"
 )
 
 // ExtendedClusterHealth stores health information of a cluster.
@@ -1319,11 +1286,11 @@ type ExtendedClusterHealth struct {
 	Controller                   HealthStatus  `json:"controller,omitempty"`
 	MachineController            HealthStatus  `json:"machineController,omitempty"`
 	Etcd                         HealthStatus  `json:"etcd,omitempty"`
-	OpenVPN                      HealthStatus  `json:"openvpn,omitempty"`
-	Konnectivity                 HealthStatus  `json:"konnectivity,omitempty"`
 	CloudProviderInfrastructure  HealthStatus  `json:"cloudProviderInfrastructure,omitempty"`
 	UserClusterControllerManager HealthStatus  `json:"userClusterControllerManager,omitempty"`
 	ApplicationController        HealthStatus  `json:"applicationController,omitempty"`
+	OpenVPN                      *HealthStatus `json:"openvpn,omitempty"`
+	Konnectivity                 *HealthStatus `json:"konnectivity,omitempty"`
 	GatekeeperController         *HealthStatus `json:"gatekeeperController,omitempty"`
 	GatekeeperAudit              *HealthStatus `json:"gatekeeperAudit,omitempty"`
 	Monitoring                   *HealthStatus `json:"monitoring,omitempty"`
@@ -1401,6 +1368,7 @@ func NewBytes(b64 string) Bytes {
 	return Bytes(bs)
 }
 
+// TODO: Remove this in KKP 3.x and replace it with a field in the ClusterStatus.
 func (cluster *Cluster) GetSecretName() string {
 	// new clusters might not have a name yet (if the user used GenerateName),
 	// so we must be careful when constructing the Secret name
@@ -1463,5 +1431,5 @@ func (cluster *Cluster) IsEncryptionEnabled() bool {
 // IsEncryptionActive returns whether encryption-at-rest is active on this cluster. This can still be
 // the case when encryption configuration has been disabled, as encrypted resources require a decryption.
 func (cluster *Cluster) IsEncryptionActive() bool {
-	return cluster.Status.HasConditionValue(ClusterConditionEncryptionInitialized, corev1.ConditionTrue)
+	return cluster.Status.Conditions[ClusterConditionEncryptionInitialized].Status == corev1.ConditionTrue
 }

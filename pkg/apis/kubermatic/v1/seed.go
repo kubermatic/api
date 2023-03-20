@@ -21,10 +21,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// +kubebuilder:validation:Pattern:=`^((\d{1,3}\.){3}\d{1,3}\/([0-9]|[1-2][0-9]|3[0-2]))$`
-type CIDR string
-
-// +kubebuilder:validation:Enum="";Healthy;Unhealthy;Invalid;Terminating;Paused
+// +kubebuilder:validation:Enum=Healthy;Unhealthy;Invalid;Terminating;Paused
 
 type SeedPhase string
 
@@ -105,7 +102,7 @@ type SeedStatus struct {
 	Conditions map[SeedConditionType]SeedCondition `json:"conditions,omitempty"`
 }
 
-// +kubebuilder:validation:Enum="";KubeconfigValid;ResourcesReconciled;ClusterInitialized
+// +kubebuilder:validation:Enum=KubeconfigValid;ResourcesReconciled;ClusterInitialized
 
 // SeedConditionType is used to indicate the type of a seed condition. For all condition
 // types, the `true` value must indicate success.
@@ -342,4 +339,25 @@ type OIDCProviderConfiguration struct {
 	// Optional: SkipTLSVerify skip TLS verification for the token issuer.
 	// If not set, configuration is inherited from the default OIDC provider.
 	SkipTLSVerify *bool `json:"skipTLSVerify,omitempty"`
+}
+
+// IsEtcdAutomaticBackupEnabled returns true if etcd automatic backup is configured for the seed.
+func (s *Seed) IsEtcdAutomaticBackupEnabled() bool {
+	if cfg := s.Spec.EtcdBackupRestore; cfg != nil {
+		return len(cfg.Destinations) > 0
+	}
+	return false
+}
+
+// IsDefaultEtcdAutomaticBackupEnabled returns true if etcd automatic backup with default destination is configured for the seed.
+func (s *Seed) IsDefaultEtcdAutomaticBackupEnabled() bool {
+	return s.IsEtcdAutomaticBackupEnabled() && s.Spec.EtcdBackupRestore.DefaultDestination != ""
+}
+
+func (s *Seed) GetEtcdBackupDestination(destinationName string) *BackupDestination {
+	if s.Spec.EtcdBackupRestore == nil {
+		return nil
+	}
+
+	return s.Spec.EtcdBackupRestore.Destinations[destinationName]
 }
