@@ -74,6 +74,10 @@ linters-settings:
     packages:
       - io/ioutil # https://go.dev/doc/go1.16#ioutil
       - github.com/ghodss/yaml # use sigs.k8s.io/yaml instead
+      - sigs.k8s.io/controller-runtime # we never want to pull in the entire kitchen sink
+      - github.com/kubermatic/machine-controller # prevent import loops across modules
+      - k8c.io/operating-system-manager # prevent import loops across modules
+      - k8c.io/dashboard # prevent import loops across modules
 
   importas:
     no-unaliased: true
