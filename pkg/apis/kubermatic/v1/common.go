@@ -20,6 +20,7 @@ import (
 	"fmt"
 	"net"
 
+	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
 	netutils "k8s.io/utils/net"
 )
@@ -195,3 +196,13 @@ func emptyQuantity(q *resource.Quantity) bool {
 func (r *ResourceDetails) IsEmpty() bool {
 	return r == nil || (emptyQuantity(r.CPU) && emptyQuantity(r.Memory) && emptyQuantity(r.Storage))
 }
+
+// GlobalObjectKeySelector is needed as we can not use v1.SecretKeySelector
+// because it is not cross namespace.
+type GlobalObjectKeySelector struct {
+	corev1.ObjectReference `json:",inline"`
+	Key                    string `json:"key,omitempty"`
+}
+
+type GlobalSecretKeySelector GlobalObjectKeySelector
+type GlobalConfigMapKeySelector GlobalObjectKeySelector
