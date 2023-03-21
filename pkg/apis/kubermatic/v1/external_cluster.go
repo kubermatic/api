@@ -19,7 +19,6 @@ package v1
 import (
 	"fmt"
 
-	machinecontroller "k8c.io/api/v2/pkg/apis/machine-controller"
 	"k8c.io/api/v2/pkg/semver"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -68,9 +67,9 @@ type ExternalClusterKubeOneCloudSpec struct {
 	// This field is used only to display information.
 	Region string `json:"region,omitempty"`
 
-	CredentialsReference *machinecontroller.GlobalSecretKeySelector `json:"credentialsReference,omitempty"`
-	SSHReference         *machinecontroller.GlobalSecretKeySelector `json:"sshReference,omitempty"`
-	ManifestReference    *machinecontroller.GlobalSecretKeySelector `json:"manifestReference,omitempty"`
+	CredentialsReference *GlobalSecretKeySelector `json:"credentialsReference,omitempty"`
+	SSHReference         *GlobalSecretKeySelector `json:"sshReference,omitempty"`
+	ManifestReference    *GlobalSecretKeySelector `json:"manifestReference,omitempty"`
 }
 
 // +kubebuilder:object:generate=true
@@ -90,7 +89,7 @@ type ExternalClusterSpec struct {
 	HumanReadableName string `json:"humanReadableName"`
 
 	// KubeconfigReference is reference to cluster Kubeconfig
-	KubeconfigReference *machinecontroller.GlobalSecretKeySelector `json:"kubeconfigReference,omitempty"`
+	KubeconfigReference *GlobalSecretKeySelector `json:"kubeconfigReference,omitempty"`
 
 	// Version defines the desired version of the control plane.
 	Version semver.Semver `json:"version"`
@@ -196,7 +195,7 @@ const (
 type ExternalClusterBringYourOwnCloudSpec struct{}
 
 type ExternalClusterGKECloudSpec struct {
-	CredentialsReference *machinecontroller.GlobalSecretKeySelector `json:"credentialsReference"`
+	CredentialsReference *GlobalSecretKeySelector `json:"credentialsReference"`
 
 	Name string `json:"name"`
 	// ServiceAccount: The Google Cloud Platform Service Account.
@@ -209,7 +208,7 @@ type ExternalClusterGKECloudSpec struct {
 }
 
 type ExternalClusterEKSCloudSpec struct {
-	CredentialsReference *machinecontroller.GlobalSecretKeySelector `json:"credentialsReference"`
+	CredentialsReference *GlobalSecretKeySelector `json:"credentialsReference"`
 
 	Name string `json:"name"`
 	// AccessKeyID: AWS Access key ID
@@ -244,7 +243,7 @@ type ExternalClusterEKSCloudSpec struct {
 
 type ExternalClusterAKSCloudSpec struct {
 	// CredentialsReference allows referencing a `Secret` resource instead of passing secret data in this spec.
-	CredentialsReference *machinecontroller.GlobalSecretKeySelector `json:"credentialsReference"`
+	CredentialsReference *GlobalSecretKeySelector `json:"credentialsReference"`
 
 	Name string `json:"name"`
 	// TenantID: The Azure Active Directory Tenant used for this cluster.

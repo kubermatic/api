@@ -19,8 +19,6 @@ package v1
 import (
 	"fmt"
 
-	machinecontroller "k8c.io/api/v2/pkg/apis/machine-controller"
-
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -86,7 +84,7 @@ type UserSpec struct {
 
 	// InvalidTokensReference is a reference to a Secret that contains invalidated
 	// login tokens. The tokens are used to provide a safe logout mechanism.
-	InvalidTokensReference *machinecontroller.GlobalSecretKeySelector `json:"invalidTokensReference,omitempty"`
+	InvalidTokensReference *GlobalSecretKeySelector `json:"invalidTokensReference,omitempty"`
 }
 
 // UserSettings represent an user settings.

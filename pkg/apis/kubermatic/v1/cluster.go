@@ -22,7 +22,6 @@ import (
 	"fmt"
 	"strings"
 
-	machinecontroller "k8c.io/api/v2/pkg/apis/machine-controller"
 	"k8c.io/api/v2/pkg/semver"
 
 	corev1 "k8s.io/api/core/v1"
@@ -866,14 +865,14 @@ type FakeCloudSpec struct {
 
 // DigitaloceanCloudSpec specifies access data to DigitalOcean.
 type DigitaloceanCloudSpec struct {
-	CredentialsReference *machinecontroller.GlobalSecretKeySelector `json:"credentialsReference,omitempty"`
+	CredentialsReference *GlobalSecretKeySelector `json:"credentialsReference,omitempty"`
 
 	Token string `json:"token,omitempty"` // Token is used to authenticate with the DigitalOcean API.
 }
 
 // HetznerCloudSpec specifies access data to hetzner cloud.
 type HetznerCloudSpec struct {
-	CredentialsReference *machinecontroller.GlobalSecretKeySelector `json:"credentialsReference,omitempty"`
+	CredentialsReference *GlobalSecretKeySelector `json:"credentialsReference,omitempty"`
 
 	// Token is used to authenticate with the Hetzner cloud API.
 	Token string `json:"token,omitempty"`
@@ -887,7 +886,7 @@ type HetznerCloudSpec struct {
 // AzureCloudSpec defines cloud resource references for Microsoft Azure.
 type AzureCloudSpec struct {
 	// CredentialsReference allows referencing a `Secret` resource instead of passing secret data in this spec.
-	CredentialsReference *machinecontroller.GlobalSecretKeySelector `json:"credentialsReference,omitempty"`
+	CredentialsReference *GlobalSecretKeySelector `json:"credentialsReference,omitempty"`
 
 	// TenantID is the Azure Active Directory Tenant used for this cluster.
 	// Can be read from `credentialsReference` instead.
@@ -952,7 +951,7 @@ type VSphereCredentials struct {
 
 // VSphereCloudSpec specifies access data to VSphere cloud.
 type VSphereCloudSpec struct {
-	CredentialsReference *machinecontroller.GlobalSecretKeySelector `json:"credentialsReference,omitempty"`
+	CredentialsReference *GlobalSecretKeySelector `json:"credentialsReference,omitempty"`
 
 	// Username is the vSphere user name.
 	// +optional
@@ -1010,7 +1009,7 @@ type VSphereTag struct {
 
 // VMwareCloudDirectorCloudSpec specifies access data to VMware Cloud Director cloud.
 type VMwareCloudDirectorCloudSpec struct {
-	CredentialsReference *machinecontroller.GlobalSecretKeySelector `json:"credentialsReference,omitempty"`
+	CredentialsReference *GlobalSecretKeySelector `json:"credentialsReference,omitempty"`
 
 	// Username is the VMware Cloud Director user name.
 	// +optional
@@ -1052,7 +1051,7 @@ type BringYourOwnCloudSpec struct{}
 
 // AWSCloudSpec specifies access data to Amazon Web Services.
 type AWSCloudSpec struct {
-	CredentialsReference *machinecontroller.GlobalSecretKeySelector `json:"credentialsReference,omitempty"`
+	CredentialsReference *GlobalSecretKeySelector `json:"credentialsReference,omitempty"`
 
 	AccessKeyID          string `json:"accessKeyID,omitempty"`
 	SecretAccessKey      string `json:"secretAccessKey,omitempty"`
@@ -1079,7 +1078,7 @@ type AWSCloudSpec struct {
 
 // OpenStackCloudSpec specifies access data to an OpenStack cloud.
 type OpenStackCloudSpec struct {
-	CredentialsReference *machinecontroller.GlobalSecretKeySelector `json:"credentialsReference,omitempty"`
+	CredentialsReference *GlobalSecretKeySelector `json:"credentialsReference,omitempty"`
 
 	Username string `json:"username,omitempty"`
 	Password string `json:"password,omitempty"`
@@ -1151,7 +1150,7 @@ type OpenStackCloudSpec struct {
 
 // PacketCloudSpec specifies access data to a Packet cloud.
 type PacketCloudSpec struct {
-	CredentialsReference *machinecontroller.GlobalSecretKeySelector `json:"credentialsReference,omitempty"`
+	CredentialsReference *GlobalSecretKeySelector `json:"credentialsReference,omitempty"`
 
 	APIKey       string `json:"apiKey,omitempty"`
 	ProjectID    string `json:"projectID,omitempty"`
@@ -1160,7 +1159,7 @@ type PacketCloudSpec struct {
 
 // GCPCloudSpec specifies access data to GCP.
 type GCPCloudSpec struct {
-	CredentialsReference *machinecontroller.GlobalSecretKeySelector `json:"credentialsReference,omitempty"`
+	CredentialsReference *GlobalSecretKeySelector `json:"credentialsReference,omitempty"`
 
 	// The Google Service Account (JSON format), encoded with base64.
 	ServiceAccount string `json:"serviceAccount,omitempty"`
@@ -1176,7 +1175,7 @@ type GCPCloudSpec struct {
 
 // KubeVirtCloudSpec specifies the access data to KubeVirt.
 type KubeVirtCloudSpec struct {
-	CredentialsReference *machinecontroller.GlobalSecretKeySelector `json:"credentialsReference,omitempty"`
+	CredentialsReference *GlobalSecretKeySelector `json:"credentialsReference,omitempty"`
 
 	// The cluster's kubeconfig file, encoded with base64.
 	Kubeconfig    string `json:"kubeconfig,omitempty"`
@@ -1206,7 +1205,7 @@ type PreAllocatedDataVolume struct {
 
 // AlibabaCloudSpec specifies the access data to Alibaba.
 type AlibabaCloudSpec struct {
-	CredentialsReference *machinecontroller.GlobalSecretKeySelector `json:"credentialsReference,omitempty"`
+	CredentialsReference *GlobalSecretKeySelector `json:"credentialsReference,omitempty"`
 
 	AccessKeyID     string `json:"accessKeyID,omitempty"`
 	AccessKeySecret string `json:"accessKeySecret,omitempty"`
@@ -1214,7 +1213,7 @@ type AlibabaCloudSpec struct {
 
 // AnexiaCloudSpec specifies the access data to Anexia.
 type AnexiaCloudSpec struct {
-	CredentialsReference *machinecontroller.GlobalSecretKeySelector `json:"credentialsReference,omitempty"`
+	CredentialsReference *GlobalSecretKeySelector `json:"credentialsReference,omitempty"`
 
 	Token string `json:"token,omitempty"`
 }
@@ -1251,7 +1250,7 @@ type NutanixCSIConfig struct {
 
 // NutanixCloudSpec specifies the access data to Nutanix.
 type NutanixCloudSpec struct {
-	CredentialsReference *machinecontroller.GlobalSecretKeySelector `json:"credentialsReference,omitempty"`
+	CredentialsReference *GlobalSecretKeySelector `json:"credentialsReference,omitempty"`
 
 	// ClusterName is the Nutanix cluster that this user cluster will be deployed to.
 	ClusterName string `json:"clusterName"`
