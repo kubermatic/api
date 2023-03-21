@@ -88,7 +88,5 @@ linters-settings:
         alias: apierrors
       - pkg: k8s.io/apimachinery/pkg/util/errors
         alias: kerrors
-      - pkg: sigs.k8s.io/controller-runtime/pkg/client
-        alias: ctrlruntimeclient
       - pkg: github.com/Masterminds/semver/v3
         alias: semverlib
