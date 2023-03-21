@@ -77,10 +77,10 @@ echo "Annotating CRDs"
 
 for filename in $CRD_DIR/*.yaml; do
   crdName="$(yq '.metadata.name' "$filename")"
-  location="$(echo "$locationMap" | jq -rc --arg key "$crdName" '.[$key]')"
+  location="$(echo "$locationMap" | jq -rc --arg key "$crdName" '.[$key] + ""')"
 
   if [ -z "$location" ]; then
-    echodate "Error: No location defined for CRD $crdName"
+    echo "Error: No location defined for CRD $crdName"
     failure=true
     continue
   fi

@@ -20,6 +20,8 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+const GlobalSettingsName = "globalsettings"
+
 // +kubebuilder:resource:scope=Cluster
 // +kubebuilder:object:generate=true
 // +kubebuilder:object:root=true

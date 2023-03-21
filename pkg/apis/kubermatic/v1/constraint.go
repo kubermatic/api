@@ -41,7 +41,7 @@ type ConstraintSpec struct {
 	// Disabled  is the flag for disabling OPA constraints
 	Disabled bool `json:"disabled,omitempty"`
 	// Match contains the constraint to resource matching data
-	Match Match `json:"match,omitempty"`
+	Match ConstraintMatch `json:"match,omitempty"`
 	// Parameters specifies the parameters used by the constraint template REGO.
 	// It supports both the legacy rawJSON parameters, in which all the parameters are set in a JSON string, and regular
 	// parameters like in Gatekeeper Constraints.
@@ -58,30 +58,30 @@ type ConstraintSpec struct {
 	//
 	// +kubebuilder:validation:Schemaless
 	// +kubebuilder:pruning:PreserveUnknownFields
-	Parameters Parameters `json:"parameters,omitempty"`
+	Parameters ConstraintParameters `json:"parameters,omitempty"`
 	// Selector specifies the cluster selection filters
-	Selector ConstraintSelector `json:"selector,omitempty"`
+	Selector *ConstraintSelector `json:"selector,omitempty"`
 
 	// EnforcementAction defines the action to take in response to a constraint being violated.
 	// By default, EnforcementAction is set to deny as the default behavior is to deny admission requests with any violation.
 	EnforcementAction string `json:"enforcementAction,omitempty"`
 }
 
-type Parameters map[string]json.RawMessage
+type ConstraintParameters map[string]json.RawMessage
 
 // ConstraintSelector is the object holding the cluster selection filters.
 type ConstraintSelector struct {
 	// Providers is a list of cloud providers to which the Constraint applies to. Empty means all providers are selected.
-	Providers []string `json:"providers,omitempty"`
+	Providers []CloudProvider `json:"providers,omitempty"`
 	// LabelSelector selects the Clusters to which the Constraint applies based on their labels
 	LabelSelector metav1.LabelSelector `json:"labelSelector,omitempty"`
 }
 
-// Match contains the constraint to resource matching data.
-type Match struct {
+// ConstraintMatch contains the constraint to resource matching data.
+type ConstraintMatch struct {
 	// Kinds accepts a list of objects with apiGroups and kinds fields that list the groups/kinds of objects to which
 	// the constraint will apply. If multiple groups/kinds objects are specified, only one match is needed for the resource to be in scope
-	Kinds []Kind `json:"kinds,omitempty"`
+	Kinds []ConstraintMatchKind `json:"kinds,omitempty"`
 	// Scope accepts *, Cluster, or Namespaced which determines if cluster-scoped and/or namesapced-scoped resources are selected. (defaults to *)
 	Scope string `json:"scope,omitempty"`
 	// Namespaces is a list of namespace names. If defined, a constraint will only apply to resources in a listed namespace.
@@ -95,8 +95,8 @@ type Match struct {
 	NamespaceSelector metav1.LabelSelector `json:"namespaceSelector,omitempty"`
 }
 
-// Kind specifies the resource Kind and APIGroup.
-type Kind struct {
+// ConstraintMatchKind specifies the resource Kind(s) and APIGroup(s).
+type ConstraintMatchKind struct {
 	// Kinds specifies the kinds of the resources
 	Kinds []string `json:"kinds,omitempty"`
 	// APIGroups specifies the APIGroups of the resources

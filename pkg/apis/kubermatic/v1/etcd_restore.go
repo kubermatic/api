@@ -27,16 +27,16 @@ import (
 type EtcdRestorePhase string
 
 const (
-	// EtcdRestorePhaseStarted value indicating that the restore has started.
+	// EtcdRestorePhaseStarted indicates that the restore has started.
 	EtcdRestorePhaseStarted EtcdRestorePhase = "Started"
 
-	// EtcdRestorePhaseStsRebuilding value indicating that the old Etcd statefulset has been deleted and is now rebuilding.
+	// EtcdRestorePhaseStsRebuilding indicates that the old Etcd statefulset has been deleted and is now rebuilding.
 	EtcdRestorePhaseStsRebuilding EtcdRestorePhase = "StsRebuilding"
 
-	// EtcdRestorePhaseCompleted value indicating that the old Etcd statefulset has completed successfully.
+	// EtcdRestorePhaseCompleted indicates that the old Etcd statefulset has completed successfully.
 	EtcdRestorePhaseCompleted EtcdRestorePhase = "Completed"
 
-	// EtcdRestorePhaseEtcdLauncherNotEnabled value indicating that etcd-launcher is not enabled.
+	// EtcdRestorePhaseEtcdLauncherNotEnabled indicates that etcd-launcher is not enabled.
 	EtcdRestorePhaseEtcdLauncherNotEnabled EtcdRestorePhase = "EtcdLauncherNotEnabled"
 )
 

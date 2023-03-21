@@ -30,11 +30,11 @@ type ConditionType string
 
 const (
 	// AlwaysCondition represent an always true matching condition used while checking provider incompatibilities.
-	AlwaysCondition ConditionType = "always"
+	ConditionAlways ConditionType = "always"
 	// ExternalCloudProviderCondition is an incompatibility condition that represents the usage of the external Cloud Provider.
-	ExternalCloudProviderCondition ConditionType = ClusterFeatureExternalCloudProvider
+	ConditionExternalCloudProvider ConditionType = ClusterFeatureExternalCloudProvider
 	// InTreeCloudProviderCondition is an incompatibility condition that represents the usage of the in-tree Cloud Provider.
-	InTreeCloudProviderCondition ConditionType = "inTreeProvider"
+	ConditionInTreeCloudProvider ConditionType = "inTreeProvider"
 )
 
 // +kubebuilder:validation:Enum=CREATE;UPGRADE;SUPPORT
@@ -44,11 +44,11 @@ type OperationType string
 
 const (
 	// CreateOperation represents the creation of a new cluster.
-	CreateOperation OperationType = "CREATE"
+	OperationCreate OperationType = "CREATE"
 	// UpdateOperation represents the update of an existing cluster.
-	UpdateOperation OperationType = "UPGRADE"
+	OperationUpdate OperationType = "UPGRADE"
 	// SupportOperation represents the possibility to enable a new feature on an existing cluster.
-	SupportOperation OperationType = "SUPPORT"
+	OperationSupport OperationType = "SUPPORT"
 )
 
 // +kubebuilder:object:generate=true
@@ -83,22 +83,21 @@ type KubermaticConfigurationSpec struct {
 	ImagePullSecret string `json:"imagePullSecret,omitempty"`
 	// Auth defines keys and URLs for Dex. These must be defined unless the HeadlessInstallation
 	// feature gate is set, which will disable the UI/API and its need for an OIDC provider entirely.
-	// +optional
-	Auth KubermaticAuthConfiguration `json:"auth"`
+	Auth *KubermaticAuthConfiguration `json:"auth,omitempty"`
 	// FeatureGates are used to optionally enable certain features.
 	FeatureGates map[string]bool `json:"featureGates,omitempty"`
 	// UI configures the dashboard.
-	UI KubermaticUIConfiguration `json:"ui,omitempty"`
+	UI *KubermaticUIConfiguration `json:"ui,omitempty"`
 	// API configures the frontend REST API used by the dashboard.
-	API KubermaticAPIConfiguration `json:"api,omitempty"`
+	API *KubermaticAPIConfiguration `json:"api,omitempty"`
 	// SeedController configures the seed-controller-manager.
-	SeedController KubermaticSeedControllerConfiguration `json:"seedController,omitempty"`
+	SeedController *KubermaticSeedControllerConfiguration `json:"seedController,omitempty"`
 	// MasterController configures the master-controller-manager.
-	MasterController KubermaticMasterControllerConfiguration `json:"masterController,omitempty"`
+	MasterController *KubermaticMasterControllerConfiguration `json:"masterController,omitempty"`
 	// Webhook configures the webhook.
-	Webhook KubermaticWebhookConfiguration `json:"webhook,omitempty"`
+	Webhook *KubermaticWebhookConfiguration `json:"webhook,omitempty"`
 	// UserCluster configures various aspects of the user-created clusters.
-	UserCluster KubermaticUserClusterConfiguration `json:"userCluster,omitempty"`
+	UserCluster *KubermaticUserClusterConfiguration `json:"userCluster,omitempty"`
 	// ExposeStrategy is the strategy to expose the cluster with.
 	// Note: The `seed_dns_overwrite` setting of a Seed's datacenter doesn't have any effect
 	// if this is set to LoadBalancerStrategy.
@@ -108,10 +107,10 @@ type KubermaticConfigurationSpec struct {
 	// Versions configures the available and default Kubernetes versions and updates.
 	Versions KubermaticVersioningConfiguration `json:"versions,omitempty"`
 	// VerticalPodAutoscaler configures the Kubernetes VPA integration.
-	VerticalPodAutoscaler KubermaticVPAConfiguration `json:"verticalPodAutoscaler,omitempty"`
+	VerticalPodAutoscaler *KubermaticVPAConfiguration `json:"verticalPodAutoscaler,omitempty"`
 	// Proxy allows to configure Kubermatic to use proxies to talk to the
 	// world outside of its cluster.
-	Proxy KubermaticProxyConfiguration `json:"proxy,omitempty"`
+	Proxy *KubermaticProxyConfiguration `json:"proxy,omitempty"`
 }
 
 // KubermaticAuthConfiguration defines keys and URLs for Dex.
@@ -136,7 +135,7 @@ type KubermaticAPIConfiguration struct {
 	// data. This port is never exposed from the container and only available via port-forwardings.
 	PProfEndpoint *string `json:"pprofEndpoint,omitempty"`
 	// Resources describes the requested and maximum allowed CPU/memory usage.
-	Resources corev1.ResourceRequirements `json:"resources,omitempty"`
+	Resources *corev1.ResourceRequirements `json:"resources,omitempty"`
 	// DebugLog enables more verbose logging.
 	DebugLog bool `json:"debugLog,omitempty"`
 	// Replicas sets the number of pod replicas for the API deployment.
@@ -160,7 +159,7 @@ type KubermaticUIConfiguration struct {
 	// Config sets flags for various dashboard features.
 	Config string `json:"config,omitempty"`
 	// Resources describes the requested and maximum allowed CPU/memory usage.
-	Resources corev1.ResourceRequirements `json:"resources,omitempty"`
+	Resources *corev1.ResourceRequirements `json:"resources,omitempty"`
 	// Replicas sets the number of pod replicas for the UI deployment.
 	Replicas *int32 `json:"replicas,omitempty"`
 }
@@ -184,7 +183,7 @@ type KubermaticSeedControllerConfiguration struct {
 	// data. This port is never exposed from the container and only available via port-forwardings.
 	PProfEndpoint *string `json:"pprofEndpoint,omitempty"`
 	// Resources describes the requested and maximum allowed CPU/memory usage.
-	Resources corev1.ResourceRequirements `json:"resources,omitempty"`
+	Resources *corev1.ResourceRequirements `json:"resources,omitempty"`
 	// DebugLog enables more verbose logging.
 	DebugLog bool `json:"debugLog,omitempty"`
 	// Replicas sets the number of pod replicas for the seed-controller-manager.
@@ -199,7 +198,7 @@ type KubermaticWebhookConfiguration struct {
 	// data. This port is never exposed from the container and only available via port-forwardings.
 	PProfEndpoint *string `json:"pprofEndpoint,omitempty"`
 	// Resources describes the requested and maximum allowed CPU/memory usage.
-	Resources corev1.ResourceRequirements `json:"resources,omitempty"`
+	Resources *corev1.ResourceRequirements `json:"resources,omitempty"`
 	// DebugLog enables more verbose logging.
 	DebugLog bool `json:"debugLog,omitempty"`
 	// Replicas sets the number of pod replicas for the webhook.
@@ -221,14 +220,14 @@ type KubermaticUserClusterConfiguration struct {
 	// the KubermaticDockerRepository and DNATControllerDockerRepository fields.
 	OverwriteRegistry string `json:"overwriteRegistry,omitempty"`
 	// Addons controls the optional additions installed into each user cluster.
-	Addons KubermaticAddonsConfiguration `json:"addons,omitempty"`
+	Addons *KubermaticAddonsConfiguration `json:"addons,omitempty"`
 	// SystemApplications contains configuration for system Applications (such as CNI).
-	SystemApplications SystemApplicationsConfiguration `json:"systemApplications,omitempty"`
+	SystemApplications *SystemApplicationsConfiguration `json:"systemApplications,omitempty"`
 	// NodePortRange is the port range for user clusters - this must match the NodePort
 	// range of the seed cluster.
 	NodePortRange string `json:"nodePortRange,omitempty"`
 	// Monitoring can be used to fine-tune to in-cluster Prometheus.
-	Monitoring KubermaticUserClusterMonitoringConfiguration `json:"monitoring,omitempty"`
+	Monitoring *KubermaticUserClusterMonitoringConfiguration `json:"monitoring,omitempty"`
 	// DisableAPIServerEndpointReconciling can be used to toggle the `--endpoint-reconciler-type` flag for
 	// the Kubernetes API server.
 	DisableAPIServerEndpointReconciling bool `json:"disableApiserverEndpointReconciling,omitempty"`
@@ -237,9 +236,9 @@ type KubermaticUserClusterConfiguration struct {
 	// APIServerReplicas configures the replica count for the API-Server deployment inside user clusters.
 	APIServerReplicas *int32 `json:"apiserverReplicas,omitempty"`
 	// MachineController configures the Machine Controller
-	MachineController MachineControllerConfiguration `json:"machineController,omitempty"`
+	MachineController *MachineControllerConfiguration `json:"machineController,omitempty"`
 	// OperatingSystemManager configures the image repo and the tag version for osm deployment.
-	OperatingSystemManager OperatingSystemManager `json:"operatingSystemManager,omitempty"`
+	OperatingSystemManager *OperatingSystemManager `json:"operatingSystemManager,omitempty"`
 }
 
 // KubermaticUserClusterMonitoringConfiguration can be used to fine-tune to in-cluster Prometheus.
@@ -337,7 +336,7 @@ type KubermaticIngressConfiguration struct {
 	// matching Issuer in Kubermatic's namespace.
 	// Setting an empty name disables the automatic creation of certificates and disables
 	// the TLS settings on the Kubermatic Ingress.
-	CertificateIssuer corev1.TypedLocalObjectReference `json:"certificateIssuer,omitempty"`
+	CertificateIssuer *corev1.TypedLocalObjectReference `json:"certificateIssuer,omitempty"`
 }
 
 // KubermaticMasterControllerConfiguration configures the Kubermatic master controller-manager.
@@ -345,12 +344,12 @@ type KubermaticMasterControllerConfiguration struct {
 	// DockerRepository is the repository containing the Kubermatic master-controller-manager image.
 	DockerRepository string `json:"dockerRepository,omitempty"`
 	// ProjectsMigrator configures the migrator for user projects.
-	ProjectsMigrator KubermaticProjectsMigratorConfiguration `json:"projectsMigrator,omitempty"`
+	ProjectsMigrator *KubermaticProjectsMigratorConfiguration `json:"projectsMigrator,omitempty"`
 	// PProfEndpoint controls the port the master-controller-manager should listen on to provide pprof
 	// data. This port is never exposed from the container and only available via port-forwardings.
 	PProfEndpoint *string `json:"pprofEndpoint,omitempty"`
 	// Resources describes the requested and maximum allowed CPU/memory usage.
-	Resources corev1.ResourceRequirements `json:"resources,omitempty"`
+	Resources *corev1.ResourceRequirements `json:"resources,omitempty"`
 	// DebugLog enables more verbose logging.
 	DebugLog bool `json:"debugLog,omitempty"`
 	// Replicas sets the number of pod replicas for the master-controller-manager.
@@ -422,10 +421,9 @@ type Update struct {
 
 // Incompatibility represents a version incompatibility for a user cluster.
 type Incompatibility struct {
-	// Provider to which to apply the compatibility check.
-	// Empty string matches all providers
-	// +kubebuilder:validation:Enum="";digitalocean;hetzner;azure;vsphere;aws;openstack;packet;gcp;kubevirt;nutanix;alibaba;anexia;fake;vmwareclouddirector
-	Provider string `json:"provider,omitempty"`
+	// Provider to which to apply the compatibility check. If this is not specified, the
+	// incompatibility is valid for all cloud providers.
+	Provider CloudProvider `json:"provider,omitempty"`
 	// Version is the Kubernetes version that must be checked. Wildcards are allowed, e.g. "1.25.*".
 	Version string `json:"version,omitempty"`
 	// Condition is the cluster or datacenter condition that must be met to block a specific version
@@ -436,16 +434,16 @@ type Incompatibility struct {
 
 // KubermaticVPAConfiguration configures the Kubernetes VPA.
 type KubermaticVPAConfiguration struct {
-	Recommender         KubermaticVPAComponent `json:"recommender,omitempty"`
-	Updater             KubermaticVPAComponent `json:"updater,omitempty"`
-	AdmissionController KubermaticVPAComponent `json:"admissionController,omitempty"`
+	Recommender         *KubermaticVPAComponent `json:"recommender,omitempty"`
+	Updater             *KubermaticVPAComponent `json:"updater,omitempty"`
+	AdmissionController *KubermaticVPAComponent `json:"admissionController,omitempty"`
 }
 
 type KubermaticVPAComponent struct {
 	// DockerRepository is the repository containing the component's image.
 	DockerRepository string `json:"dockerRepository,omitempty"`
 	// Resources describes the requested and maximum allowed CPU/memory usage.
-	Resources corev1.ResourceRequirements `json:"resources,omitempty"`
+	Resources *corev1.ResourceRequirements `json:"resources,omitempty"`
 }
 
 // KubermaticProxyConfiguration can be used to control how the various

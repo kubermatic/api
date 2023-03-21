@@ -20,7 +20,7 @@ import (
 	corev1 "k8s.io/api/core/v1"
 )
 
-// +kubebuilder:validation:Enum="";metadata;recommended;minimal
+// +kubebuilder:validation:Enum=metadata;recommended;minimal
 
 // AuditPolicyPreset refers to a pre-defined set of audit policy rules. Supported values
 // are `metadata`, `recommended` and `minimal`. See KKP documentation for what each policy preset includes.
@@ -31,6 +31,16 @@ const (
 	AuditPolicyRecommended AuditPolicyPreset = "recommended"
 	AuditPolicyMinimal     AuditPolicyPreset = "minimal"
 )
+
+// AuditLoggingSettings configures audit logging functionality.
+type AuditLoggingSettings struct {
+	// Enabled will enable or disable audit logging.
+	Enabled bool `json:"enabled,omitempty"`
+	// Optional: PolicyPreset can be set to utilize a pre-defined set of audit policy rules.
+	PolicyPreset AuditPolicyPreset `json:"policyPreset,omitempty"`
+	// Optional: Configures the fluent-bit sidecar deployed alongside kube-apiserver.
+	SidecarSettings *AuditSidecarSettings `json:"sidecar,omitempty"`
+}
 
 type AuditSidecarSettings struct {
 	Resources *corev1.ResourceRequirements `json:"resources,omitempty"`
@@ -43,14 +53,4 @@ type AuditSidecarConfiguration struct {
 	Service map[string]string   `json:"service,omitempty"`
 	Filters []map[string]string `json:"filters,omitempty"`
 	Outputs []map[string]string `json:"outputs,omitempty"`
-}
-
-// AuditLoggingSettings configures audit logging functionality.
-type AuditLoggingSettings struct {
-	// Enabled will enable or disable audit logging.
-	Enabled bool `json:"enabled,omitempty"`
-	// Optional: PolicyPreset can be set to utilize a pre-defined set of audit policy rules.
-	PolicyPreset AuditPolicyPreset `json:"policyPreset,omitempty"`
-	// Optional: Configures the fluent-bit sidecar deployed alongside kube-apiserver.
-	SidecarSettings *AuditSidecarSettings `json:"sidecar,omitempty"`
 }

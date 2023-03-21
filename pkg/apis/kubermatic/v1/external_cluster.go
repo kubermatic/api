@@ -17,6 +17,8 @@ limitations under the License.
 package v1
 
 import (
+	"fmt"
+
 	machinecontroller "k8c.io/api/v2/pkg/apis/machine-controller"
 	"k8c.io/api/v2/pkg/semver"
 
@@ -90,13 +92,13 @@ type ExternalClusterSpec struct {
 	// KubeconfigReference is reference to cluster Kubeconfig
 	KubeconfigReference *machinecontroller.GlobalSecretKeySelector `json:"kubeconfigReference,omitempty"`
 
-	// Version defines the wanted version of the control plane.
+	// Version defines the desired version of the control plane.
 	Version semver.Semver `json:"version"`
 
 	// CloudSpec contains provider specific fields
 	CloudSpec ExternalClusterCloudSpec `json:"cloudSpec"`
 
-	ClusterNetwork ExternalClusterNetworkingConfig `json:"clusterNetwork,omitempty"`
+	ClusterNetwork *ExternalClusterNetworkingConfig `json:"clusterNetwork,omitempty"`
 
 	// ContainerRuntime to use, i.e. `docker` or `containerd`.
 	ContainerRuntime string `json:"containerRuntime,omitempty"`
@@ -116,12 +118,12 @@ type ExternalClusterNetworkingConfig struct {
 	// The network ranges from which service VIPs are allocated.
 	// It can contain one IPv4 and/or one IPv6 CIDR.
 	// If both address families are specified, the first one defines the primary address family.
-	Services ExternalClusterNetworkRanges `json:"services,omitempty"`
+	Services *ExternalClusterNetworkRanges `json:"services,omitempty"`
 
 	// The network ranges from which POD networks are allocated.
 	// It can contain one IPv4 and/or one IPv6 CIDR.
 	// If both address families are specified, the first one defines the primary address family.
-	Pods ExternalClusterNetworkRanges `json:"pods,omitempty"`
+	Pods *ExternalClusterNetworkRanges `json:"pods,omitempty"`
 }
 
 // ExternalClusterNetworkRanges represents ranges of network addresses.
@@ -263,4 +265,73 @@ type ExternalClusterAKSCloudSpec struct {
 	// If set to empty string at cluster creation, a new resource group will be created and this field will be updated to
 	// the generated resource group's name.
 	ResourceGroup string `json:"resourceGroup"`
+}
+
+const (
+	// ExternalCluster Kubeconfig secret prefix.
+	externalClusterKubeconfigPrefix = "kubeconfig-external-cluster"
+
+	// kubeOneNamespacePrefix is the kubeone namespace prefix.
+	kubeOneNamespacePrefix = "kubeone"
+
+	// don't change this as these prefixes are used for rbac generation.
+	// KubeOne ssh secret prefixes.
+	kubeOneSSHSecretPrefix = "ssh-kubeone-external-cluster"
+
+	// KubeOne manifest secret prefixes.
+	kubeOneManifestSecretPrefix = "manifest-kubeone-external-cluster"
+)
+
+// TODO: Replace this with a field in the ExternalClusterStatus in KKP 3.x.
+func (c *ExternalCluster) GetKubeconfigSecretName() string {
+	return fmt.Sprintf("%s-%s", externalClusterKubeconfigPrefix, c.Name)
+}
+
+// TODO: Replace this with a field in the ExternalClusterStatus in KKP 3.x.
+func (c *ExternalCluster) GetCredentialsSecretName() string {
+	// The kubermatic cluster `GetSecretName` method is used to get credential secret name for external cluster
+	// The same is used for the external cluster creation when secret is created
+	cluster := &Cluster{
+		ObjectMeta: metav1.ObjectMeta{
+			Name: c.Name,
+		},
+		Spec: ClusterSpec{
+			Cloud: CloudSpec{},
+		},
+	}
+	cloud := c.Spec.CloudSpec
+	if cloud.ProviderName == ExternalClusterProviderBringYourOwn {
+		return ""
+	}
+	if cloud.GKE != nil {
+		cluster.Spec.Cloud.GCP = &GCPCloudSpec{}
+	}
+	if cloud.EKS != nil {
+		cluster.Spec.Cloud.AWS = &AWSCloudSpec{}
+	}
+	if cloud.AKS != nil {
+		cluster.Spec.Cloud.Azure = &AzureCloudSpec{}
+	}
+	return cluster.GetSecretName()
+}
+
+// TODO: Replace this with a field in the ExternalClusterStatus in KKP 3.x.
+func (c *ExternalCluster) GetKubeOneCredentialsSecretName() string {
+	providerName := c.Spec.CloudSpec.KubeOne.ProviderName
+	return fmt.Sprintf("%s-%s-%s", credentialPrefix, providerName, c.Name)
+}
+
+// TODO: Replace this with a field in the ExternalClusterStatus in KKP 3.x.
+func (c *ExternalCluster) GetKubeOneSSHSecretName() string {
+	return fmt.Sprintf("%s-%s", kubeOneSSHSecretPrefix, c.Name)
+}
+
+// TODO: Replace this with a field in the ExternalClusterStatus in KKP 3.x.
+func (c *ExternalCluster) GetKubeOneManifestSecretName() string {
+	return fmt.Sprintf("%s-%s", kubeOneManifestSecretPrefix, c.Name)
+}
+
+// TODO: Replace this with a field in the ExternalClusterStatus in KKP 3.x.
+func (c *ExternalCluster) GetKubeOneNamespaceName() string {
+	return fmt.Sprintf("%s-%s", kubeOneNamespacePrefix, c.Name)
 }

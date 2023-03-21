@@ -55,6 +55,11 @@ var (
 	}
 )
 
+func IsIPv6KnownProvider(provider kubermaticv1.CloudProvider) bool {
+	_, isIPv6KnownProvider := knownIPv6CloudProviders[provider]
+	return isIPv6KnownProvider
+}
+
 // IsIPv6EnabledDatacenter returns true if IPv6 is enabled for the datacenter.
 func IsIPv6EnabledDatacenter(dc *kubermaticv1.Datacenter) bool {
 	provider, err := DatacenterCloudProviderName(&dc.Spec)

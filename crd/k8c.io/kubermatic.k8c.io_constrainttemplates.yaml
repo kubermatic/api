@@ -99,6 +99,22 @@ spec:
                     providers:
                       description: Providers is a list of cloud providers to which the Constraint Template applies to. Empty means all providers are selected.
                       items:
+                        description: CloudProvider defines the cloud provider where the a cluster's nodes are running. Note that these constants may match the machine-controller's constant, but don't have to. Use the functions in the helper package to translate between the two.
+                        enum:
+                          - alibaba
+                          - anexia
+                          - aws
+                          - azure
+                          - bringyourown
+                          - digitalocean
+                          - gcp
+                          - hetzner
+                          - kubevirt
+                          - nutanix
+                          - openstack
+                          - packet
+                          - vmwareclouddirector
+                          - vsphere
                         type: string
                       type: array
                   type: object

@@ -21,10 +21,10 @@ import (
 )
 
 const (
-	UserClusterTemplateScope    = "user"
-	ProjectClusterTemplateScope = "project"
-	GlobalClusterTemplateScope  = "global"
-	SeedTemplateScope           = "seed"
+	TemplateScopeUserCluster    = "user"
+	TemplateScopeProjectCluster = "project"
+	TemplateScopeGlobalCluster  = "global"
+	TemplateScopeSeed           = "seed"
 )
 
 const (

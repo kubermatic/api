@@ -20,8 +20,25 @@ import (
 	"fmt"
 	"net"
 
+	"k8s.io/apimachinery/pkg/api/resource"
 	netutils "k8s.io/utils/net"
 )
+
+const (
+	// AuthZRoleLabel is the label used by rbac-controller and group-rbac-controller to identify the KKP role a ClusterRole or Role were created for.
+	AuthZRoleLabel = "authz.k8c.io/role"
+
+	// AuthZGroupProjectBindingLabel references the GroupProjectBinding resource that a ClusterRole/Role was created for.
+	AuthZGroupProjectBindingLabel = "authz.k8c.io/group-project-binding"
+)
+
+// +kubebuilder:validation:Pattern:=`^((\d{1,3}\.){3}\d{1,3}\/([0-9]|[1-2][0-9]|3[0-2]))$`
+type CIDR string
+
+// +kubebuilder:validation:Pattern="((^((([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]))/([0-9]|[1-2][0-9]|3[0-2])$)|(^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:))/([0-9]|[0-9][0-9]|1[0-1][0-9]|12[0-8])$))"
+
+// SubnetCIDR is used to store IPv4/IPv6 CIDR.
+type SubnetCIDR string
 
 // Finalizers should be kept to their controllers. Only if a finalizer is
 // used by multiple controllers should it be placed here.
@@ -97,11 +114,13 @@ func (r *NetworkRanges) Validate() error {
 	if r == nil {
 		return nil
 	}
+
 	for _, cidr := range r.CIDRBlocks {
 		if _, _, err := net.ParseCIDR(cidr); err != nil {
 			return fmt.Errorf("unable to parse CIDR %q: %w", cidr, err)
 		}
 	}
+
 	return nil
 }
 
@@ -112,6 +131,7 @@ func (r *NetworkRanges) GetIPv4CIDR() string {
 			return cidr
 		}
 	}
+
 	return ""
 }
 
@@ -122,6 +142,7 @@ func (r *NetworkRanges) GetIPv4CIDRs() (res []string) {
 			res = append(res, cidr)
 		}
 	}
+
 	return
 }
 
@@ -137,6 +158,7 @@ func (r *NetworkRanges) GetIPv6CIDR() string {
 			return cidr
 		}
 	}
+
 	return ""
 }
 
@@ -147,10 +169,29 @@ func (r *NetworkRanges) GetIPv6CIDRs() (res []string) {
 			res = append(res, cidr)
 		}
 	}
+
 	return
 }
 
 // HasIPv6CIDR returns true if the network ranges contain any IPv6 CIDR, false otherwise.
 func (r *NetworkRanges) HasIPv6CIDR() bool {
 	return r.GetIPv6CIDR() != ""
+}
+
+// ResourceDetails holds the CPU, Memory and Storage quantities.
+type ResourceDetails struct {
+	// CPU holds the quantity of CPU. For the format, please check k8s.io/apimachinery/pkg/api/resource.Quantity.
+	CPU *resource.Quantity `json:"cpu,omitempty"`
+	// Memory represents the quantity of RAM size. For the format, please check k8s.io/apimachinery/pkg/api/resource.Quantity.
+	Memory *resource.Quantity `json:"memory,omitempty"`
+	// Storage represents the disk size. For the format, please check k8s.io/apimachinery/pkg/api/resource.Quantity.
+	Storage *resource.Quantity `json:"storage,omitempty"`
+}
+
+func emptyQuantity(q *resource.Quantity) bool {
+	return q == nil || q.IsZero()
+}
+
+func (r *ResourceDetails) IsEmpty() bool {
+	return r == nil || (emptyQuantity(r.CPU) && emptyQuantity(r.Memory) && emptyQuantity(r.Storage))
 }

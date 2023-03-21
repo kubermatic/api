@@ -17,15 +17,20 @@ limitations under the License.
 package v1
 
 import (
-	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 const (
 	ResourceQuotaSubjectNameLabelKey = "subject-name"
 	ResourceQuotaSubjectKindLabelKey = "subject-kind"
+)
 
-	ProjectSubjectKind = "project"
+// +kubebuilder:validation:Enum=project
+
+type ResourceQuotaSubjectName string
+
+const (
+	ResourceQuotaSubjectProject ResourceQuotaSubjectName = "project"
 )
 
 // +kubebuilder:resource:scope=Cluster
@@ -48,7 +53,7 @@ type ResourceQuota struct {
 // ResourceQuotaSpec describes the desired state of a resource quota.
 type ResourceQuotaSpec struct {
 	// Subject specifies to which entity the quota applies to.
-	Subject Subject `json:"subject"`
+	Subject ResourceQuotaSubject `json:"subject"`
 	// Quota specifies the current maximum allowed usage of resources.
 	Quota ResourceDetails `json:"quota"`
 }
@@ -56,39 +61,20 @@ type ResourceQuotaSpec struct {
 // ResourceQuotaStatus describes the current state of a resource quota.
 type ResourceQuotaStatus struct {
 	// GlobalUsage is holds the current usage of resources for all seeds.
-	GlobalUsage ResourceDetails `json:"globalUsage,omitempty"`
+	GlobalUsage *ResourceDetails `json:"globalUsage,omitempty"`
 	// LocalUsage is holds the current usage of resources for the local seed.
-	LocalUsage ResourceDetails `json:"localUsage,omitempty"`
+	LocalUsage *ResourceDetails `json:"localUsage,omitempty"`
 }
 
-// Subject describes the entity to which the quota applies to.
-type Subject struct {
+// ResourceQuotaSubject describes the entity to which the quota applies to.
+type ResourceQuotaSubject struct {
 	// Name of the quota subject.
 	Name string `json:"name"`
 
-	// +kubebuilder:validation:Enum=project
 	// +kubebuilder:default=project
 
-	// Kind of the quota subject. For now the only possible kind is project.
-	Kind string `json:"kind"`
-}
-
-// ResourceDetails holds the CPU, Memory and Storage quantities.
-type ResourceDetails struct {
-	// CPU holds the quantity of CPU. For the format, please check k8s.io/apimachinery/pkg/api/resource.Quantity.
-	CPU *resource.Quantity `json:"cpu,omitempty"`
-	// Memory represents the quantity of RAM size. For the format, please check k8s.io/apimachinery/pkg/api/resource.Quantity.
-	Memory *resource.Quantity `json:"memory,omitempty"`
-	// Storage represents the disk size. For the format, please check k8s.io/apimachinery/pkg/api/resource.Quantity.
-	Storage *resource.Quantity `json:"storage,omitempty"`
-}
-
-func emptyQuantity(q *resource.Quantity) bool {
-	return q == nil || q.IsZero()
-}
-
-func (r *ResourceDetails) IsEmpty() bool {
-	return r == nil || (emptyQuantity(r.CPU) && emptyQuantity(r.Memory) && emptyQuantity(r.Storage))
+	// Kind of the quota subject.
+	Kind ResourceQuotaSubjectName `json:"kind"`
 }
 
 // +kubebuilder:object:generate=true

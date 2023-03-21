@@ -1214,8 +1214,6 @@ spec:
                     - apiserver
                     - controllerManager
                     - etcd
-                    - nodePortProxyEnvoy
-                    - prometheus
                     - scheduler
                   type: object
                 etcdBackupRestore:
@@ -1586,7 +1584,6 @@ spec:
                 phase:
                   description: Phase contains a human readable text to indicate the seed cluster status. No logic should be tied to this field, as its content can change in between KKP releases.
                   enum:
-                    - ""
                     - Healthy
                     - Unhealthy
                     - Invalid

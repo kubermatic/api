@@ -23,19 +23,19 @@ import (
 
 // +kubebuilder:validation:Enum=Running;Completed;Failed
 
-// EtcdBackupStatusPhase is used to indicate the type of a EtcdBackupConfig condition.
+// EtcdBackupPhase is used to indicate the type of a EtcdBackupConfig condition.
 // For all condition types, the `true` value must indicate success.
-type EtcdBackupStatusPhase string
+type EtcdBackupPhase string
 
 const (
-	// BackupStatusPhase value indicating that the corresponding job has started.
-	BackupStatusPhaseRunning EtcdBackupStatusPhase = "Running"
+	// EtcdBackupPhaseRunning indicates that the corresponding job has started.
+	EtcdBackupPhaseRunning EtcdBackupPhase = "Running"
 
-	// BackupStatusPhase value indicating that the corresponding job has completed successfully.
-	BackupStatusPhaseCompleted EtcdBackupStatusPhase = "Completed"
+	// EtcdBackupPhaseCompleted indicates that the corresponding job has completed successfully.
+	EtcdBackupPhaseCompleted EtcdBackupPhase = "Completed"
 
-	// BackupStatusPhase value indicating that the corresponding job has completed with an error.
-	BackupStatusPhaseFailed EtcdBackupStatusPhase = "Failed"
+	// EtcdBackupPhaseFailed indicates that the corresponding job has completed with an error.
+	EtcdBackupPhaseFailed EtcdBackupPhase = "Failed"
 )
 
 // +kubebuilder:validation:Enum=SchedulingActive
@@ -114,16 +114,16 @@ type BackupStatus struct {
 	// +optional
 	BackupStartTime metav1.Time `json:"backupStartTime,omitempty"`
 	// +optional
-	BackupFinishedTime metav1.Time           `json:"backupFinishedTime,omitempty"`
-	BackupPhase        EtcdBackupStatusPhase `json:"backupPhase,omitempty"`
-	BackupMessage      string                `json:"backupMessage,omitempty"`
-	DeleteJobName      string                `json:"deleteJobName,omitempty"`
+	BackupFinishedTime metav1.Time     `json:"backupFinishedTime,omitempty"`
+	BackupPhase        EtcdBackupPhase `json:"backupPhase,omitempty"`
+	BackupMessage      string          `json:"backupMessage,omitempty"`
+	DeleteJobName      string          `json:"deleteJobName,omitempty"`
 	// +optional
 	DeleteStartTime metav1.Time `json:"deleteStartTime,omitempty"`
 	// +optional
-	DeleteFinishedTime metav1.Time           `json:"deleteFinishedTime,omitempty"`
-	DeletePhase        EtcdBackupStatusPhase `json:"deletePhase,omitempty"`
-	DeleteMessage      string                `json:"deleteMessage,omitempty"`
+	DeleteFinishedTime metav1.Time     `json:"deleteFinishedTime,omitempty"`
+	DeletePhase        EtcdBackupPhase `json:"deletePhase,omitempty"`
+	DeleteMessage      string          `json:"deleteMessage,omitempty"`
 }
 
 type EtcdBackupConfigCondition struct {

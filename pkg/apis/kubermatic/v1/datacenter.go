@@ -20,6 +20,7 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	networkingv1 "k8s.io/api/networking/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/util/sets"
 )
 
 type Datacenter struct {
@@ -300,7 +301,7 @@ type DatacenterSpecKubeVirt struct {
 	CustomNetworkPolicies []*CustomNetworkPolicy `json:"customNetworkPolicies,omitempty"`
 
 	// Images represents standard VM Image sources.
-	Images KubeVirtImageSources `json:"images,omitempty"`
+	Images *KubeVirtImageSources `json:"images,omitempty"`
 
 	// InfraStorageClasses contains a list of KubeVirt infra cluster StorageClasses names
 	// that will be used to initialise StorageClasses in the tenant cluster.
@@ -327,13 +328,13 @@ type CustomNetworkPolicy struct {
 }
 
 var (
-	SupportedKubeVirtOS = map[OperatingSystem]*struct{}{
-		OperatingSystemCentOS:     nil,
-		OperatingSystemUbuntu:     nil,
-		OperatingSystemRHEL:       nil,
-		OperatingSystemFlatcar:    nil,
-		OperatingSystemRockyLinux: nil,
-	}
+	SupportedKubeVirtOS = sets.New(
+		OperatingSystemCentOS,
+		OperatingSystemUbuntu,
+		OperatingSystemRHEL,
+		OperatingSystemFlatcar,
+		OperatingSystemRockyLinux,
+	)
 )
 
 // KubeVirtImageSources represents KubeVirt image sources.
