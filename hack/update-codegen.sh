@@ -29,7 +29,8 @@ echodate "Creating vendor directory"
 go mod vendor
 
 echodate "Generating Kubernetes clientset"
-bash vendor/k8s.io/code-generator/generate-groups.sh all \
+# no deepcopy here, as controller-gen takes care of that
+bash vendor/k8s.io/code-generator/generate-groups.sh client,lister,informer \
   k8c.io/api/v2/$CODEGEN_DIR \
   k8c.io/api/v2/pkg/apis \
   "kubermatic:v1 apps.kubermatic:v1" \
