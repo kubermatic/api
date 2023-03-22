@@ -4,7 +4,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.10.0
+    controller-gen.kubebuilder.io/version: v0.11.3
     kubermatic.k8c.io/location: master,seed
   name: seeds.kubermatic.k8c.io
 spec:
@@ -789,7 +789,7 @@ spec:
                           description: ResourceRequirements describes the compute resource requirements.
                           properties:
                             claims:
-                              description: "Claims lists the names of resources, defined in spec.resourceClaims, that are used by this container. \n This is an alpha field and requires enabling the DynamicResourceAllocation feature gate. \n This field is immutable."
+                              description: "Claims lists the names of resources, defined in spec.resourceClaims, that are used by this container. \n This is an alpha field and requires enabling the DynamicResourceAllocation feature gate. \n This field is immutable. It can only be set for containers."
                               items:
                                 description: ResourceClaim references one entry in PodSpec.ResourceClaims.
                                 properties:
@@ -870,7 +870,7 @@ spec:
                           description: ResourceRequirements describes the compute resource requirements.
                           properties:
                             claims:
-                              description: "Claims lists the names of resources, defined in spec.resourceClaims, that are used by this container. \n This is an alpha field and requires enabling the DynamicResourceAllocation feature gate. \n This field is immutable."
+                              description: "Claims lists the names of resources, defined in spec.resourceClaims, that are used by this container. \n This is an alpha field and requires enabling the DynamicResourceAllocation feature gate. \n This field is immutable. It can only be set for containers."
                               items:
                                 description: ResourceClaim references one entry in PodSpec.ResourceClaims.
                                 properties:
@@ -942,7 +942,7 @@ spec:
                           description: ResourceRequirements describes the compute resource requirements.
                           properties:
                             claims:
-                              description: "Claims lists the names of resources, defined in spec.resourceClaims, that are used by this container. \n This is an alpha field and requires enabling the DynamicResourceAllocation feature gate. \n This field is immutable."
+                              description: "Claims lists the names of resources, defined in spec.resourceClaims, that are used by this container. \n This is an alpha field and requires enabling the DynamicResourceAllocation feature gate. \n This field is immutable. It can only be set for containers."
                               items:
                                 description: ResourceClaim references one entry in PodSpec.ResourceClaims.
                                 properties:
@@ -1010,7 +1010,7 @@ spec:
                           description: Resources configure limits/requests for Konnectivity components.
                           properties:
                             claims:
-                              description: "Claims lists the names of resources, defined in spec.resourceClaims, that are used by this container. \n This is an alpha field and requires enabling the DynamicResourceAllocation feature gate. \n This field is immutable."
+                              description: "Claims lists the names of resources, defined in spec.resourceClaims, that are used by this container. \n This is an alpha field and requires enabling the DynamicResourceAllocation feature gate. \n This field is immutable. It can only be set for containers."
                               items:
                                 description: ResourceClaim references one entry in PodSpec.ResourceClaims.
                                 properties:
@@ -1054,7 +1054,7 @@ spec:
                           description: Resources describes the requested and maximum allowed CPU/memory usage.
                           properties:
                             claims:
-                              description: "Claims lists the names of resources, defined in spec.resourceClaims, that are used by this container. \n This is an alpha field and requires enabling the DynamicResourceAllocation feature gate. \n This field is immutable."
+                              description: "Claims lists the names of resources, defined in spec.resourceClaims, that are used by this container. \n This is an alpha field and requires enabling the DynamicResourceAllocation feature gate. \n This field is immutable. It can only be set for containers."
                               items:
                                 description: ResourceClaim references one entry in PodSpec.ResourceClaims.
                                 properties:
@@ -1095,7 +1095,7 @@ spec:
                           description: ResourceRequirements describes the compute resource requirements.
                           properties:
                             claims:
-                              description: "Claims lists the names of resources, defined in spec.resourceClaims, that are used by this container. \n This is an alpha field and requires enabling the DynamicResourceAllocation feature gate. \n This field is immutable."
+                              description: "Claims lists the names of resources, defined in spec.resourceClaims, that are used by this container. \n This is an alpha field and requires enabling the DynamicResourceAllocation feature gate. \n This field is immutable. It can only be set for containers."
                               items:
                                 description: ResourceClaim references one entry in PodSpec.ResourceClaims.
                                 properties:
@@ -1154,7 +1154,7 @@ spec:
                           description: ResourceRequirements describes the compute resource requirements.
                           properties:
                             claims:
-                              description: "Claims lists the names of resources, defined in spec.resourceClaims, that are used by this container. \n This is an alpha field and requires enabling the DynamicResourceAllocation feature gate. \n This field is immutable."
+                              description: "Claims lists the names of resources, defined in spec.resourceClaims, that are used by this container. \n This is an alpha field and requires enabling the DynamicResourceAllocation feature gate. \n This field is immutable. It can only be set for containers."
                               items:
                                 description: ResourceClaim references one entry in PodSpec.ResourceClaims.
                                 properties:
@@ -1379,7 +1379,7 @@ spec:
                           description: Resources describes the requested and maximum allowed CPU/memory usage.
                           properties:
                             claims:
-                              description: "Claims lists the names of resources, defined in spec.resourceClaims, that are used by this container. \n This is an alpha field and requires enabling the DynamicResourceAllocation feature gate. \n This field is immutable."
+                              description: "Claims lists the names of resources, defined in spec.resourceClaims, that are used by this container. \n This is an alpha field and requires enabling the DynamicResourceAllocation feature gate. \n This field is immutable. It can only be set for containers."
                               items:
                                 description: ResourceClaim references one entry in PodSpec.ResourceClaims.
                                 properties:
@@ -1423,7 +1423,7 @@ spec:
                           description: Resources describes the requested and maximum allowed CPU/memory usage.
                           properties:
                             claims:
-                              description: "Claims lists the names of resources, defined in spec.resourceClaims, that are used by this container. \n This is an alpha field and requires enabling the DynamicResourceAllocation feature gate. \n This field is immutable."
+                              description: "Claims lists the names of resources, defined in spec.resourceClaims, that are used by this container. \n This is an alpha field and requires enabling the DynamicResourceAllocation feature gate. \n This field is immutable. It can only be set for containers."
                               items:
                                 description: ResourceClaim references one entry in PodSpec.ResourceClaims.
                                 properties:
@@ -1467,7 +1467,7 @@ spec:
                           description: Resources describes the requested and maximum allowed CPU/memory usage.
                           properties:
                             claims:
-                              description: "Claims lists the names of resources, defined in spec.resourceClaims, that are used by this container. \n This is an alpha field and requires enabling the DynamicResourceAllocation feature gate. \n This field is immutable."
+                              description: "Claims lists the names of resources, defined in spec.resourceClaims, that are used by this container. \n This is an alpha field and requires enabling the DynamicResourceAllocation feature gate. \n This field is immutable. It can only be set for containers."
                               items:
                                 description: ResourceClaim references one entry in PodSpec.ResourceClaims.
                                 properties:
