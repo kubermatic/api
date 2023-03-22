@@ -33,6 +33,7 @@ type PresetList struct {
 	Items []Preset `json:"items"`
 }
 
+// +genclient
 // +kubebuilder:resource:scope=Cluster
 // +kubebuilder:object:generate=true
 // +kubebuilder:object:root=true

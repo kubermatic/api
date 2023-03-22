@@ -29,6 +29,7 @@ const (
 	AddonConditionResourcesCreated AddonConditionType = "AddonResourcesCreatedSuccessfully"
 )
 
+// +genclient
 // +kubebuilder:object:generate=true
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
