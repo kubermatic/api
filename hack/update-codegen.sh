@@ -17,12 +17,33 @@
 set -euo pipefail
 
 cd $(dirname $0)/..
+source hack/lib.sh
 
 CRD_DIR=crd/k8c.io
+CODEGEN_DIR=pkg/generated
 
-echo "Generating openAPI v3 CRDs"
+echodate "Removing old generated clients"
+rm -rf "$CODEGEN_DIR"
+
+echodate "Creating vendor directory"
+go mod vendor
+
+echodate "Generating Kubernetes clientset"
+bash vendor/k8s.io/code-generator/generate-groups.sh all \
+  k8c.io/api/v2/$CODEGEN_DIR \
+  k8c.io/api/v2/pkg/apis \
+  "kubermatic:v1 apps.kubermatic:v1" \
+  --go-header-file hack/boilerplate/ce/boilerplate.go.txt
+
+# move generated code to the correct location
+mv v2/pkg/generated pkg/
+rm -rf v2
+
+# cleanup
+rm -rf vendor
 
 # generate CRDs from the Go types
+echodate "Generating CRDs"
 go run sigs.k8s.io/controller-tools/cmd/controller-gen \
   crd \
   object:headerFile=./hack/boilerplate/ce/boilerplate.go.txt \
@@ -73,7 +94,7 @@ locationMap='{
 }'
 
 failure=false
-echo "Annotating CRDs"
+echodate "Annotating CRDs"
 
 for filename in $CRD_DIR/*.yaml; do
   crdName="$(yq '.metadata.name' "$filename")"
