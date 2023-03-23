@@ -33,6 +33,7 @@ const (
 	ApplicationInstallationsFQDNName = ApplicationInstallationResourceName + "." + GroupName
 )
 
+// +genclient
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:resource:shortName=appinstall

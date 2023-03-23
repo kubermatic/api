@@ -17,12 +17,41 @@
 set -euo pipefail
 
 cd $(dirname $0)/..
+source hack/lib.sh
 
 CRD_DIR=crd/k8c.io
+CODEGEN_DIR=pkg/generated
 
-echo "Generating openAPI v3 CRDs"
+echodate "Removing old generated clients"
+rm -rf "$CODEGEN_DIR"
+
+echodate "Creating vendor directory"
+go mod vendor
+
+echodate "Generating Kubernetes clientset"
+
+echo "" > /tmp/headerfile
+
+# no deepcopy here, as controller-gen takes care of that
+bash vendor/k8s.io/code-generator/generate-groups.sh client,lister,informer \
+  k8c.io/api/v2/$CODEGEN_DIR \
+  k8c.io/api/v2/pkg/apis \
+  "kubermatic:v1 apps.kubermatic:v1" \
+  --go-header-file /tmp/headerfile
+
+# move generated code to the correct location; this should work regardless where
+# this repository has been cloned to
+mv $GOPATH/src/k8c.io/api/v2/pkg/generated pkg/
+
+# in case the repository was cloned to the module path in $GOPATH, make sure to
+# remove the leftover v2 directory
+rm -rf v2
+
+# cleanup
+rm -rf vendor
 
 # generate CRDs from the Go types
+echodate "Generating CRDs"
 go run sigs.k8s.io/controller-tools/cmd/controller-gen \
   crd \
   object:headerFile=./hack/boilerplate/ce/boilerplate.go.txt \
@@ -73,7 +102,7 @@ locationMap='{
 }'
 
 failure=false
-echo "Annotating CRDs"
+echodate "Annotating CRDs"
 
 for filename in $CRD_DIR/*.yaml; do
   crdName="$(yq '.metadata.name' "$filename")"

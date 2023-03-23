@@ -57,6 +57,7 @@ type SeedList struct {
 	Items []Seed `json:"items"`
 }
 
+// +genclient
 // +kubebuilder:object:generate=true
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status

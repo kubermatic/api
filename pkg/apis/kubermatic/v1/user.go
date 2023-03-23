@@ -30,6 +30,7 @@ const (
 	ServiceAccountInitialGroupLabel = "initialGroup"
 )
 
+// +genclient
 // +kubebuilder:resource:scope=Cluster
 // +kubebuilder:object:generate=true
 // +kubebuilder:object:root=true

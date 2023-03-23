@@ -203,8 +203,9 @@ type ApplicationDefinitionSpec struct {
 	Versions []ApplicationVersion `json:"versions"`
 }
 
-//+kubebuilder:object:root=true
-//+kubebuilder:resource:scope=Cluster,shortName=appdef
+// +genclient
+// +kubebuilder:object:root=true
+// +kubebuilder:resource:scope=Cluster,shortName=appdef
 
 // ApplicationDefinition is the Schema for the applicationdefinitions API.
 type ApplicationDefinition struct {
@@ -214,7 +215,7 @@ type ApplicationDefinition struct {
 	Spec ApplicationDefinitionSpec `json:"spec,omitempty"`
 }
 
-//+kubebuilder:object:root=true
+// +kubebuilder:object:root=true
 
 // ApplicationDefinitionList contains a list of ApplicationDefinition.
 type ApplicationDefinitionList struct {

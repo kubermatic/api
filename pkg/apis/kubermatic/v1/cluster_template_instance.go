@@ -21,6 +21,7 @@ import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 // ClusterTemplateInstanceOwnerAnnotationKey represents the user cluster owner.
 const ClusterTemplateInstanceOwnerAnnotationKey = "owner"
 
+// +genclient
 // +kubebuilder:resource:scope=Cluster
 // +kubebuilder:object:generate=true
 // +kubebuilder:object:root=true
