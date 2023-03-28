@@ -17,6 +17,7 @@ limitations under the License.
 package v1
 
 import (
+	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -87,4 +88,24 @@ type ResourceQuotaList struct {
 	metav1.ListMeta `json:"metadata,omitempty"`
 
 	Items []ResourceQuota `json:"items"`
+}
+
+// TODO: This is duplicated, find a better way to share it.
+
+// ResourceDetails holds the CPU, Memory and Storage quantities.
+type ResourceDetails struct {
+	// CPU holds the quantity of CPU. For the format, please check k8s.io/apimachinery/pkg/api/resource.Quantity.
+	CPU *resource.Quantity `json:"cpu,omitempty"`
+	// Memory represents the quantity of RAM size. For the format, please check k8s.io/apimachinery/pkg/api/resource.Quantity.
+	Memory *resource.Quantity `json:"memory,omitempty"`
+	// Storage represents the disk size. For the format, please check k8s.io/apimachinery/pkg/api/resource.Quantity.
+	Storage *resource.Quantity `json:"storage,omitempty"`
+}
+
+func emptyQuantity(q *resource.Quantity) bool {
+	return q == nil || q.IsZero()
+}
+
+func (r *ResourceDetails) IsEmpty() bool {
+	return r == nil || (emptyQuantity(r.CPU) && emptyQuantity(r.Memory) && emptyQuantity(r.Storage))
 }
