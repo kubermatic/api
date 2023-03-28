@@ -23,8 +23,8 @@ package v1
 
 import (
 	"encoding/json"
-	open_policy_agent "k8c.io/api/v2/pkg/apis/open-policy-agent"
-	"k8c.io/api/v2/pkg/semver"
+	open_policy_agent "k8c.io/api/v3/pkg/apis/open-policy-agent"
+	"k8c.io/api/v3/pkg/semver"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"

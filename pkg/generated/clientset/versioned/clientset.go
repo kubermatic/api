@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"net/http"
 
-	appsv1 "k8c.io/api/v2/pkg/generated/clientset/versioned/typed/apps.kubermatic/v1"
-	kubermaticv1 "k8c.io/api/v2/pkg/generated/clientset/versioned/typed/kubermatic/v1"
+	appsv1 "k8c.io/api/v3/pkg/generated/clientset/versioned/typed/apps.kubermatic/v1"
+	kubermaticv1 "k8c.io/api/v3/pkg/generated/clientset/versioned/typed/kubermatic/v1"
 	discovery "k8s.io/client-go/discovery"
 	rest "k8s.io/client-go/rest"
 	flowcontrol "k8s.io/client-go/util/flowcontrol"

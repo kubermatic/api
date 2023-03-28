@@ -5,8 +5,8 @@ package v1
 import (
 	"net/http"
 
-	v1 "k8c.io/api/v2/pkg/apis/apps.kubermatic/v1"
-	"k8c.io/api/v2/pkg/generated/clientset/versioned/scheme"
+	v1 "k8c.io/api/v3/pkg/apis/apps.kubermatic/v1"
+	"k8c.io/api/v3/pkg/generated/clientset/versioned/scheme"
 	rest "k8s.io/client-go/rest"
 )
 

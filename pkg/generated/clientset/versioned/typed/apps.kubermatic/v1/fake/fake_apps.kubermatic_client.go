@@ -3,7 +3,7 @@
 package fake
 
 import (
-	v1 "k8c.io/api/v2/pkg/generated/clientset/versioned/typed/apps.kubermatic/v1"
+	v1 "k8c.io/api/v3/pkg/generated/clientset/versioned/typed/apps.kubermatic/v1"
 	rest "k8s.io/client-go/rest"
 	testing "k8s.io/client-go/testing"
 )

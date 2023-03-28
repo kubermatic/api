@@ -22,7 +22,7 @@ import (
 	"fmt"
 	"strings"
 
-	"k8c.io/api/v2/pkg/semver"
+	"k8c.io/api/v3/pkg/semver"
 
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"

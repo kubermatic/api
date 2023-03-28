@@ -3,11 +3,11 @@
 package fake
 
 import (
-	clientset "k8c.io/api/v2/pkg/generated/clientset/versioned"
-	appsv1 "k8c.io/api/v2/pkg/generated/clientset/versioned/typed/apps.kubermatic/v1"
-	fakeappsv1 "k8c.io/api/v2/pkg/generated/clientset/versioned/typed/apps.kubermatic/v1/fake"
-	kubermaticv1 "k8c.io/api/v2/pkg/generated/clientset/versioned/typed/kubermatic/v1"
-	fakekubermaticv1 "k8c.io/api/v2/pkg/generated/clientset/versioned/typed/kubermatic/v1/fake"
+	clientset "k8c.io/api/v3/pkg/generated/clientset/versioned"
+	appsv1 "k8c.io/api/v3/pkg/generated/clientset/versioned/typed/apps.kubermatic/v1"
+	fakeappsv1 "k8c.io/api/v3/pkg/generated/clientset/versioned/typed/apps.kubermatic/v1/fake"
+	kubermaticv1 "k8c.io/api/v3/pkg/generated/clientset/versioned/typed/kubermatic/v1"
+	fakekubermaticv1 "k8c.io/api/v3/pkg/generated/clientset/versioned/typed/kubermatic/v1/fake"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/watch"
 	"k8s.io/client-go/discovery"

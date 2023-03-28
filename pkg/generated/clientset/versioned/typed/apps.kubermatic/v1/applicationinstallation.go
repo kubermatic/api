@@ -6,8 +6,8 @@ import (
 	"context"
 	"time"
 
-	v1 "k8c.io/api/v2/pkg/apis/apps.kubermatic/v1"
-	scheme "k8c.io/api/v2/pkg/generated/clientset/versioned/scheme"
+	v1 "k8c.io/api/v3/pkg/apis/apps.kubermatic/v1"
+	scheme "k8c.io/api/v3/pkg/generated/clientset/versioned/scheme"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"

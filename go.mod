@@ -1,4 +1,4 @@
-module k8c.io/api/v2
+module k8c.io/api/v3
 
 go 1.19
 

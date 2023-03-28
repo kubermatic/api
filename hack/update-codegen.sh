@@ -34,18 +34,18 @@ echo "" > /tmp/headerfile
 
 # no deepcopy here, as controller-gen takes care of that
 bash vendor/k8s.io/code-generator/generate-groups.sh client,lister,informer \
-  k8c.io/api/v2/$CODEGEN_DIR \
-  k8c.io/api/v2/pkg/apis \
+  k8c.io/api/v3/$CODEGEN_DIR \
+  k8c.io/api/v3/pkg/apis \
   "kubermatic:v1 apps.kubermatic:v1" \
   --go-header-file /tmp/headerfile
 
 # move generated code to the correct location; this should work regardless where
 # this repository has been cloned to
-mv $GOPATH/src/k8c.io/api/v2/pkg/generated pkg/
+mv $GOPATH/src/k8c.io/api/v3/pkg/generated pkg/
 
 # in case the repository was cloned to the module path in $GOPATH, make sure to
-# remove the leftover v2 directory
-rm -rf v2
+# remove the leftover v3 directory
+rm -rf v3
 
 # cleanup
 rm -rf vendor
