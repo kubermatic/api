@@ -40,7 +40,7 @@ type admissionPlugins struct {
 }
 
 // newAdmissionPlugins returns a AdmissionPlugins
-func newAdmissionPlugins(c *EeKubermaticV1Client, namespace string) *admissionPlugins {
+func newAdmissionPlugins(c *KubermaticEnterpriseV1Client, namespace string) *admissionPlugins {
 	return &admissionPlugins{
 		client: c.RESTClient(),
 		ns:     namespace,

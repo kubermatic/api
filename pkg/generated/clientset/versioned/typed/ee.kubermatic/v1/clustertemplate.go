@@ -40,7 +40,7 @@ type clusterTemplates struct {
 }
 
 // newClusterTemplates returns a ClusterTemplates
-func newClusterTemplates(c *EeKubermaticV1Client, namespace string) *clusterTemplates {
+func newClusterTemplates(c *KubermaticEnterpriseV1Client, namespace string) *clusterTemplates {
 	return &clusterTemplates{
 		client: c.RESTClient(),
 		ns:     namespace,

@@ -16,7 +16,7 @@ import (
 
 // FakeSeeds implements SeedInterface
 type FakeSeeds struct {
-	Fake *FakeEeKubermaticV1
+	Fake *FakeKubermaticEnterpriseV1
 	ns   string
 }
 

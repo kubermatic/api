@@ -41,7 +41,7 @@ type clusters struct {
 }
 
 // newClusters returns a Clusters
-func newClusters(c *EeKubermaticV1Client, namespace string) *clusters {
+func newClusters(c *KubermaticEnterpriseV1Client, namespace string) *clusters {
 	return &clusters{
 		client: c.RESTClient(),
 		ns:     namespace,

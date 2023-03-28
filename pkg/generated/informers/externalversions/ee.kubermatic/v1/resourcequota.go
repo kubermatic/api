@@ -46,13 +46,13 @@ func NewFilteredResourceQuotaInformer(client versioned.Interface, namespace stri
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.EeKubermaticV1().ResourceQuotas(namespace).List(context.TODO(), options)
+				return client.KubermaticEnterpriseV1().ResourceQuotas(namespace).List(context.TODO(), options)
 			},
 			WatchFunc: func(options metav1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.EeKubermaticV1().ResourceQuotas(namespace).Watch(context.TODO(), options)
+				return client.KubermaticEnterpriseV1().ResourceQuotas(namespace).Watch(context.TODO(), options)
 			},
 		},
 		&eekubermaticv1.ResourceQuota{},

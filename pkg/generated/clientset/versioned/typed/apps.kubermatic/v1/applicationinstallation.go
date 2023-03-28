@@ -41,7 +41,7 @@ type applicationInstallations struct {
 }
 
 // newApplicationInstallations returns a ApplicationInstallations
-func newApplicationInstallations(c *AppsKubermaticV1Client, namespace string) *applicationInstallations {
+func newApplicationInstallations(c *KubermaticAppsV1Client, namespace string) *applicationInstallations {
 	return &applicationInstallations{
 		client: c.RESTClient(),
 		ns:     namespace,

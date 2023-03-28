@@ -41,7 +41,7 @@ type users struct {
 }
 
 // newUsers returns a Users
-func newUsers(c *EeKubermaticV1Client, namespace string) *users {
+func newUsers(c *KubermaticEnterpriseV1Client, namespace string) *users {
 	return &users{
 		client: c.RESTClient(),
 		ns:     namespace,

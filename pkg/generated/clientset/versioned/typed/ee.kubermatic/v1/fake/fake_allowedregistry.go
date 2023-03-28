@@ -16,7 +16,7 @@ import (
 
 // FakeAllowedRegistries implements AllowedRegistryInterface
 type FakeAllowedRegistries struct {
-	Fake *FakeEeKubermaticV1
+	Fake *FakeKubermaticEnterpriseV1
 	ns   string
 }
 

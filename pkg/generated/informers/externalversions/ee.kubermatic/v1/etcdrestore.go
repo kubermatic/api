@@ -46,13 +46,13 @@ func NewFilteredEtcdRestoreInformer(client versioned.Interface, namespace string
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.EeKubermaticV1().EtcdRestores(namespace).List(context.TODO(), options)
+				return client.KubermaticEnterpriseV1().EtcdRestores(namespace).List(context.TODO(), options)
 			},
 			WatchFunc: func(options metav1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.EeKubermaticV1().EtcdRestores(namespace).Watch(context.TODO(), options)
+				return client.KubermaticEnterpriseV1().EtcdRestores(namespace).Watch(context.TODO(), options)
 			},
 		},
 		&eekubermaticv1.EtcdRestore{},

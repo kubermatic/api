@@ -40,7 +40,7 @@ type allowedRegistries struct {
 }
 
 // newAllowedRegistries returns a AllowedRegistries
-func newAllowedRegistries(c *EeKubermaticV1Client, namespace string) *allowedRegistries {
+func newAllowedRegistries(c *KubermaticEnterpriseV1Client, namespace string) *allowedRegistries {
 	return &allowedRegistries{
 		client: c.RESTClient(),
 		ns:     namespace,

@@ -41,7 +41,7 @@ type seeds struct {
 }
 
 // newSeeds returns a Seeds
-func newSeeds(c *EeKubermaticV1Client, namespace string) *seeds {
+func newSeeds(c *KubermaticEnterpriseV1Client, namespace string) *seeds {
 	return &seeds{
 		client: c.RESTClient(),
 		ns:     namespace,

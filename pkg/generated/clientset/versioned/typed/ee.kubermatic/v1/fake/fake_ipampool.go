@@ -16,7 +16,7 @@ import (
 
 // FakeIPAMPools implements IPAMPoolInterface
 type FakeIPAMPools struct {
-	Fake *FakeEeKubermaticV1
+	Fake *FakeKubermaticEnterpriseV1
 	ns   string
 }
 

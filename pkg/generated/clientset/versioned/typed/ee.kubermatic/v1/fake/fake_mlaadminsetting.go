@@ -16,7 +16,7 @@ import (
 
 // FakeMLAAdminSettings implements MLAAdminSettingInterface
 type FakeMLAAdminSettings struct {
-	Fake *FakeEeKubermaticV1
+	Fake *FakeKubermaticEnterpriseV1
 	ns   string
 }
 

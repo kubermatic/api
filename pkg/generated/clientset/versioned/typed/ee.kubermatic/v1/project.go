@@ -41,7 +41,7 @@ type projects struct {
 }
 
 // newProjects returns a Projects
-func newProjects(c *EeKubermaticV1Client, namespace string) *projects {
+func newProjects(c *KubermaticEnterpriseV1Client, namespace string) *projects {
 	return &projects{
 		client: c.RESTClient(),
 		ns:     namespace,

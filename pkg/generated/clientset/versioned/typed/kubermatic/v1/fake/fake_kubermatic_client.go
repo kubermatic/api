@@ -28,10 +28,6 @@ func (c *FakeKubermaticV1) Alertmanagers(namespace string) v1.AlertmanagerInterf
 	return &FakeAlertmanagers{c, namespace}
 }
 
-func (c *FakeKubermaticV1) AllowedRegistries(namespace string) v1.AllowedRegistryInterface {
-	return &FakeAllowedRegistries{c, namespace}
-}
-
 func (c *FakeKubermaticV1) Clusters(namespace string) v1.ClusterInterface {
 	return &FakeClusters{c, namespace}
 }
@@ -42,30 +38,6 @@ func (c *FakeKubermaticV1) ClusterTemplates(namespace string) v1.ClusterTemplate
 
 func (c *FakeKubermaticV1) ClusterTemplateInstances(namespace string) v1.ClusterTemplateInstanceInterface {
 	return &FakeClusterTemplateInstances{c, namespace}
-}
-
-func (c *FakeKubermaticV1) Constraints(namespace string) v1.ConstraintInterface {
-	return &FakeConstraints{c, namespace}
-}
-
-func (c *FakeKubermaticV1) ConstraintTemplates(namespace string) v1.ConstraintTemplateInterface {
-	return &FakeConstraintTemplates{c, namespace}
-}
-
-func (c *FakeKubermaticV1) EtcdBackupConfigs(namespace string) v1.EtcdBackupConfigInterface {
-	return &FakeEtcdBackupConfigs{c, namespace}
-}
-
-func (c *FakeKubermaticV1) EtcdRestores(namespace string) v1.EtcdRestoreInterface {
-	return &FakeEtcdRestores{c, namespace}
-}
-
-func (c *FakeKubermaticV1) ExternalClusters(namespace string) v1.ExternalClusterInterface {
-	return &FakeExternalClusters{c, namespace}
-}
-
-func (c *FakeKubermaticV1) GroupProjectBindings(namespace string) v1.GroupProjectBindingInterface {
-	return &FakeGroupProjectBindings{c, namespace}
 }
 
 func (c *FakeKubermaticV1) IPAMAllocations(namespace string) v1.IPAMAllocationInterface {
@@ -96,10 +68,6 @@ func (c *FakeKubermaticV1) Projects(namespace string) v1.ProjectInterface {
 	return &FakeProjects{c, namespace}
 }
 
-func (c *FakeKubermaticV1) ResourceQuotas(namespace string) v1.ResourceQuotaInterface {
-	return &FakeResourceQuotas{c, namespace}
-}
-
 func (c *FakeKubermaticV1) RuleGroups(namespace string) v1.RuleGroupInterface {
 	return &FakeRuleGroups{c, namespace}
 }
@@ -110,10 +78,6 @@ func (c *FakeKubermaticV1) Seeds(namespace string) v1.SeedInterface {
 
 func (c *FakeKubermaticV1) Users(namespace string) v1.UserInterface {
 	return &FakeUsers{c, namespace}
-}
-
-func (c *FakeKubermaticV1) UserProjectBindings(namespace string) v1.UserProjectBindingInterface {
-	return &FakeUserProjectBindings{c, namespace}
 }
 
 func (c *FakeKubermaticV1) UserSSHKeys(namespace string) v1.UserSSHKeyInterface {

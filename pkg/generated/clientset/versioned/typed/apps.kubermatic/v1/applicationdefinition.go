@@ -40,7 +40,7 @@ type applicationDefinitions struct {
 }
 
 // newApplicationDefinitions returns a ApplicationDefinitions
-func newApplicationDefinitions(c *AppsKubermaticV1Client, namespace string) *applicationDefinitions {
+func newApplicationDefinitions(c *KubermaticAppsV1Client, namespace string) *applicationDefinitions {
 	return &applicationDefinitions{
 		client: c.RESTClient(),
 		ns:     namespace,

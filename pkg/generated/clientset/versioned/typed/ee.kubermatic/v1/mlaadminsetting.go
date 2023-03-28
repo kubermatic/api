@@ -40,7 +40,7 @@ type mLAAdminSettings struct {
 }
 
 // newMLAAdminSettings returns a MLAAdminSettings
-func newMLAAdminSettings(c *EeKubermaticV1Client, namespace string) *mLAAdminSettings {
+func newMLAAdminSettings(c *KubermaticEnterpriseV1Client, namespace string) *mLAAdminSettings {
 	return &mLAAdminSettings{
 		client: c.RESTClient(),
 		ns:     namespace,

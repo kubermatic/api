@@ -16,7 +16,7 @@ import (
 
 // FakeAlertmanagers implements AlertmanagerInterface
 type FakeAlertmanagers struct {
-	Fake *FakeEeKubermaticV1
+	Fake *FakeKubermaticEnterpriseV1
 	ns   string
 }
 

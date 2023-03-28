@@ -16,7 +16,7 @@ import (
 
 // FakeKubermaticConfigurations implements KubermaticConfigurationInterface
 type FakeKubermaticConfigurations struct {
-	Fake *FakeEeKubermaticV1
+	Fake *FakeKubermaticEnterpriseV1
 	ns   string
 }
 

@@ -40,7 +40,7 @@ type userProjectBindings struct {
 }
 
 // newUserProjectBindings returns a UserProjectBindings
-func newUserProjectBindings(c *EeKubermaticV1Client, namespace string) *userProjectBindings {
+func newUserProjectBindings(c *KubermaticEnterpriseV1Client, namespace string) *userProjectBindings {
 	return &userProjectBindings{
 		client: c.RESTClient(),
 		ns:     namespace,

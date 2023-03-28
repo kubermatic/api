@@ -16,26 +16,12 @@ type Interface interface {
 	AdmissionPlugins() AdmissionPluginInformer
 	// Alertmanagers returns a AlertmanagerInformer.
 	Alertmanagers() AlertmanagerInformer
-	// AllowedRegistries returns a AllowedRegistryInformer.
-	AllowedRegistries() AllowedRegistryInformer
 	// Clusters returns a ClusterInformer.
 	Clusters() ClusterInformer
 	// ClusterTemplates returns a ClusterTemplateInformer.
 	ClusterTemplates() ClusterTemplateInformer
 	// ClusterTemplateInstances returns a ClusterTemplateInstanceInformer.
 	ClusterTemplateInstances() ClusterTemplateInstanceInformer
-	// Constraints returns a ConstraintInformer.
-	Constraints() ConstraintInformer
-	// ConstraintTemplates returns a ConstraintTemplateInformer.
-	ConstraintTemplates() ConstraintTemplateInformer
-	// EtcdBackupConfigs returns a EtcdBackupConfigInformer.
-	EtcdBackupConfigs() EtcdBackupConfigInformer
-	// EtcdRestores returns a EtcdRestoreInformer.
-	EtcdRestores() EtcdRestoreInformer
-	// ExternalClusters returns a ExternalClusterInformer.
-	ExternalClusters() ExternalClusterInformer
-	// GroupProjectBindings returns a GroupProjectBindingInformer.
-	GroupProjectBindings() GroupProjectBindingInformer
 	// IPAMAllocations returns a IPAMAllocationInformer.
 	IPAMAllocations() IPAMAllocationInformer
 	// IPAMPools returns a IPAMPoolInformer.
@@ -50,16 +36,12 @@ type Interface interface {
 	Presets() PresetInformer
 	// Projects returns a ProjectInformer.
 	Projects() ProjectInformer
-	// ResourceQuotas returns a ResourceQuotaInformer.
-	ResourceQuotas() ResourceQuotaInformer
 	// RuleGroups returns a RuleGroupInformer.
 	RuleGroups() RuleGroupInformer
 	// Seeds returns a SeedInformer.
 	Seeds() SeedInformer
 	// Users returns a UserInformer.
 	Users() UserInformer
-	// UserProjectBindings returns a UserProjectBindingInformer.
-	UserProjectBindings() UserProjectBindingInformer
 	// UserSSHKeys returns a UserSSHKeyInformer.
 	UserSSHKeys() UserSSHKeyInformer
 }
@@ -95,11 +77,6 @@ func (v *version) Alertmanagers() AlertmanagerInformer {
 	return &alertmanagerInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
-// AllowedRegistries returns a AllowedRegistryInformer.
-func (v *version) AllowedRegistries() AllowedRegistryInformer {
-	return &allowedRegistryInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
-}
-
 // Clusters returns a ClusterInformer.
 func (v *version) Clusters() ClusterInformer {
 	return &clusterInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
@@ -113,36 +90,6 @@ func (v *version) ClusterTemplates() ClusterTemplateInformer {
 // ClusterTemplateInstances returns a ClusterTemplateInstanceInformer.
 func (v *version) ClusterTemplateInstances() ClusterTemplateInstanceInformer {
 	return &clusterTemplateInstanceInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
-}
-
-// Constraints returns a ConstraintInformer.
-func (v *version) Constraints() ConstraintInformer {
-	return &constraintInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
-}
-
-// ConstraintTemplates returns a ConstraintTemplateInformer.
-func (v *version) ConstraintTemplates() ConstraintTemplateInformer {
-	return &constraintTemplateInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
-}
-
-// EtcdBackupConfigs returns a EtcdBackupConfigInformer.
-func (v *version) EtcdBackupConfigs() EtcdBackupConfigInformer {
-	return &etcdBackupConfigInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
-}
-
-// EtcdRestores returns a EtcdRestoreInformer.
-func (v *version) EtcdRestores() EtcdRestoreInformer {
-	return &etcdRestoreInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
-}
-
-// ExternalClusters returns a ExternalClusterInformer.
-func (v *version) ExternalClusters() ExternalClusterInformer {
-	return &externalClusterInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
-}
-
-// GroupProjectBindings returns a GroupProjectBindingInformer.
-func (v *version) GroupProjectBindings() GroupProjectBindingInformer {
-	return &groupProjectBindingInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // IPAMAllocations returns a IPAMAllocationInformer.
@@ -180,11 +127,6 @@ func (v *version) Projects() ProjectInformer {
 	return &projectInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
-// ResourceQuotas returns a ResourceQuotaInformer.
-func (v *version) ResourceQuotas() ResourceQuotaInformer {
-	return &resourceQuotaInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
-}
-
 // RuleGroups returns a RuleGroupInformer.
 func (v *version) RuleGroups() RuleGroupInformer {
 	return &ruleGroupInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
@@ -198,11 +140,6 @@ func (v *version) Seeds() SeedInformer {
 // Users returns a UserInformer.
 func (v *version) Users() UserInformer {
 	return &userInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
-}
-
-// UserProjectBindings returns a UserProjectBindingInformer.
-func (v *version) UserProjectBindings() UserProjectBindingInformer {
-	return &userProjectBindingInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // UserSSHKeys returns a UserSSHKeyInformer.

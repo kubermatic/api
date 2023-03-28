@@ -10,25 +10,11 @@ type AdmissionPluginExpansion interface{}
 
 type AlertmanagerExpansion interface{}
 
-type AllowedRegistryExpansion interface{}
-
 type ClusterExpansion interface{}
 
 type ClusterTemplateExpansion interface{}
 
 type ClusterTemplateInstanceExpansion interface{}
-
-type ConstraintExpansion interface{}
-
-type ConstraintTemplateExpansion interface{}
-
-type EtcdBackupConfigExpansion interface{}
-
-type EtcdRestoreExpansion interface{}
-
-type ExternalClusterExpansion interface{}
-
-type GroupProjectBindingExpansion interface{}
 
 type IPAMAllocationExpansion interface{}
 
@@ -44,14 +30,10 @@ type PresetExpansion interface{}
 
 type ProjectExpansion interface{}
 
-type ResourceQuotaExpansion interface{}
-
 type RuleGroupExpansion interface{}
 
 type SeedExpansion interface{}
 
 type UserExpansion interface{}
-
-type UserProjectBindingExpansion interface{}
 
 type UserSSHKeyExpansion interface{}

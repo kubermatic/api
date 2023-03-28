@@ -41,7 +41,7 @@ type addons struct {
 }
 
 // newAddons returns a Addons
-func newAddons(c *EeKubermaticV1Client, namespace string) *addons {
+func newAddons(c *KubermaticEnterpriseV1Client, namespace string) *addons {
 	return &addons{
 		client: c.RESTClient(),
 		ns:     namespace,

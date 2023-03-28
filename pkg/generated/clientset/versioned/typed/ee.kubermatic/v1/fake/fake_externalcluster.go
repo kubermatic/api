@@ -16,7 +16,7 @@ import (
 
 // FakeExternalClusters implements ExternalClusterInterface
 type FakeExternalClusters struct {
-	Fake *FakeEeKubermaticV1
+	Fake *FakeKubermaticEnterpriseV1
 	ns   string
 }
 

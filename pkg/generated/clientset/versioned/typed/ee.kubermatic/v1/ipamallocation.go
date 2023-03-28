@@ -40,7 +40,7 @@ type iPAMAllocations struct {
 }
 
 // newIPAMAllocations returns a IPAMAllocations
-func newIPAMAllocations(c *EeKubermaticV1Client, namespace string) *iPAMAllocations {
+func newIPAMAllocations(c *KubermaticEnterpriseV1Client, namespace string) *iPAMAllocations {
 	return &iPAMAllocations{
 		client: c.RESTClient(),
 		ns:     namespace,

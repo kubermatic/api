@@ -40,7 +40,7 @@ type addonConfigs struct {
 }
 
 // newAddonConfigs returns a AddonConfigs
-func newAddonConfigs(c *EeKubermaticV1Client, namespace string) *addonConfigs {
+func newAddonConfigs(c *KubermaticEnterpriseV1Client, namespace string) *addonConfigs {
 	return &addonConfigs{
 		client: c.RESTClient(),
 		ns:     namespace,

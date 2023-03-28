@@ -16,7 +16,7 @@ import (
 
 // FakeGroupProjectBindings implements GroupProjectBindingInterface
 type FakeGroupProjectBindings struct {
-	Fake *FakeEeKubermaticV1
+	Fake *FakeKubermaticEnterpriseV1
 	ns   string
 }
 

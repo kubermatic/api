@@ -16,7 +16,7 @@ import (
 
 // FakeResourceQuotas implements ResourceQuotaInterface
 type FakeResourceQuotas struct {
-	Fake *FakeEeKubermaticV1
+	Fake *FakeKubermaticEnterpriseV1
 	ns   string
 }
 

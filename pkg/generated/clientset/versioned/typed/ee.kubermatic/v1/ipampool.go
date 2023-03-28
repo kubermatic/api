@@ -40,7 +40,7 @@ type iPAMPools struct {
 }
 
 // newIPAMPools returns a IPAMPools
-func newIPAMPools(c *EeKubermaticV1Client, namespace string) *iPAMPools {
+func newIPAMPools(c *KubermaticEnterpriseV1Client, namespace string) *iPAMPools {
 	return &iPAMPools{
 		client: c.RESTClient(),
 		ns:     namespace,

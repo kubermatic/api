@@ -41,7 +41,7 @@ type alertmanagers struct {
 }
 
 // newAlertmanagers returns a Alertmanagers
-func newAlertmanagers(c *EeKubermaticV1Client, namespace string) *alertmanagers {
+func newAlertmanagers(c *KubermaticEnterpriseV1Client, namespace string) *alertmanagers {
 	return &alertmanagers{
 		client: c.RESTClient(),
 		ns:     namespace,

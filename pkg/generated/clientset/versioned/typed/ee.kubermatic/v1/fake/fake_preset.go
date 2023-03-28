@@ -16,7 +16,7 @@ import (
 
 // FakePresets implements PresetInterface
 type FakePresets struct {
-	Fake *FakeEeKubermaticV1
+	Fake *FakeKubermaticEnterpriseV1
 	ns   string
 }
 

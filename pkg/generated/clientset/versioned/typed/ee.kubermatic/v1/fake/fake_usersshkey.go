@@ -16,7 +16,7 @@ import (
 
 // FakeUserSSHKeys implements UserSSHKeyInterface
 type FakeUserSSHKeys struct {
-	Fake *FakeEeKubermaticV1
+	Fake *FakeKubermaticEnterpriseV1
 	ns   string
 }
 

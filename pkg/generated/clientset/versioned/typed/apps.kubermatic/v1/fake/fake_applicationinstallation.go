@@ -16,7 +16,7 @@ import (
 
 // FakeApplicationInstallations implements ApplicationInstallationInterface
 type FakeApplicationInstallations struct {
-	Fake *FakeAppsKubermaticV1
+	Fake *FakeKubermaticAppsV1
 	ns   string
 }
 

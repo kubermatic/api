@@ -40,7 +40,7 @@ type presets struct {
 }
 
 // newPresets returns a Presets
-func newPresets(c *EeKubermaticV1Client, namespace string) *presets {
+func newPresets(c *KubermaticEnterpriseV1Client, namespace string) *presets {
 	return &presets{
 		client: c.RESTClient(),
 		ns:     namespace,

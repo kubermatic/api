@@ -40,7 +40,7 @@ type constraintTemplates struct {
 }
 
 // newConstraintTemplates returns a ConstraintTemplates
-func newConstraintTemplates(c *EeKubermaticV1Client, namespace string) *constraintTemplates {
+func newConstraintTemplates(c *KubermaticEnterpriseV1Client, namespace string) *constraintTemplates {
 	return &constraintTemplates{
 		client: c.RESTClient(),
 		ns:     namespace,

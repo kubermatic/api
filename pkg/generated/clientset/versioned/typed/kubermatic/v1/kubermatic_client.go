@@ -16,16 +16,9 @@ type KubermaticV1Interface interface {
 	AddonConfigsGetter
 	AdmissionPluginsGetter
 	AlertmanagersGetter
-	AllowedRegistriesGetter
 	ClustersGetter
 	ClusterTemplatesGetter
 	ClusterTemplateInstancesGetter
-	ConstraintsGetter
-	ConstraintTemplatesGetter
-	EtcdBackupConfigsGetter
-	EtcdRestoresGetter
-	ExternalClustersGetter
-	GroupProjectBindingsGetter
 	IPAMAllocationsGetter
 	IPAMPoolsGetter
 	KubermaticConfigurationsGetter
@@ -33,11 +26,9 @@ type KubermaticV1Interface interface {
 	MLAAdminSettingsGetter
 	PresetsGetter
 	ProjectsGetter
-	ResourceQuotasGetter
 	RuleGroupsGetter
 	SeedsGetter
 	UsersGetter
-	UserProjectBindingsGetter
 	UserSSHKeysGetter
 }
 
@@ -62,10 +53,6 @@ func (c *KubermaticV1Client) Alertmanagers(namespace string) AlertmanagerInterfa
 	return newAlertmanagers(c, namespace)
 }
 
-func (c *KubermaticV1Client) AllowedRegistries(namespace string) AllowedRegistryInterface {
-	return newAllowedRegistries(c, namespace)
-}
-
 func (c *KubermaticV1Client) Clusters(namespace string) ClusterInterface {
 	return newClusters(c, namespace)
 }
@@ -76,30 +63,6 @@ func (c *KubermaticV1Client) ClusterTemplates(namespace string) ClusterTemplateI
 
 func (c *KubermaticV1Client) ClusterTemplateInstances(namespace string) ClusterTemplateInstanceInterface {
 	return newClusterTemplateInstances(c, namespace)
-}
-
-func (c *KubermaticV1Client) Constraints(namespace string) ConstraintInterface {
-	return newConstraints(c, namespace)
-}
-
-func (c *KubermaticV1Client) ConstraintTemplates(namespace string) ConstraintTemplateInterface {
-	return newConstraintTemplates(c, namespace)
-}
-
-func (c *KubermaticV1Client) EtcdBackupConfigs(namespace string) EtcdBackupConfigInterface {
-	return newEtcdBackupConfigs(c, namespace)
-}
-
-func (c *KubermaticV1Client) EtcdRestores(namespace string) EtcdRestoreInterface {
-	return newEtcdRestores(c, namespace)
-}
-
-func (c *KubermaticV1Client) ExternalClusters(namespace string) ExternalClusterInterface {
-	return newExternalClusters(c, namespace)
-}
-
-func (c *KubermaticV1Client) GroupProjectBindings(namespace string) GroupProjectBindingInterface {
-	return newGroupProjectBindings(c, namespace)
 }
 
 func (c *KubermaticV1Client) IPAMAllocations(namespace string) IPAMAllocationInterface {
@@ -130,10 +93,6 @@ func (c *KubermaticV1Client) Projects(namespace string) ProjectInterface {
 	return newProjects(c, namespace)
 }
 
-func (c *KubermaticV1Client) ResourceQuotas(namespace string) ResourceQuotaInterface {
-	return newResourceQuotas(c, namespace)
-}
-
 func (c *KubermaticV1Client) RuleGroups(namespace string) RuleGroupInterface {
 	return newRuleGroups(c, namespace)
 }
@@ -144,10 +103,6 @@ func (c *KubermaticV1Client) Seeds(namespace string) SeedInterface {
 
 func (c *KubermaticV1Client) Users(namespace string) UserInterface {
 	return newUsers(c, namespace)
-}
-
-func (c *KubermaticV1Client) UserProjectBindings(namespace string) UserProjectBindingInterface {
-	return newUserProjectBindings(c, namespace)
 }
 
 func (c *KubermaticV1Client) UserSSHKeys(namespace string) UserSSHKeyInterface {

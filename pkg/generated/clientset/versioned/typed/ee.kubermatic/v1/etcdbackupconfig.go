@@ -41,7 +41,7 @@ type etcdBackupConfigs struct {
 }
 
 // newEtcdBackupConfigs returns a EtcdBackupConfigs
-func newEtcdBackupConfigs(c *EeKubermaticV1Client, namespace string) *etcdBackupConfigs {
+func newEtcdBackupConfigs(c *KubermaticEnterpriseV1Client, namespace string) *etcdBackupConfigs {
 	return &etcdBackupConfigs{
 		client: c.RESTClient(),
 		ns:     namespace,

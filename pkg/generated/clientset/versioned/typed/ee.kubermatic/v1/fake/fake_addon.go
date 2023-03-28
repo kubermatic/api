@@ -16,7 +16,7 @@ import (
 
 // FakeAddons implements AddonInterface
 type FakeAddons struct {
-	Fake *FakeEeKubermaticV1
+	Fake *FakeKubermaticEnterpriseV1
 	ns   string
 }
 

@@ -16,7 +16,7 @@ import (
 
 // FakeConstraintTemplates implements ConstraintTemplateInterface
 type FakeConstraintTemplates struct {
-	Fake *FakeEeKubermaticV1
+	Fake *FakeKubermaticEnterpriseV1
 	ns   string
 }
 

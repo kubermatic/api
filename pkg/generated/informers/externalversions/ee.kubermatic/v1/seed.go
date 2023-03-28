@@ -46,13 +46,13 @@ func NewFilteredSeedInformer(client versioned.Interface, namespace string, resyn
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.EeKubermaticV1().Seeds(namespace).List(context.TODO(), options)
+				return client.KubermaticEnterpriseV1().Seeds(namespace).List(context.TODO(), options)
 			},
 			WatchFunc: func(options metav1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.EeKubermaticV1().Seeds(namespace).Watch(context.TODO(), options)
+				return client.KubermaticEnterpriseV1().Seeds(namespace).Watch(context.TODO(), options)
 			},
 		},
 		&eekubermaticv1.Seed{},

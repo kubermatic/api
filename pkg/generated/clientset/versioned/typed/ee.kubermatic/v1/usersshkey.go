@@ -40,7 +40,7 @@ type userSSHKeys struct {
 }
 
 // newUserSSHKeys returns a UserSSHKeys
-func newUserSSHKeys(c *EeKubermaticV1Client, namespace string) *userSSHKeys {
+func newUserSSHKeys(c *KubermaticEnterpriseV1Client, namespace string) *userSSHKeys {
 	return &userSSHKeys{
 		client: c.RESTClient(),
 		ns:     namespace,

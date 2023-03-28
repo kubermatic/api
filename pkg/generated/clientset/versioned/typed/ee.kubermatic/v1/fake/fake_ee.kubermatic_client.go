@@ -8,121 +8,121 @@ import (
 	testing "k8s.io/client-go/testing"
 )
 
-type FakeEeKubermaticV1 struct {
+type FakeKubermaticEnterpriseV1 struct {
 	*testing.Fake
 }
 
-func (c *FakeEeKubermaticV1) Addons(namespace string) v1.AddonInterface {
+func (c *FakeKubermaticEnterpriseV1) Addons(namespace string) v1.AddonInterface {
 	return &FakeAddons{c, namespace}
 }
 
-func (c *FakeEeKubermaticV1) AddonConfigs(namespace string) v1.AddonConfigInterface {
+func (c *FakeKubermaticEnterpriseV1) AddonConfigs(namespace string) v1.AddonConfigInterface {
 	return &FakeAddonConfigs{c, namespace}
 }
 
-func (c *FakeEeKubermaticV1) AdmissionPlugins(namespace string) v1.AdmissionPluginInterface {
+func (c *FakeKubermaticEnterpriseV1) AdmissionPlugins(namespace string) v1.AdmissionPluginInterface {
 	return &FakeAdmissionPlugins{c, namespace}
 }
 
-func (c *FakeEeKubermaticV1) Alertmanagers(namespace string) v1.AlertmanagerInterface {
+func (c *FakeKubermaticEnterpriseV1) Alertmanagers(namespace string) v1.AlertmanagerInterface {
 	return &FakeAlertmanagers{c, namespace}
 }
 
-func (c *FakeEeKubermaticV1) AllowedRegistries(namespace string) v1.AllowedRegistryInterface {
+func (c *FakeKubermaticEnterpriseV1) AllowedRegistries(namespace string) v1.AllowedRegistryInterface {
 	return &FakeAllowedRegistries{c, namespace}
 }
 
-func (c *FakeEeKubermaticV1) Clusters(namespace string) v1.ClusterInterface {
+func (c *FakeKubermaticEnterpriseV1) Clusters(namespace string) v1.ClusterInterface {
 	return &FakeClusters{c, namespace}
 }
 
-func (c *FakeEeKubermaticV1) ClusterTemplates(namespace string) v1.ClusterTemplateInterface {
+func (c *FakeKubermaticEnterpriseV1) ClusterTemplates(namespace string) v1.ClusterTemplateInterface {
 	return &FakeClusterTemplates{c, namespace}
 }
 
-func (c *FakeEeKubermaticV1) ClusterTemplateInstances(namespace string) v1.ClusterTemplateInstanceInterface {
+func (c *FakeKubermaticEnterpriseV1) ClusterTemplateInstances(namespace string) v1.ClusterTemplateInstanceInterface {
 	return &FakeClusterTemplateInstances{c, namespace}
 }
 
-func (c *FakeEeKubermaticV1) Constraints(namespace string) v1.ConstraintInterface {
+func (c *FakeKubermaticEnterpriseV1) Constraints(namespace string) v1.ConstraintInterface {
 	return &FakeConstraints{c, namespace}
 }
 
-func (c *FakeEeKubermaticV1) ConstraintTemplates(namespace string) v1.ConstraintTemplateInterface {
+func (c *FakeKubermaticEnterpriseV1) ConstraintTemplates(namespace string) v1.ConstraintTemplateInterface {
 	return &FakeConstraintTemplates{c, namespace}
 }
 
-func (c *FakeEeKubermaticV1) EtcdBackupConfigs(namespace string) v1.EtcdBackupConfigInterface {
+func (c *FakeKubermaticEnterpriseV1) EtcdBackupConfigs(namespace string) v1.EtcdBackupConfigInterface {
 	return &FakeEtcdBackupConfigs{c, namespace}
 }
 
-func (c *FakeEeKubermaticV1) EtcdRestores(namespace string) v1.EtcdRestoreInterface {
+func (c *FakeKubermaticEnterpriseV1) EtcdRestores(namespace string) v1.EtcdRestoreInterface {
 	return &FakeEtcdRestores{c, namespace}
 }
 
-func (c *FakeEeKubermaticV1) ExternalClusters(namespace string) v1.ExternalClusterInterface {
+func (c *FakeKubermaticEnterpriseV1) ExternalClusters(namespace string) v1.ExternalClusterInterface {
 	return &FakeExternalClusters{c, namespace}
 }
 
-func (c *FakeEeKubermaticV1) GroupProjectBindings(namespace string) v1.GroupProjectBindingInterface {
+func (c *FakeKubermaticEnterpriseV1) GroupProjectBindings(namespace string) v1.GroupProjectBindingInterface {
 	return &FakeGroupProjectBindings{c, namespace}
 }
 
-func (c *FakeEeKubermaticV1) IPAMAllocations(namespace string) v1.IPAMAllocationInterface {
+func (c *FakeKubermaticEnterpriseV1) IPAMAllocations(namespace string) v1.IPAMAllocationInterface {
 	return &FakeIPAMAllocations{c, namespace}
 }
 
-func (c *FakeEeKubermaticV1) IPAMPools(namespace string) v1.IPAMPoolInterface {
+func (c *FakeKubermaticEnterpriseV1) IPAMPools(namespace string) v1.IPAMPoolInterface {
 	return &FakeIPAMPools{c, namespace}
 }
 
-func (c *FakeEeKubermaticV1) KubermaticConfigurations(namespace string) v1.KubermaticConfigurationInterface {
+func (c *FakeKubermaticEnterpriseV1) KubermaticConfigurations(namespace string) v1.KubermaticConfigurationInterface {
 	return &FakeKubermaticConfigurations{c, namespace}
 }
 
-func (c *FakeEeKubermaticV1) KubermaticSettings(namespace string) v1.KubermaticSettingInterface {
+func (c *FakeKubermaticEnterpriseV1) KubermaticSettings(namespace string) v1.KubermaticSettingInterface {
 	return &FakeKubermaticSettings{c, namespace}
 }
 
-func (c *FakeEeKubermaticV1) MLAAdminSettings(namespace string) v1.MLAAdminSettingInterface {
+func (c *FakeKubermaticEnterpriseV1) MLAAdminSettings(namespace string) v1.MLAAdminSettingInterface {
 	return &FakeMLAAdminSettings{c, namespace}
 }
 
-func (c *FakeEeKubermaticV1) Presets(namespace string) v1.PresetInterface {
+func (c *FakeKubermaticEnterpriseV1) Presets(namespace string) v1.PresetInterface {
 	return &FakePresets{c, namespace}
 }
 
-func (c *FakeEeKubermaticV1) Projects(namespace string) v1.ProjectInterface {
+func (c *FakeKubermaticEnterpriseV1) Projects(namespace string) v1.ProjectInterface {
 	return &FakeProjects{c, namespace}
 }
 
-func (c *FakeEeKubermaticV1) ResourceQuotas(namespace string) v1.ResourceQuotaInterface {
+func (c *FakeKubermaticEnterpriseV1) ResourceQuotas(namespace string) v1.ResourceQuotaInterface {
 	return &FakeResourceQuotas{c, namespace}
 }
 
-func (c *FakeEeKubermaticV1) RuleGroups(namespace string) v1.RuleGroupInterface {
+func (c *FakeKubermaticEnterpriseV1) RuleGroups(namespace string) v1.RuleGroupInterface {
 	return &FakeRuleGroups{c, namespace}
 }
 
-func (c *FakeEeKubermaticV1) Seeds(namespace string) v1.SeedInterface {
+func (c *FakeKubermaticEnterpriseV1) Seeds(namespace string) v1.SeedInterface {
 	return &FakeSeeds{c, namespace}
 }
 
-func (c *FakeEeKubermaticV1) Users(namespace string) v1.UserInterface {
+func (c *FakeKubermaticEnterpriseV1) Users(namespace string) v1.UserInterface {
 	return &FakeUsers{c, namespace}
 }
 
-func (c *FakeEeKubermaticV1) UserProjectBindings(namespace string) v1.UserProjectBindingInterface {
+func (c *FakeKubermaticEnterpriseV1) UserProjectBindings(namespace string) v1.UserProjectBindingInterface {
 	return &FakeUserProjectBindings{c, namespace}
 }
 
-func (c *FakeEeKubermaticV1) UserSSHKeys(namespace string) v1.UserSSHKeyInterface {
+func (c *FakeKubermaticEnterpriseV1) UserSSHKeys(namespace string) v1.UserSSHKeyInterface {
 	return &FakeUserSSHKeys{c, namespace}
 }
 
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
-func (c *FakeEeKubermaticV1) RESTClient() rest.Interface {
+func (c *FakeKubermaticEnterpriseV1) RESTClient() rest.Interface {
 	var ret *rest.RESTClient
 	return ret
 }

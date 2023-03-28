@@ -10,7 +10,7 @@ import (
 	rest "k8s.io/client-go/rest"
 )
 
-type EeKubermaticV1Interface interface {
+type KubermaticEnterpriseV1Interface interface {
 	RESTClient() rest.Interface
 	AddonsGetter
 	AddonConfigsGetter
@@ -41,123 +41,123 @@ type EeKubermaticV1Interface interface {
 	UserSSHKeysGetter
 }
 
-// EeKubermaticV1Client is used to interact with features provided by the ee.kubermatic.k8c.io group.
-type EeKubermaticV1Client struct {
+// KubermaticEnterpriseV1Client is used to interact with features provided by the ee.kubermatic.k8c.io group.
+type KubermaticEnterpriseV1Client struct {
 	restClient rest.Interface
 }
 
-func (c *EeKubermaticV1Client) Addons(namespace string) AddonInterface {
+func (c *KubermaticEnterpriseV1Client) Addons(namespace string) AddonInterface {
 	return newAddons(c, namespace)
 }
 
-func (c *EeKubermaticV1Client) AddonConfigs(namespace string) AddonConfigInterface {
+func (c *KubermaticEnterpriseV1Client) AddonConfigs(namespace string) AddonConfigInterface {
 	return newAddonConfigs(c, namespace)
 }
 
-func (c *EeKubermaticV1Client) AdmissionPlugins(namespace string) AdmissionPluginInterface {
+func (c *KubermaticEnterpriseV1Client) AdmissionPlugins(namespace string) AdmissionPluginInterface {
 	return newAdmissionPlugins(c, namespace)
 }
 
-func (c *EeKubermaticV1Client) Alertmanagers(namespace string) AlertmanagerInterface {
+func (c *KubermaticEnterpriseV1Client) Alertmanagers(namespace string) AlertmanagerInterface {
 	return newAlertmanagers(c, namespace)
 }
 
-func (c *EeKubermaticV1Client) AllowedRegistries(namespace string) AllowedRegistryInterface {
+func (c *KubermaticEnterpriseV1Client) AllowedRegistries(namespace string) AllowedRegistryInterface {
 	return newAllowedRegistries(c, namespace)
 }
 
-func (c *EeKubermaticV1Client) Clusters(namespace string) ClusterInterface {
+func (c *KubermaticEnterpriseV1Client) Clusters(namespace string) ClusterInterface {
 	return newClusters(c, namespace)
 }
 
-func (c *EeKubermaticV1Client) ClusterTemplates(namespace string) ClusterTemplateInterface {
+func (c *KubermaticEnterpriseV1Client) ClusterTemplates(namespace string) ClusterTemplateInterface {
 	return newClusterTemplates(c, namespace)
 }
 
-func (c *EeKubermaticV1Client) ClusterTemplateInstances(namespace string) ClusterTemplateInstanceInterface {
+func (c *KubermaticEnterpriseV1Client) ClusterTemplateInstances(namespace string) ClusterTemplateInstanceInterface {
 	return newClusterTemplateInstances(c, namespace)
 }
 
-func (c *EeKubermaticV1Client) Constraints(namespace string) ConstraintInterface {
+func (c *KubermaticEnterpriseV1Client) Constraints(namespace string) ConstraintInterface {
 	return newConstraints(c, namespace)
 }
 
-func (c *EeKubermaticV1Client) ConstraintTemplates(namespace string) ConstraintTemplateInterface {
+func (c *KubermaticEnterpriseV1Client) ConstraintTemplates(namespace string) ConstraintTemplateInterface {
 	return newConstraintTemplates(c, namespace)
 }
 
-func (c *EeKubermaticV1Client) EtcdBackupConfigs(namespace string) EtcdBackupConfigInterface {
+func (c *KubermaticEnterpriseV1Client) EtcdBackupConfigs(namespace string) EtcdBackupConfigInterface {
 	return newEtcdBackupConfigs(c, namespace)
 }
 
-func (c *EeKubermaticV1Client) EtcdRestores(namespace string) EtcdRestoreInterface {
+func (c *KubermaticEnterpriseV1Client) EtcdRestores(namespace string) EtcdRestoreInterface {
 	return newEtcdRestores(c, namespace)
 }
 
-func (c *EeKubermaticV1Client) ExternalClusters(namespace string) ExternalClusterInterface {
+func (c *KubermaticEnterpriseV1Client) ExternalClusters(namespace string) ExternalClusterInterface {
 	return newExternalClusters(c, namespace)
 }
 
-func (c *EeKubermaticV1Client) GroupProjectBindings(namespace string) GroupProjectBindingInterface {
+func (c *KubermaticEnterpriseV1Client) GroupProjectBindings(namespace string) GroupProjectBindingInterface {
 	return newGroupProjectBindings(c, namespace)
 }
 
-func (c *EeKubermaticV1Client) IPAMAllocations(namespace string) IPAMAllocationInterface {
+func (c *KubermaticEnterpriseV1Client) IPAMAllocations(namespace string) IPAMAllocationInterface {
 	return newIPAMAllocations(c, namespace)
 }
 
-func (c *EeKubermaticV1Client) IPAMPools(namespace string) IPAMPoolInterface {
+func (c *KubermaticEnterpriseV1Client) IPAMPools(namespace string) IPAMPoolInterface {
 	return newIPAMPools(c, namespace)
 }
 
-func (c *EeKubermaticV1Client) KubermaticConfigurations(namespace string) KubermaticConfigurationInterface {
+func (c *KubermaticEnterpriseV1Client) KubermaticConfigurations(namespace string) KubermaticConfigurationInterface {
 	return newKubermaticConfigurations(c, namespace)
 }
 
-func (c *EeKubermaticV1Client) KubermaticSettings(namespace string) KubermaticSettingInterface {
+func (c *KubermaticEnterpriseV1Client) KubermaticSettings(namespace string) KubermaticSettingInterface {
 	return newKubermaticSettings(c, namespace)
 }
 
-func (c *EeKubermaticV1Client) MLAAdminSettings(namespace string) MLAAdminSettingInterface {
+func (c *KubermaticEnterpriseV1Client) MLAAdminSettings(namespace string) MLAAdminSettingInterface {
 	return newMLAAdminSettings(c, namespace)
 }
 
-func (c *EeKubermaticV1Client) Presets(namespace string) PresetInterface {
+func (c *KubermaticEnterpriseV1Client) Presets(namespace string) PresetInterface {
 	return newPresets(c, namespace)
 }
 
-func (c *EeKubermaticV1Client) Projects(namespace string) ProjectInterface {
+func (c *KubermaticEnterpriseV1Client) Projects(namespace string) ProjectInterface {
 	return newProjects(c, namespace)
 }
 
-func (c *EeKubermaticV1Client) ResourceQuotas(namespace string) ResourceQuotaInterface {
+func (c *KubermaticEnterpriseV1Client) ResourceQuotas(namespace string) ResourceQuotaInterface {
 	return newResourceQuotas(c, namespace)
 }
 
-func (c *EeKubermaticV1Client) RuleGroups(namespace string) RuleGroupInterface {
+func (c *KubermaticEnterpriseV1Client) RuleGroups(namespace string) RuleGroupInterface {
 	return newRuleGroups(c, namespace)
 }
 
-func (c *EeKubermaticV1Client) Seeds(namespace string) SeedInterface {
+func (c *KubermaticEnterpriseV1Client) Seeds(namespace string) SeedInterface {
 	return newSeeds(c, namespace)
 }
 
-func (c *EeKubermaticV1Client) Users(namespace string) UserInterface {
+func (c *KubermaticEnterpriseV1Client) Users(namespace string) UserInterface {
 	return newUsers(c, namespace)
 }
 
-func (c *EeKubermaticV1Client) UserProjectBindings(namespace string) UserProjectBindingInterface {
+func (c *KubermaticEnterpriseV1Client) UserProjectBindings(namespace string) UserProjectBindingInterface {
 	return newUserProjectBindings(c, namespace)
 }
 
-func (c *EeKubermaticV1Client) UserSSHKeys(namespace string) UserSSHKeyInterface {
+func (c *KubermaticEnterpriseV1Client) UserSSHKeys(namespace string) UserSSHKeyInterface {
 	return newUserSSHKeys(c, namespace)
 }
 
-// NewForConfig creates a new EeKubermaticV1Client for the given config.
+// NewForConfig creates a new KubermaticEnterpriseV1Client for the given config.
 // NewForConfig is equivalent to NewForConfigAndClient(c, httpClient),
 // where httpClient was generated with rest.HTTPClientFor(c).
-func NewForConfig(c *rest.Config) (*EeKubermaticV1Client, error) {
+func NewForConfig(c *rest.Config) (*KubermaticEnterpriseV1Client, error) {
 	config := *c
 	if err := setConfigDefaults(&config); err != nil {
 		return nil, err
@@ -169,9 +169,9 @@ func NewForConfig(c *rest.Config) (*EeKubermaticV1Client, error) {
 	return NewForConfigAndClient(&config, httpClient)
 }
 
-// NewForConfigAndClient creates a new EeKubermaticV1Client for the given config and http client.
+// NewForConfigAndClient creates a new KubermaticEnterpriseV1Client for the given config and http client.
 // Note the http client provided takes precedence over the configured transport values.
-func NewForConfigAndClient(c *rest.Config, h *http.Client) (*EeKubermaticV1Client, error) {
+func NewForConfigAndClient(c *rest.Config, h *http.Client) (*KubermaticEnterpriseV1Client, error) {
 	config := *c
 	if err := setConfigDefaults(&config); err != nil {
 		return nil, err
@@ -180,12 +180,12 @@ func NewForConfigAndClient(c *rest.Config, h *http.Client) (*EeKubermaticV1Clien
 	if err != nil {
 		return nil, err
 	}
-	return &EeKubermaticV1Client{client}, nil
+	return &KubermaticEnterpriseV1Client{client}, nil
 }
 
-// NewForConfigOrDie creates a new EeKubermaticV1Client for the given config and
+// NewForConfigOrDie creates a new KubermaticEnterpriseV1Client for the given config and
 // panics if there is an error in the config.
-func NewForConfigOrDie(c *rest.Config) *EeKubermaticV1Client {
+func NewForConfigOrDie(c *rest.Config) *KubermaticEnterpriseV1Client {
 	client, err := NewForConfig(c)
 	if err != nil {
 		panic(err)
@@ -193,9 +193,9 @@ func NewForConfigOrDie(c *rest.Config) *EeKubermaticV1Client {
 	return client
 }
 
-// New creates a new EeKubermaticV1Client for the given RESTClient.
-func New(c rest.Interface) *EeKubermaticV1Client {
-	return &EeKubermaticV1Client{c}
+// New creates a new KubermaticEnterpriseV1Client for the given RESTClient.
+func New(c rest.Interface) *KubermaticEnterpriseV1Client {
+	return &KubermaticEnterpriseV1Client{c}
 }
 
 func setConfigDefaults(config *rest.Config) error {
@@ -213,7 +213,7 @@ func setConfigDefaults(config *rest.Config) error {
 
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
-func (c *EeKubermaticV1Client) RESTClient() rest.Interface {
+func (c *KubermaticEnterpriseV1Client) RESTClient() rest.Interface {
 	if c == nil {
 		return nil
 	}

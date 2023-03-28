@@ -40,7 +40,7 @@ type ruleGroups struct {
 }
 
 // newRuleGroups returns a RuleGroups
-func newRuleGroups(c *EeKubermaticV1Client, namespace string) *ruleGroups {
+func newRuleGroups(c *KubermaticEnterpriseV1Client, namespace string) *ruleGroups {
 	return &ruleGroups{
 		client: c.RESTClient(),
 		ns:     namespace,

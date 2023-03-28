@@ -41,7 +41,7 @@ type etcdRestores struct {
 }
 
 // newEtcdRestores returns a EtcdRestores
-func newEtcdRestores(c *EeKubermaticV1Client, namespace string) *etcdRestores {
+func newEtcdRestores(c *KubermaticEnterpriseV1Client, namespace string) *etcdRestores {
 	return &etcdRestores{
 		client: c.RESTClient(),
 		ns:     namespace,

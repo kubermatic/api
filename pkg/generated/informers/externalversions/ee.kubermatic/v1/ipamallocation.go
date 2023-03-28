@@ -46,13 +46,13 @@ func NewFilteredIPAMAllocationInformer(client versioned.Interface, namespace str
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.EeKubermaticV1().IPAMAllocations(namespace).List(context.TODO(), options)
+				return client.KubermaticEnterpriseV1().IPAMAllocations(namespace).List(context.TODO(), options)
 			},
 			WatchFunc: func(options metav1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.EeKubermaticV1().IPAMAllocations(namespace).Watch(context.TODO(), options)
+				return client.KubermaticEnterpriseV1().IPAMAllocations(namespace).Watch(context.TODO(), options)
 			},
 		},
 		&eekubermaticv1.IPAMAllocation{},

@@ -6,8 +6,9 @@ import (
 	"fmt"
 	"net/http"
 
-	appskubermaticv1 "k8c.io/api/v3/pkg/generated/clientset/versioned/typed/apps.kubermatic/v1"
-	eekubermaticv1 "k8c.io/api/v3/pkg/generated/clientset/versioned/typed/ee.kubermatic/v1"
+	kubermaticappsv1 "k8c.io/api/v3/pkg/generated/clientset/versioned/typed/apps.kubermatic/v1"
+	kubermaticenterpriseappsv1 "k8c.io/api/v3/pkg/generated/clientset/versioned/typed/ee.apps.kubermatic/v1"
+	kubermaticenterprisev1 "k8c.io/api/v3/pkg/generated/clientset/versioned/typed/ee.kubermatic/v1"
 	kubermaticv1 "k8c.io/api/v3/pkg/generated/clientset/versioned/typed/kubermatic/v1"
 	discovery "k8s.io/client-go/discovery"
 	rest "k8s.io/client-go/rest"
@@ -16,27 +17,34 @@ import (
 
 type Interface interface {
 	Discovery() discovery.DiscoveryInterface
-	AppsKubermaticV1() appskubermaticv1.AppsKubermaticV1Interface
-	EeKubermaticV1() eekubermaticv1.EeKubermaticV1Interface
+	KubermaticAppsV1() kubermaticappsv1.KubermaticAppsV1Interface
+	KubermaticEnterpriseAppsV1() kubermaticenterpriseappsv1.KubermaticEnterpriseAppsV1Interface
+	KubermaticEnterpriseV1() kubermaticenterprisev1.KubermaticEnterpriseV1Interface
 	KubermaticV1() kubermaticv1.KubermaticV1Interface
 }
 
 // Clientset contains the clients for groups.
 type Clientset struct {
 	*discovery.DiscoveryClient
-	appsKubermaticV1 *appskubermaticv1.AppsKubermaticV1Client
-	eeKubermaticV1   *eekubermaticv1.EeKubermaticV1Client
-	kubermaticV1     *kubermaticv1.KubermaticV1Client
+	kubermaticAppsV1           *kubermaticappsv1.KubermaticAppsV1Client
+	kubermaticEnterpriseAppsV1 *kubermaticenterpriseappsv1.KubermaticEnterpriseAppsV1Client
+	kubermaticEnterpriseV1     *kubermaticenterprisev1.KubermaticEnterpriseV1Client
+	kubermaticV1               *kubermaticv1.KubermaticV1Client
 }
 
-// AppsKubermaticV1 retrieves the AppsKubermaticV1Client
-func (c *Clientset) AppsKubermaticV1() appskubermaticv1.AppsKubermaticV1Interface {
-	return c.appsKubermaticV1
+// KubermaticAppsV1 retrieves the KubermaticAppsV1Client
+func (c *Clientset) KubermaticAppsV1() kubermaticappsv1.KubermaticAppsV1Interface {
+	return c.kubermaticAppsV1
 }
 
-// EeKubermaticV1 retrieves the EeKubermaticV1Client
-func (c *Clientset) EeKubermaticV1() eekubermaticv1.EeKubermaticV1Interface {
-	return c.eeKubermaticV1
+// KubermaticEnterpriseAppsV1 retrieves the KubermaticEnterpriseAppsV1Client
+func (c *Clientset) KubermaticEnterpriseAppsV1() kubermaticenterpriseappsv1.KubermaticEnterpriseAppsV1Interface {
+	return c.kubermaticEnterpriseAppsV1
+}
+
+// KubermaticEnterpriseV1 retrieves the KubermaticEnterpriseV1Client
+func (c *Clientset) KubermaticEnterpriseV1() kubermaticenterprisev1.KubermaticEnterpriseV1Interface {
+	return c.kubermaticEnterpriseV1
 }
 
 // KubermaticV1 retrieves the KubermaticV1Client
@@ -88,11 +96,15 @@ func NewForConfigAndClient(c *rest.Config, httpClient *http.Client) (*Clientset,
 
 	var cs Clientset
 	var err error
-	cs.appsKubermaticV1, err = appskubermaticv1.NewForConfigAndClient(&configShallowCopy, httpClient)
+	cs.kubermaticAppsV1, err = kubermaticappsv1.NewForConfigAndClient(&configShallowCopy, httpClient)
 	if err != nil {
 		return nil, err
 	}
-	cs.eeKubermaticV1, err = eekubermaticv1.NewForConfigAndClient(&configShallowCopy, httpClient)
+	cs.kubermaticEnterpriseAppsV1, err = kubermaticenterpriseappsv1.NewForConfigAndClient(&configShallowCopy, httpClient)
+	if err != nil {
+		return nil, err
+	}
+	cs.kubermaticEnterpriseV1, err = kubermaticenterprisev1.NewForConfigAndClient(&configShallowCopy, httpClient)
 	if err != nil {
 		return nil, err
 	}
@@ -121,8 +133,9 @@ func NewForConfigOrDie(c *rest.Config) *Clientset {
 // New creates a new Clientset for the given RESTClient.
 func New(c rest.Interface) *Clientset {
 	var cs Clientset
-	cs.appsKubermaticV1 = appskubermaticv1.New(c)
-	cs.eeKubermaticV1 = eekubermaticv1.New(c)
+	cs.kubermaticAppsV1 = kubermaticappsv1.New(c)
+	cs.kubermaticEnterpriseAppsV1 = kubermaticenterpriseappsv1.New(c)
+	cs.kubermaticEnterpriseV1 = kubermaticenterprisev1.New(c)
 	cs.kubermaticV1 = kubermaticv1.New(c)
 
 	cs.DiscoveryClient = discovery.NewDiscoveryClient(c)

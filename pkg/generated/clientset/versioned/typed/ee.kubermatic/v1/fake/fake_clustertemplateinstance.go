@@ -16,7 +16,7 @@ import (
 
 // FakeClusterTemplateInstances implements ClusterTemplateInstanceInterface
 type FakeClusterTemplateInstances struct {
-	Fake *FakeEeKubermaticV1
+	Fake *FakeKubermaticEnterpriseV1
 	ns   string
 }
 

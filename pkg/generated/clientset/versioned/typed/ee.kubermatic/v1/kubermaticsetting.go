@@ -40,7 +40,7 @@ type kubermaticSettings struct {
 }
 
 // newKubermaticSettings returns a KubermaticSettings
-func newKubermaticSettings(c *EeKubermaticV1Client, namespace string) *kubermaticSettings {
+func newKubermaticSettings(c *KubermaticEnterpriseV1Client, namespace string) *kubermaticSettings {
 	return &kubermaticSettings{
 		client: c.RESTClient(),
 		ns:     namespace,

@@ -3,8 +3,9 @@
 package scheme
 
 import (
-	appskubermaticv1 "k8c.io/api/v3/pkg/apis/apps.kubermatic/v1"
-	eekubermaticv1 "k8c.io/api/v3/pkg/apis/ee.kubermatic/v1"
+	kubermaticappsv1 "k8c.io/api/v3/pkg/apis/apps.kubermatic/v1"
+	kubermaticenterpriseappsv1 "k8c.io/api/v3/pkg/apis/ee.apps.kubermatic/v1"
+	kubermaticenterprisev1 "k8c.io/api/v3/pkg/apis/ee.kubermatic/v1"
 	kubermaticv1 "k8c.io/api/v3/pkg/apis/kubermatic/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -17,8 +18,9 @@ var Scheme = runtime.NewScheme()
 var Codecs = serializer.NewCodecFactory(Scheme)
 var ParameterCodec = runtime.NewParameterCodec(Scheme)
 var localSchemeBuilder = runtime.SchemeBuilder{
-	appskubermaticv1.AddToScheme,
-	eekubermaticv1.AddToScheme,
+	kubermaticappsv1.AddToScheme,
+	kubermaticenterpriseappsv1.AddToScheme,
+	kubermaticenterprisev1.AddToScheme,
 	kubermaticv1.AddToScheme,
 }
 

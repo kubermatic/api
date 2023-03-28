@@ -6,6 +6,7 @@ import (
 	"fmt"
 
 	v1 "k8c.io/api/v3/pkg/apis/apps.kubermatic/v1"
+	eeappskubermaticv1 "k8c.io/api/v3/pkg/apis/ee.apps.kubermatic/v1"
 	eekubermaticv1 "k8c.io/api/v3/pkg/apis/ee.kubermatic/v1"
 	kubermaticv1 "k8c.io/api/v3/pkg/apis/kubermatic/v1"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"
@@ -40,65 +41,71 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 	switch resource {
 	// Group=apps.kubermatic.k8c.io, Version=v1
 	case v1.SchemeGroupVersion.WithResource("applicationdefinitions"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.AppsKubermatic().V1().ApplicationDefinitions().Informer()}, nil
+		return &genericInformer{resource: resource.GroupResource(), informer: f.KubermaticApps().V1().ApplicationDefinitions().Informer()}, nil
 	case v1.SchemeGroupVersion.WithResource("applicationinstallations"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.AppsKubermatic().V1().ApplicationInstallations().Informer()}, nil
+		return &genericInformer{resource: resource.GroupResource(), informer: f.KubermaticApps().V1().ApplicationInstallations().Informer()}, nil
+
+		// Group=ee.apps.kubermatic.k8c.io, Version=v1
+	case eeappskubermaticv1.SchemeGroupVersion.WithResource("applicationdefinitions"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.KubermaticEnterpriseApps().V1().ApplicationDefinitions().Informer()}, nil
+	case eeappskubermaticv1.SchemeGroupVersion.WithResource("applicationinstallations"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.KubermaticEnterpriseApps().V1().ApplicationInstallations().Informer()}, nil
 
 		// Group=ee.kubermatic.k8c.io, Version=v1
 	case eekubermaticv1.SchemeGroupVersion.WithResource("addons"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.EeKubermatic().V1().Addons().Informer()}, nil
+		return &genericInformer{resource: resource.GroupResource(), informer: f.KubermaticEnterprise().V1().Addons().Informer()}, nil
 	case eekubermaticv1.SchemeGroupVersion.WithResource("addonconfigs"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.EeKubermatic().V1().AddonConfigs().Informer()}, nil
+		return &genericInformer{resource: resource.GroupResource(), informer: f.KubermaticEnterprise().V1().AddonConfigs().Informer()}, nil
 	case eekubermaticv1.SchemeGroupVersion.WithResource("admissionplugins"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.EeKubermatic().V1().AdmissionPlugins().Informer()}, nil
+		return &genericInformer{resource: resource.GroupResource(), informer: f.KubermaticEnterprise().V1().AdmissionPlugins().Informer()}, nil
 	case eekubermaticv1.SchemeGroupVersion.WithResource("alertmanagers"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.EeKubermatic().V1().Alertmanagers().Informer()}, nil
+		return &genericInformer{resource: resource.GroupResource(), informer: f.KubermaticEnterprise().V1().Alertmanagers().Informer()}, nil
 	case eekubermaticv1.SchemeGroupVersion.WithResource("allowedregistries"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.EeKubermatic().V1().AllowedRegistries().Informer()}, nil
+		return &genericInformer{resource: resource.GroupResource(), informer: f.KubermaticEnterprise().V1().AllowedRegistries().Informer()}, nil
 	case eekubermaticv1.SchemeGroupVersion.WithResource("clusters"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.EeKubermatic().V1().Clusters().Informer()}, nil
+		return &genericInformer{resource: resource.GroupResource(), informer: f.KubermaticEnterprise().V1().Clusters().Informer()}, nil
 	case eekubermaticv1.SchemeGroupVersion.WithResource("clustertemplates"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.EeKubermatic().V1().ClusterTemplates().Informer()}, nil
+		return &genericInformer{resource: resource.GroupResource(), informer: f.KubermaticEnterprise().V1().ClusterTemplates().Informer()}, nil
 	case eekubermaticv1.SchemeGroupVersion.WithResource("clustertemplateinstances"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.EeKubermatic().V1().ClusterTemplateInstances().Informer()}, nil
+		return &genericInformer{resource: resource.GroupResource(), informer: f.KubermaticEnterprise().V1().ClusterTemplateInstances().Informer()}, nil
 	case eekubermaticv1.SchemeGroupVersion.WithResource("constraints"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.EeKubermatic().V1().Constraints().Informer()}, nil
+		return &genericInformer{resource: resource.GroupResource(), informer: f.KubermaticEnterprise().V1().Constraints().Informer()}, nil
 	case eekubermaticv1.SchemeGroupVersion.WithResource("constrainttemplates"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.EeKubermatic().V1().ConstraintTemplates().Informer()}, nil
+		return &genericInformer{resource: resource.GroupResource(), informer: f.KubermaticEnterprise().V1().ConstraintTemplates().Informer()}, nil
 	case eekubermaticv1.SchemeGroupVersion.WithResource("etcdbackupconfigs"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.EeKubermatic().V1().EtcdBackupConfigs().Informer()}, nil
+		return &genericInformer{resource: resource.GroupResource(), informer: f.KubermaticEnterprise().V1().EtcdBackupConfigs().Informer()}, nil
 	case eekubermaticv1.SchemeGroupVersion.WithResource("etcdrestores"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.EeKubermatic().V1().EtcdRestores().Informer()}, nil
+		return &genericInformer{resource: resource.GroupResource(), informer: f.KubermaticEnterprise().V1().EtcdRestores().Informer()}, nil
 	case eekubermaticv1.SchemeGroupVersion.WithResource("externalclusters"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.EeKubermatic().V1().ExternalClusters().Informer()}, nil
+		return &genericInformer{resource: resource.GroupResource(), informer: f.KubermaticEnterprise().V1().ExternalClusters().Informer()}, nil
 	case eekubermaticv1.SchemeGroupVersion.WithResource("groupprojectbindings"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.EeKubermatic().V1().GroupProjectBindings().Informer()}, nil
+		return &genericInformer{resource: resource.GroupResource(), informer: f.KubermaticEnterprise().V1().GroupProjectBindings().Informer()}, nil
 	case eekubermaticv1.SchemeGroupVersion.WithResource("ipamallocations"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.EeKubermatic().V1().IPAMAllocations().Informer()}, nil
+		return &genericInformer{resource: resource.GroupResource(), informer: f.KubermaticEnterprise().V1().IPAMAllocations().Informer()}, nil
 	case eekubermaticv1.SchemeGroupVersion.WithResource("ipampools"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.EeKubermatic().V1().IPAMPools().Informer()}, nil
+		return &genericInformer{resource: resource.GroupResource(), informer: f.KubermaticEnterprise().V1().IPAMPools().Informer()}, nil
 	case eekubermaticv1.SchemeGroupVersion.WithResource("kubermaticconfigurations"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.EeKubermatic().V1().KubermaticConfigurations().Informer()}, nil
+		return &genericInformer{resource: resource.GroupResource(), informer: f.KubermaticEnterprise().V1().KubermaticConfigurations().Informer()}, nil
 	case eekubermaticv1.SchemeGroupVersion.WithResource("kubermaticsettings"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.EeKubermatic().V1().KubermaticSettings().Informer()}, nil
+		return &genericInformer{resource: resource.GroupResource(), informer: f.KubermaticEnterprise().V1().KubermaticSettings().Informer()}, nil
 	case eekubermaticv1.SchemeGroupVersion.WithResource("mlaadminsettings"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.EeKubermatic().V1().MLAAdminSettings().Informer()}, nil
+		return &genericInformer{resource: resource.GroupResource(), informer: f.KubermaticEnterprise().V1().MLAAdminSettings().Informer()}, nil
 	case eekubermaticv1.SchemeGroupVersion.WithResource("presets"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.EeKubermatic().V1().Presets().Informer()}, nil
+		return &genericInformer{resource: resource.GroupResource(), informer: f.KubermaticEnterprise().V1().Presets().Informer()}, nil
 	case eekubermaticv1.SchemeGroupVersion.WithResource("projects"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.EeKubermatic().V1().Projects().Informer()}, nil
+		return &genericInformer{resource: resource.GroupResource(), informer: f.KubermaticEnterprise().V1().Projects().Informer()}, nil
 	case eekubermaticv1.SchemeGroupVersion.WithResource("resourcequotas"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.EeKubermatic().V1().ResourceQuotas().Informer()}, nil
+		return &genericInformer{resource: resource.GroupResource(), informer: f.KubermaticEnterprise().V1().ResourceQuotas().Informer()}, nil
 	case eekubermaticv1.SchemeGroupVersion.WithResource("rulegroups"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.EeKubermatic().V1().RuleGroups().Informer()}, nil
+		return &genericInformer{resource: resource.GroupResource(), informer: f.KubermaticEnterprise().V1().RuleGroups().Informer()}, nil
 	case eekubermaticv1.SchemeGroupVersion.WithResource("seeds"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.EeKubermatic().V1().Seeds().Informer()}, nil
+		return &genericInformer{resource: resource.GroupResource(), informer: f.KubermaticEnterprise().V1().Seeds().Informer()}, nil
 	case eekubermaticv1.SchemeGroupVersion.WithResource("users"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.EeKubermatic().V1().Users().Informer()}, nil
+		return &genericInformer{resource: resource.GroupResource(), informer: f.KubermaticEnterprise().V1().Users().Informer()}, nil
 	case eekubermaticv1.SchemeGroupVersion.WithResource("userprojectbindings"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.EeKubermatic().V1().UserProjectBindings().Informer()}, nil
+		return &genericInformer{resource: resource.GroupResource(), informer: f.KubermaticEnterprise().V1().UserProjectBindings().Informer()}, nil
 	case eekubermaticv1.SchemeGroupVersion.WithResource("usersshkeys"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.EeKubermatic().V1().UserSSHKeys().Informer()}, nil
+		return &genericInformer{resource: resource.GroupResource(), informer: f.KubermaticEnterprise().V1().UserSSHKeys().Informer()}, nil
 
 		// Group=kubermatic.k8c.io, Version=v1
 	case kubermaticv1.SchemeGroupVersion.WithResource("addons"):
@@ -109,26 +116,12 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubermatic().V1().AdmissionPlugins().Informer()}, nil
 	case kubermaticv1.SchemeGroupVersion.WithResource("alertmanagers"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubermatic().V1().Alertmanagers().Informer()}, nil
-	case kubermaticv1.SchemeGroupVersion.WithResource("allowedregistries"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubermatic().V1().AllowedRegistries().Informer()}, nil
 	case kubermaticv1.SchemeGroupVersion.WithResource("clusters"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubermatic().V1().Clusters().Informer()}, nil
 	case kubermaticv1.SchemeGroupVersion.WithResource("clustertemplates"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubermatic().V1().ClusterTemplates().Informer()}, nil
 	case kubermaticv1.SchemeGroupVersion.WithResource("clustertemplateinstances"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubermatic().V1().ClusterTemplateInstances().Informer()}, nil
-	case kubermaticv1.SchemeGroupVersion.WithResource("constraints"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubermatic().V1().Constraints().Informer()}, nil
-	case kubermaticv1.SchemeGroupVersion.WithResource("constrainttemplates"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubermatic().V1().ConstraintTemplates().Informer()}, nil
-	case kubermaticv1.SchemeGroupVersion.WithResource("etcdbackupconfigs"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubermatic().V1().EtcdBackupConfigs().Informer()}, nil
-	case kubermaticv1.SchemeGroupVersion.WithResource("etcdrestores"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubermatic().V1().EtcdRestores().Informer()}, nil
-	case kubermaticv1.SchemeGroupVersion.WithResource("externalclusters"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubermatic().V1().ExternalClusters().Informer()}, nil
-	case kubermaticv1.SchemeGroupVersion.WithResource("groupprojectbindings"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubermatic().V1().GroupProjectBindings().Informer()}, nil
 	case kubermaticv1.SchemeGroupVersion.WithResource("ipamallocations"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubermatic().V1().IPAMAllocations().Informer()}, nil
 	case kubermaticv1.SchemeGroupVersion.WithResource("ipampools"):
@@ -143,16 +136,12 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubermatic().V1().Presets().Informer()}, nil
 	case kubermaticv1.SchemeGroupVersion.WithResource("projects"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubermatic().V1().Projects().Informer()}, nil
-	case kubermaticv1.SchemeGroupVersion.WithResource("resourcequotas"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubermatic().V1().ResourceQuotas().Informer()}, nil
 	case kubermaticv1.SchemeGroupVersion.WithResource("rulegroups"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubermatic().V1().RuleGroups().Informer()}, nil
 	case kubermaticv1.SchemeGroupVersion.WithResource("seeds"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubermatic().V1().Seeds().Informer()}, nil
 	case kubermaticv1.SchemeGroupVersion.WithResource("users"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubermatic().V1().Users().Informer()}, nil
-	case kubermaticv1.SchemeGroupVersion.WithResource("userprojectbindings"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubermatic().V1().UserProjectBindings().Informer()}, nil
 	case kubermaticv1.SchemeGroupVersion.WithResource("usersshkeys"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubermatic().V1().UserSSHKeys().Informer()}, nil
 

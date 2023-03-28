@@ -46,13 +46,13 @@ func NewFilteredClusterTemplateInstanceInformer(client versioned.Interface, name
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.EeKubermaticV1().ClusterTemplateInstances(namespace).List(context.TODO(), options)
+				return client.KubermaticEnterpriseV1().ClusterTemplateInstances(namespace).List(context.TODO(), options)
 			},
 			WatchFunc: func(options metav1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.EeKubermaticV1().ClusterTemplateInstances(namespace).Watch(context.TODO(), options)
+				return client.KubermaticEnterpriseV1().ClusterTemplateInstances(namespace).Watch(context.TODO(), options)
 			},
 		},
 		&eekubermaticv1.ClusterTemplateInstance{},

@@ -16,7 +16,7 @@ import (
 
 // FakeEtcdRestores implements EtcdRestoreInterface
 type FakeEtcdRestores struct {
-	Fake *FakeEeKubermaticV1
+	Fake *FakeKubermaticEnterpriseV1
 	ns   string
 }
 

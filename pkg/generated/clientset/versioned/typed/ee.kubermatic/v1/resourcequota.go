@@ -41,7 +41,7 @@ type resourceQuotas struct {
 }
 
 // newResourceQuotas returns a ResourceQuotas
-func newResourceQuotas(c *EeKubermaticV1Client, namespace string) *resourceQuotas {
+func newResourceQuotas(c *KubermaticEnterpriseV1Client, namespace string) *resourceQuotas {
 	return &resourceQuotas{
 		client: c.RESTClient(),
 		ns:     namespace,

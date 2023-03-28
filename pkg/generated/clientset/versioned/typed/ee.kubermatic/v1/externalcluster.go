@@ -41,7 +41,7 @@ type externalClusters struct {
 }
 
 // newExternalClusters returns a ExternalClusters
-func newExternalClusters(c *EeKubermaticV1Client, namespace string) *externalClusters {
+func newExternalClusters(c *KubermaticEnterpriseV1Client, namespace string) *externalClusters {
 	return &externalClusters{
 		client: c.RESTClient(),
 		ns:     namespace,

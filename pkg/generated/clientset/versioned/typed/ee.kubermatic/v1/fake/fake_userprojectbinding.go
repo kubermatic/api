@@ -16,7 +16,7 @@ import (
 
 // FakeUserProjectBindings implements UserProjectBindingInterface
 type FakeUserProjectBindings struct {
-	Fake *FakeEeKubermaticV1
+	Fake *FakeKubermaticEnterpriseV1
 	ns   string
 }
 

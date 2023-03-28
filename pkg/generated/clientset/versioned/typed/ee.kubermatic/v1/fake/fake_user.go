@@ -16,7 +16,7 @@ import (
 
 // FakeUsers implements UserInterface
 type FakeUsers struct {
-	Fake *FakeEeKubermaticV1
+	Fake *FakeKubermaticEnterpriseV1
 	ns   string
 }
 

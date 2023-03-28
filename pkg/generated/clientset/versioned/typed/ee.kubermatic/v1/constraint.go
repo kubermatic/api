@@ -40,7 +40,7 @@ type constraints struct {
 }
 
 // newConstraints returns a Constraints
-func newConstraints(c *EeKubermaticV1Client, namespace string) *constraints {
+func newConstraints(c *KubermaticEnterpriseV1Client, namespace string) *constraints {
 	return &constraints{
 		client: c.RESTClient(),
 		ns:     namespace,

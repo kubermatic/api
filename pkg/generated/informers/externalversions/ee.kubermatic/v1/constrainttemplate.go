@@ -46,13 +46,13 @@ func NewFilteredConstraintTemplateInformer(client versioned.Interface, namespace
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.EeKubermaticV1().ConstraintTemplates(namespace).List(context.TODO(), options)
+				return client.KubermaticEnterpriseV1().ConstraintTemplates(namespace).List(context.TODO(), options)
 			},
 			WatchFunc: func(options metav1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.EeKubermaticV1().ConstraintTemplates(namespace).Watch(context.TODO(), options)
+				return client.KubermaticEnterpriseV1().ConstraintTemplates(namespace).Watch(context.TODO(), options)
 			},
 		},
 		&eekubermaticv1.ConstraintTemplate{},
