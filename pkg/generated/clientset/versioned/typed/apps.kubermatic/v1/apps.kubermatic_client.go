@@ -10,29 +10,29 @@ import (
 	rest "k8s.io/client-go/rest"
 )
 
-type AppsV1Interface interface {
+type AppsKubermaticV1Interface interface {
 	RESTClient() rest.Interface
 	ApplicationDefinitionsGetter
 	ApplicationInstallationsGetter
 }
 
-// AppsV1Client is used to interact with features provided by the apps.kubermatic.k8c.io group.
-type AppsV1Client struct {
+// AppsKubermaticV1Client is used to interact with features provided by the apps.kubermatic.k8c.io group.
+type AppsKubermaticV1Client struct {
 	restClient rest.Interface
 }
 
-func (c *AppsV1Client) ApplicationDefinitions(namespace string) ApplicationDefinitionInterface {
+func (c *AppsKubermaticV1Client) ApplicationDefinitions(namespace string) ApplicationDefinitionInterface {
 	return newApplicationDefinitions(c, namespace)
 }
 
-func (c *AppsV1Client) ApplicationInstallations(namespace string) ApplicationInstallationInterface {
+func (c *AppsKubermaticV1Client) ApplicationInstallations(namespace string) ApplicationInstallationInterface {
 	return newApplicationInstallations(c, namespace)
 }
 
-// NewForConfig creates a new AppsV1Client for the given config.
+// NewForConfig creates a new AppsKubermaticV1Client for the given config.
 // NewForConfig is equivalent to NewForConfigAndClient(c, httpClient),
 // where httpClient was generated with rest.HTTPClientFor(c).
-func NewForConfig(c *rest.Config) (*AppsV1Client, error) {
+func NewForConfig(c *rest.Config) (*AppsKubermaticV1Client, error) {
 	config := *c
 	if err := setConfigDefaults(&config); err != nil {
 		return nil, err
@@ -44,9 +44,9 @@ func NewForConfig(c *rest.Config) (*AppsV1Client, error) {
 	return NewForConfigAndClient(&config, httpClient)
 }
 
-// NewForConfigAndClient creates a new AppsV1Client for the given config and http client.
+// NewForConfigAndClient creates a new AppsKubermaticV1Client for the given config and http client.
 // Note the http client provided takes precedence over the configured transport values.
-func NewForConfigAndClient(c *rest.Config, h *http.Client) (*AppsV1Client, error) {
+func NewForConfigAndClient(c *rest.Config, h *http.Client) (*AppsKubermaticV1Client, error) {
 	config := *c
 	if err := setConfigDefaults(&config); err != nil {
 		return nil, err
@@ -55,12 +55,12 @@ func NewForConfigAndClient(c *rest.Config, h *http.Client) (*AppsV1Client, error
 	if err != nil {
 		return nil, err
 	}
-	return &AppsV1Client{client}, nil
+	return &AppsKubermaticV1Client{client}, nil
 }
 
-// NewForConfigOrDie creates a new AppsV1Client for the given config and
+// NewForConfigOrDie creates a new AppsKubermaticV1Client for the given config and
 // panics if there is an error in the config.
-func NewForConfigOrDie(c *rest.Config) *AppsV1Client {
+func NewForConfigOrDie(c *rest.Config) *AppsKubermaticV1Client {
 	client, err := NewForConfig(c)
 	if err != nil {
 		panic(err)
@@ -68,9 +68,9 @@ func NewForConfigOrDie(c *rest.Config) *AppsV1Client {
 	return client
 }
 
-// New creates a new AppsV1Client for the given RESTClient.
-func New(c rest.Interface) *AppsV1Client {
-	return &AppsV1Client{c}
+// New creates a new AppsKubermaticV1Client for the given RESTClient.
+func New(c rest.Interface) *AppsKubermaticV1Client {
+	return &AppsKubermaticV1Client{c}
 }
 
 func setConfigDefaults(config *rest.Config) error {
@@ -88,7 +88,7 @@ func setConfigDefaults(config *rest.Config) error {
 
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
-func (c *AppsV1Client) RESTClient() rest.Interface {
+func (c *AppsKubermaticV1Client) RESTClient() rest.Interface {
 	if c == nil {
 		return nil
 	}

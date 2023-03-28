@@ -36,7 +36,7 @@ echo "" > /tmp/headerfile
 bash vendor/k8s.io/code-generator/generate-groups.sh client,lister,informer \
   k8c.io/api/v3/$CODEGEN_DIR \
   k8c.io/api/v3/pkg/apis \
-  "kubermatic:v1 apps.kubermatic:v1" \
+  "kubermatic:v1 ee.kubermatic:v1 apps.kubermatic:v1" \
   --go-header-file /tmp/headerfile
 
 # move generated code to the correct location; this should work regardless where
@@ -66,57 +66,3 @@ for f in $CRD_DIR/*.yaml; do
   cat "$f.bak" >> "$f"
   rm "$f.bak"
 done
-
-annotation="kubermatic.k8c.io/location"
-locationMap='{
-  "applicationdefinitions.apps.kubermatic.k8c.io": "master,seed",
-  "applicationinstallations.apps.kubermatic.k8c.io": "usercluster",
-  "addonconfigs.kubermatic.k8c.io": "master",
-  "addons.kubermatic.k8c.io": "seed",
-  "admissionplugins.kubermatic.k8c.io": "master",
-  "alertmanagers.kubermatic.k8c.io": "seed",
-  "allowedregistries.kubermatic.k8c.io": "master",
-  "clusters.kubermatic.k8c.io": "seed",
-  "clustertemplateinstances.kubermatic.k8c.io": "seed",
-  "clustertemplates.kubermatic.k8c.io": "master,seed",
-  "constraints.kubermatic.k8c.io": "master,seed",
-  "constrainttemplates.kubermatic.k8c.io": "master,seed",
-  "customoperatingsystemprofiles.operatingsystemmanager.k8c.io": "seed",
-  "etcdbackupconfigs.kubermatic.k8c.io": "seed",
-  "etcdrestores.kubermatic.k8c.io": "seed",
-  "externalclusters.kubermatic.k8c.io": "master",
-  "groupprojectbindings.kubermatic.k8c.io": "master",
-  "ipamallocations.kubermatic.k8c.io": "master",
-  "ipampools.kubermatic.k8c.io": "master",
-  "kubermaticconfigurations.kubermatic.k8c.io": "master,seed",
-  "kubermaticsettings.kubermatic.k8c.io": "master",
-  "mlaadminsettings.kubermatic.k8c.io": "seed",
-  "presets.kubermatic.k8c.io": "master,seed",
-  "projects.kubermatic.k8c.io": "master,seed",
-  "resourcequotas.kubermatic.k8c.io": "master",
-  "rulegroups.kubermatic.k8c.io": "master",
-  "seeds.kubermatic.k8c.io": "master,seed",
-  "userprojectbindings.kubermatic.k8c.io": "master,seed",
-  "usersshkeys.kubermatic.k8c.io": "master",
-  "users.kubermatic.k8c.io": "master,seed"
-}'
-
-failure=false
-echodate "Annotating CRDs"
-
-for filename in $CRD_DIR/*.yaml; do
-  crdName="$(yq '.metadata.name' "$filename")"
-  location="$(echo "$locationMap" | jq -rc --arg key "$crdName" '.[$key] + ""')"
-
-  if [ -z "$location" ]; then
-    echo "Error: No location defined for CRD $crdName"
-    failure=true
-    continue
-  fi
-
-  yq --inplace ".metadata.annotations.\"$annotation\" = \"$location\"" "$filename"
-done
-
-if $failure; then
-  exit 1
-fi

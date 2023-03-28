@@ -3,7 +3,8 @@
 package fake
 
 import (
-	appsv1 "k8c.io/api/v3/pkg/apis/apps.kubermatic/v1"
+	appskubermaticv1 "k8c.io/api/v3/pkg/apis/apps.kubermatic/v1"
+	eekubermaticv1 "k8c.io/api/v3/pkg/apis/ee.kubermatic/v1"
 	kubermaticv1 "k8c.io/api/v3/pkg/apis/kubermatic/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
@@ -16,7 +17,8 @@ var scheme = runtime.NewScheme()
 var codecs = serializer.NewCodecFactory(scheme)
 
 var localSchemeBuilder = runtime.SchemeBuilder{
-	appsv1.AddToScheme,
+	appskubermaticv1.AddToScheme,
+	eekubermaticv1.AddToScheme,
 	kubermaticv1.AddToScheme,
 }
 

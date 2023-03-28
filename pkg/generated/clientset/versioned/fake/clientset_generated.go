@@ -4,8 +4,10 @@ package fake
 
 import (
 	clientset "k8c.io/api/v3/pkg/generated/clientset/versioned"
-	appsv1 "k8c.io/api/v3/pkg/generated/clientset/versioned/typed/apps.kubermatic/v1"
-	fakeappsv1 "k8c.io/api/v3/pkg/generated/clientset/versioned/typed/apps.kubermatic/v1/fake"
+	appskubermaticv1 "k8c.io/api/v3/pkg/generated/clientset/versioned/typed/apps.kubermatic/v1"
+	fakeappskubermaticv1 "k8c.io/api/v3/pkg/generated/clientset/versioned/typed/apps.kubermatic/v1/fake"
+	eekubermaticv1 "k8c.io/api/v3/pkg/generated/clientset/versioned/typed/ee.kubermatic/v1"
+	fakeeekubermaticv1 "k8c.io/api/v3/pkg/generated/clientset/versioned/typed/ee.kubermatic/v1/fake"
 	kubermaticv1 "k8c.io/api/v3/pkg/generated/clientset/versioned/typed/kubermatic/v1"
 	fakekubermaticv1 "k8c.io/api/v3/pkg/generated/clientset/versioned/typed/kubermatic/v1/fake"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -65,9 +67,14 @@ var (
 	_ testing.FakeClient  = &Clientset{}
 )
 
-// AppsV1 retrieves the AppsV1Client
-func (c *Clientset) AppsV1() appsv1.AppsV1Interface {
-	return &fakeappsv1.FakeAppsV1{Fake: &c.Fake}
+// AppsKubermaticV1 retrieves the AppsKubermaticV1Client
+func (c *Clientset) AppsKubermaticV1() appskubermaticv1.AppsKubermaticV1Interface {
+	return &fakeappskubermaticv1.FakeAppsKubermaticV1{Fake: &c.Fake}
+}
+
+// EeKubermaticV1 retrieves the EeKubermaticV1Client
+func (c *Clientset) EeKubermaticV1() eekubermaticv1.EeKubermaticV1Interface {
+	return &fakeeekubermaticv1.FakeEeKubermaticV1{Fake: &c.Fake}
 }
 
 // KubermaticV1 retrieves the KubermaticV1Client

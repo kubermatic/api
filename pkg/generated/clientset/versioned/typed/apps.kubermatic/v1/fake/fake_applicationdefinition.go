@@ -16,7 +16,7 @@ import (
 
 // FakeApplicationDefinitions implements ApplicationDefinitionInterface
 type FakeApplicationDefinitions struct {
-	Fake *FakeAppsV1
+	Fake *FakeAppsKubermaticV1
 	ns   string
 }
 

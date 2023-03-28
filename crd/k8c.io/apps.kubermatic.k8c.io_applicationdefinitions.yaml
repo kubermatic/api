@@ -5,7 +5,6 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.11.3
-    kubermatic.k8c.io/location: master,seed
   name: applicationdefinitions.apps.kubermatic.k8c.io
 spec:
   group: apps.kubermatic.k8c.io

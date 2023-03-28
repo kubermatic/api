@@ -6,7 +6,8 @@ import (
 	"fmt"
 	"net/http"
 
-	appsv1 "k8c.io/api/v3/pkg/generated/clientset/versioned/typed/apps.kubermatic/v1"
+	appskubermaticv1 "k8c.io/api/v3/pkg/generated/clientset/versioned/typed/apps.kubermatic/v1"
+	eekubermaticv1 "k8c.io/api/v3/pkg/generated/clientset/versioned/typed/ee.kubermatic/v1"
 	kubermaticv1 "k8c.io/api/v3/pkg/generated/clientset/versioned/typed/kubermatic/v1"
 	discovery "k8s.io/client-go/discovery"
 	rest "k8s.io/client-go/rest"
@@ -15,20 +16,27 @@ import (
 
 type Interface interface {
 	Discovery() discovery.DiscoveryInterface
-	AppsV1() appsv1.AppsV1Interface
+	AppsKubermaticV1() appskubermaticv1.AppsKubermaticV1Interface
+	EeKubermaticV1() eekubermaticv1.EeKubermaticV1Interface
 	KubermaticV1() kubermaticv1.KubermaticV1Interface
 }
 
 // Clientset contains the clients for groups.
 type Clientset struct {
 	*discovery.DiscoveryClient
-	appsV1       *appsv1.AppsV1Client
-	kubermaticV1 *kubermaticv1.KubermaticV1Client
+	appsKubermaticV1 *appskubermaticv1.AppsKubermaticV1Client
+	eeKubermaticV1   *eekubermaticv1.EeKubermaticV1Client
+	kubermaticV1     *kubermaticv1.KubermaticV1Client
 }
 
-// AppsV1 retrieves the AppsV1Client
-func (c *Clientset) AppsV1() appsv1.AppsV1Interface {
-	return c.appsV1
+// AppsKubermaticV1 retrieves the AppsKubermaticV1Client
+func (c *Clientset) AppsKubermaticV1() appskubermaticv1.AppsKubermaticV1Interface {
+	return c.appsKubermaticV1
+}
+
+// EeKubermaticV1 retrieves the EeKubermaticV1Client
+func (c *Clientset) EeKubermaticV1() eekubermaticv1.EeKubermaticV1Interface {
+	return c.eeKubermaticV1
 }
 
 // KubermaticV1 retrieves the KubermaticV1Client
@@ -80,7 +88,11 @@ func NewForConfigAndClient(c *rest.Config, httpClient *http.Client) (*Clientset,
 
 	var cs Clientset
 	var err error
-	cs.appsV1, err = appsv1.NewForConfigAndClient(&configShallowCopy, httpClient)
+	cs.appsKubermaticV1, err = appskubermaticv1.NewForConfigAndClient(&configShallowCopy, httpClient)
+	if err != nil {
+		return nil, err
+	}
+	cs.eeKubermaticV1, err = eekubermaticv1.NewForConfigAndClient(&configShallowCopy, httpClient)
 	if err != nil {
 		return nil, err
 	}
@@ -109,7 +121,8 @@ func NewForConfigOrDie(c *rest.Config) *Clientset {
 // New creates a new Clientset for the given RESTClient.
 func New(c rest.Interface) *Clientset {
 	var cs Clientset
-	cs.appsV1 = appsv1.New(c)
+	cs.appsKubermaticV1 = appskubermaticv1.New(c)
+	cs.eeKubermaticV1 = eekubermaticv1.New(c)
 	cs.kubermaticV1 = kubermaticv1.New(c)
 
 	cs.DiscoveryClient = discovery.NewDiscoveryClient(c)

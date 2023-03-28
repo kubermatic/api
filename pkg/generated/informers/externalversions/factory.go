@@ -9,6 +9,7 @@ import (
 
 	versioned "k8c.io/api/v3/pkg/generated/clientset/versioned"
 	appskubermatic "k8c.io/api/v3/pkg/generated/informers/externalversions/apps.kubermatic"
+	eekubermatic "k8c.io/api/v3/pkg/generated/informers/externalversions/ee.kubermatic"
 	internalinterfaces "k8c.io/api/v3/pkg/generated/informers/externalversions/internalinterfaces"
 	kubermatic "k8c.io/api/v3/pkg/generated/informers/externalversions/kubermatic"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -228,12 +229,17 @@ type SharedInformerFactory interface {
 	// client.
 	InformerFor(obj runtime.Object, newFunc internalinterfaces.NewInformerFunc) cache.SharedIndexInformer
 
-	Apps() appskubermatic.Interface
+	AppsKubermatic() appskubermatic.Interface
+	EeKubermatic() eekubermatic.Interface
 	Kubermatic() kubermatic.Interface
 }
 
-func (f *sharedInformerFactory) Apps() appskubermatic.Interface {
+func (f *sharedInformerFactory) AppsKubermatic() appskubermatic.Interface {
 	return appskubermatic.New(f, f.namespace, f.tweakListOptions)
+}
+
+func (f *sharedInformerFactory) EeKubermatic() eekubermatic.Interface {
+	return eekubermatic.New(f, f.namespace, f.tweakListOptions)
 }
 
 func (f *sharedInformerFactory) Kubermatic() kubermatic.Interface {
