@@ -77,8 +77,6 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&MLAAdminSettingList{},
 		&Preset{},
 		&PresetList{},
-		&Project{},
-		&ProjectList{},
 		&RuleGroup{},
 		&RuleGroupList{},
 		&Seed{},

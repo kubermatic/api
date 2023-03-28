@@ -25,7 +25,6 @@ type KubermaticV1Interface interface {
 	KubermaticSettingsGetter
 	MLAAdminSettingsGetter
 	PresetsGetter
-	ProjectsGetter
 	RuleGroupsGetter
 	SeedsGetter
 	UsersGetter
@@ -87,10 +86,6 @@ func (c *KubermaticV1Client) MLAAdminSettings(namespace string) MLAAdminSettingI
 
 func (c *KubermaticV1Client) Presets(namespace string) PresetInterface {
 	return newPresets(c, namespace)
-}
-
-func (c *KubermaticV1Client) Projects(namespace string) ProjectInterface {
-	return newProjects(c, namespace)
 }
 
 func (c *KubermaticV1Client) RuleGroups(namespace string) RuleGroupInterface {

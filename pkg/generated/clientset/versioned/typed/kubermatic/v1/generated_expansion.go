@@ -28,8 +28,6 @@ type MLAAdminSettingExpansion interface{}
 
 type PresetExpansion interface{}
 
-type ProjectExpansion interface{}
-
 type RuleGroupExpansion interface{}
 
 type SeedExpansion interface{}

@@ -92,10 +92,6 @@ func (c *FakeKubermaticEnterpriseV1) Presets(namespace string) v1.PresetInterfac
 	return &FakePresets{c, namespace}
 }
 
-func (c *FakeKubermaticEnterpriseV1) Projects(namespace string) v1.ProjectInterface {
-	return &FakeProjects{c, namespace}
-}
-
 func (c *FakeKubermaticEnterpriseV1) ResourceQuotas(namespace string) v1.ResourceQuotaInterface {
 	return &FakeResourceQuotas{c, namespace}
 }

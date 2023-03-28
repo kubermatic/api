@@ -64,10 +64,6 @@ func (c *FakeKubermaticV1) Presets(namespace string) v1.PresetInterface {
 	return &FakePresets{c, namespace}
 }
 
-func (c *FakeKubermaticV1) Projects(namespace string) v1.ProjectInterface {
-	return &FakeProjects{c, namespace}
-}
-
 func (c *FakeKubermaticV1) RuleGroups(namespace string) v1.RuleGroupInterface {
 	return &FakeRuleGroups{c, namespace}
 }

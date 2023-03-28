@@ -106,14 +106,6 @@ type PresetListerExpansion interface{}
 // PresetNamespaceLister.
 type PresetNamespaceListerExpansion interface{}
 
-// ProjectListerExpansion allows custom methods to be added to
-// ProjectLister.
-type ProjectListerExpansion interface{}
-
-// ProjectNamespaceListerExpansion allows custom methods to be added to
-// ProjectNamespaceLister.
-type ProjectNamespaceListerExpansion interface{}
-
 // RuleGroupListerExpansion allows custom methods to be added to
 // RuleGroupLister.
 type RuleGroupListerExpansion interface{}

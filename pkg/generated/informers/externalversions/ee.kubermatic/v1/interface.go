@@ -48,8 +48,6 @@ type Interface interface {
 	MLAAdminSettings() MLAAdminSettingInformer
 	// Presets returns a PresetInformer.
 	Presets() PresetInformer
-	// Projects returns a ProjectInformer.
-	Projects() ProjectInformer
 	// ResourceQuotas returns a ResourceQuotaInformer.
 	ResourceQuotas() ResourceQuotaInformer
 	// RuleGroups returns a RuleGroupInformer.
@@ -173,11 +171,6 @@ func (v *version) MLAAdminSettings() MLAAdminSettingInformer {
 // Presets returns a PresetInformer.
 func (v *version) Presets() PresetInformer {
 	return &presetInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
-}
-
-// Projects returns a ProjectInformer.
-func (v *version) Projects() ProjectInformer {
-	return &projectInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // ResourceQuotas returns a ResourceQuotaInformer.

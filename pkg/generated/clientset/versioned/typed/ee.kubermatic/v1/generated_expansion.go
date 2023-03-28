@@ -42,8 +42,6 @@ type MLAAdminSettingExpansion interface{}
 
 type PresetExpansion interface{}
 
-type ProjectExpansion interface{}
-
 type ResourceQuotaExpansion interface{}
 
 type RuleGroupExpansion interface{}

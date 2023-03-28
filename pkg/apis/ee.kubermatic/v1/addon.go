@@ -17,16 +17,9 @@ limitations under the License.
 package v1
 
 import (
-	corev1 "k8s.io/api/core/v1"
+	kubermaticv1 "k8c.io/api/v3/pkg/apis/kubermatic/v1"
+
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/runtime"
-)
-
-// +kubebuilder:validation:Enum=AddonResourcesCreatedSuccessfully
-type AddonConditionType string
-
-const (
-	AddonConditionResourcesCreated AddonConditionType = "AddonResourcesCreatedSuccessfully"
 )
 
 // +genclient
@@ -44,63 +37,19 @@ type Addon struct {
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
 	// Spec describes the desired addon state.
-	Spec AddonSpec `json:"spec,omitempty"`
+	Spec kubermaticv1.AddonSpec `json:"spec,omitempty"`
 
 	// Status contains information about the reconciliation status.
-	Status AddonStatus `json:"status,omitempty"`
-}
-
-// GroupVersionKind unambiguously identifies a kind. It doesn't anonymously include GroupVersion
-// to avoid automatic coercion. It doesn't use a GroupVersion to avoid custom marshalling.
-type GroupVersionKind struct {
-	Group   string `json:"group,omitempty"`
-	Version string `json:"version,omitempty"`
-	Kind    string `json:"kind,omitempty"`
-}
-
-// AddonSpec specifies details of an addon.
-type AddonSpec struct {
-	// Name defines the name of the addon to install
-	Name string `json:"name"`
-	// Cluster is the reference to the cluster the addon should be installed in
-	Cluster corev1.ObjectReference `json:"cluster"`
-	// Variables is free form data to use for parsing the manifest templates
-	// +kubebuilder:pruning:PreserveUnknownFields
-	Variables *runtime.RawExtension `json:"variables,omitempty"`
-	// RequiredResourceTypes allows to indicate that this addon needs some resource type before it
-	// can be installed. This can be used to indicate that a specific CRD and/or extension
-	// apiserver must be installed before this addon can be installed. The addon will not
-	// be installed until that resource is served.
-	RequiredResourceTypes []GroupVersionKind `json:"requiredResourceTypes,omitempty"`
-	// IsDefault indicates whether the addon is installed because it was configured in
-	// the default addon section in the KubermaticConfiguration. User-installed addons
-	// must not set this field to true, as extra default Addon objects (that are not in
-	// the KubermaticConfiguration) will be garbage-collected.
-	IsDefault bool `json:"isDefault,omitempty"`
+	Status kubermaticv1.AddonStatus `json:"status,omitempty"`
 }
 
 // +kubebuilder:object:generate=true
 // +kubebuilder:object:root=true
 
-// AddonList is a list of addons.
+// AddonList specifies a list of addons.
 type AddonList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
 
 	Items []Addon `json:"items"`
-}
-
-// AddonStatus contains information about the reconciliation status.
-type AddonStatus struct {
-	Conditions map[AddonConditionType]AddonCondition `json:"conditions,omitempty"`
-}
-
-type AddonCondition struct {
-	// Status of the condition, one of True, False, Unknown.
-	Status corev1.ConditionStatus `json:"status"`
-	// Last time we got an update on a given condition.
-	LastHeartbeatTime metav1.Time `json:"lastHeartbeatTime"`
-	// Last time the condition transitioned from one status to another.
-	// +optional
-	LastTransitionTime metav1.Time `json:"lastTransitionTime,omitempty"`
 }

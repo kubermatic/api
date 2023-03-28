@@ -17,7 +17,8 @@ limitations under the License.
 package v1
 
 import (
-	corev1 "k8s.io/api/core/v1"
+	kubermaticv1 "k8c.io/api/v3/pkg/apis/kubermatic/v1"
+
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -31,38 +32,18 @@ type Alertmanager struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   AlertmanagerSpec   `json:"spec,omitempty"`
-	Status AlertmanagerStatus `json:"status,omitempty"`
-}
-
-type AlertmanagerSpec struct {
-	// ConfigSecret refers to the Secret in the same namespace as the Alertmanager object,
-	// which contains configuration for this Alertmanager.
-	ConfigSecret corev1.LocalObjectReference `json:"configSecret"`
+	Spec   kubermaticv1.AlertmanagerSpec   `json:"spec,omitempty"`
+	Status kubermaticv1.AlertmanagerStatus `json:"status,omitempty"`
 }
 
 // +kubebuilder:object:generate=true
 // +kubebuilder:object:root=true
 
+// AlertmanagerList is the type representing a list of alertmanagers.
 type AlertmanagerList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
 
+	// List of Admission Plugins
 	Items []Alertmanager `json:"items"`
-}
-
-// AlertmanagerStatus stores status information about the AlertManager.
-type AlertmanagerStatus struct {
-	ConfigStatus AlertmanagerConfigurationStatus `json:"configStatus,omitempty"`
-}
-
-// AlertmanagerConfigurationStatus stores status information about the AlertManager configuration.
-type AlertmanagerConfigurationStatus struct {
-	// LastUpdated stores the last successful time when the configuration was successfully applied
-	LastUpdated metav1.Time `json:"lastUpdated,omitempty"`
-	// Status of whether the configuration was applied, one of True, False
-	Status corev1.ConditionStatus `json:"status"`
-	// ErrorMessage contains a default error message in case the configuration could not be applied.
-	// Will be reset if the error was resolved and condition becomes True
-	ErrorMessage string `json:"errorMessage,omitempty"`
 }

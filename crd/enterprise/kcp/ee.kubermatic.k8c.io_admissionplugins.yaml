@@ -15,7 +15,11 @@ spec:
     singular: admissionplugin
   scope: Cluster
   versions:
-    - name: v1
+    - additionalPrinterColumns:
+        - jsonPath: .metadata.creationTimestamp
+          name: Age
+          type: date
+      name: v1
       schema:
         openAPIV3Schema:
           description: AdmissionPlugin is the type representing a AdmissionPlugin.
@@ -42,3 +46,4 @@ spec:
           type: object
       served: true
       storage: true
+      subresources: {}

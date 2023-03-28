@@ -17,14 +17,27 @@ limitations under the License.
 package v1
 
 import (
-	"k8c.io/api/v3/pkg/semver"
+	kubermaticv1 "k8c.io/api/v3/pkg/apis/kubermatic/v1"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+// +genclient
 // +kubebuilder:object:generate=true
 // +kubebuilder:object:root=true
 // +kubebuilder:printcolumn:JSONPath=".metadata.creationTimestamp",name="Age",type="date"
+// +kubebuilder:resource:scope=Cluster
+
+// AdmissionPlugin is the type representing a AdmissionPlugin.
+type AdmissionPlugin struct {
+	metav1.TypeMeta   `json:",inline"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
+
+	Spec kubermaticv1.AdmissionPluginSpec `json:"spec,omitempty"`
+}
+
+// +kubebuilder:object:generate=true
+// +kubebuilder:object:root=true
 
 // AdmissionPluginList is the type representing a AdmissionPluginList.
 type AdmissionPluginList struct {
@@ -33,25 +46,4 @@ type AdmissionPluginList struct {
 
 	// List of Admission Plugins
 	Items []AdmissionPlugin `json:"items"`
-}
-
-// +genclient
-// +kubebuilder:resource:scope=Cluster
-// +kubebuilder:object:generate=true
-// +kubebuilder:object:root=true
-
-// AdmissionPlugin is the type representing a AdmissionPlugin.
-type AdmissionPlugin struct {
-	metav1.TypeMeta   `json:",inline"`
-	metav1.ObjectMeta `json:"metadata,omitempty"`
-
-	Spec AdmissionPluginSpec `json:"spec,omitempty"`
-}
-
-// AdmissionPluginSpec specifies admission plugin name and from which k8s version is supported.
-type AdmissionPluginSpec struct {
-	PluginName string `json:"pluginName"`
-
-	// FromVersion flag can be empty. It means the plugin fit to all k8s versions
-	FromVersion *semver.Semver `json:"fromVersion,omitempty"`
 }
