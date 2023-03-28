@@ -19,16 +19,16 @@ package helper
 import (
 	"testing"
 
-	kubermaticv1 "k8c.io/api/v3/pkg/apis/ee.kubermatic/v1"
+	kubermaticeev1 "k8c.io/api/v3/pkg/apis/ee.kubermatic/v1"
 
 	"k8s.io/apimachinery/pkg/util/sets"
 )
 
 func TestMapCloudProvider(t *testing.T) {
-	for _, kkpProvider := range sets.List(kubermaticv1.AllCloudProviders) {
+	for _, kkpProvider := range sets.List(kubermaticeev1.AllCloudProviders) {
 		t.Run(string(kkpProvider), func(t *testing.T) {
 			// provider has purposefully no mapping
-			if kkpProvider == kubermaticv1.CloudProviderBringYourOwn {
+			if kkpProvider == kubermaticeev1.CloudProviderBringYourOwn {
 				return
 			}
 
@@ -50,7 +50,7 @@ func TestMapCloudProvider(t *testing.T) {
 }
 
 func TestMapOperatingSystem(t *testing.T) {
-	for _, kkpOperatingSystem := range sets.List(kubermaticv1.AllOperatingSystems) {
+	for _, kkpOperatingSystem := range sets.List(kubermaticeev1.AllOperatingSystems) {
 		t.Run(string(kkpOperatingSystem), func(t *testing.T) {
 			mcOperatingSystem, err := OperatingSystemToMachineController(kkpOperatingSystem)
 			if err != nil {

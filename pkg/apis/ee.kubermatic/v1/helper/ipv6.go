@@ -17,51 +17,51 @@ limitations under the License.
 package helper
 
 import (
-	kubermaticv1 "k8c.io/api/v3/pkg/apis/ee.kubermatic/v1"
+	kubermaticeev1 "k8c.io/api/v3/pkg/apis/ee.kubermatic/v1"
 )
 
 var (
 	// knownIPv6CloudProviders configures which providers have IPv6 and if it's enabled for all datacenters.
-	knownIPv6CloudProviders = map[kubermaticv1.CloudProvider]struct {
+	knownIPv6CloudProviders = map[kubermaticeev1.CloudProvider]struct {
 		ipv6EnabledForAllDatacenters bool
 	}{
-		kubermaticv1.CloudProviderAWS: {
+		kubermaticeev1.CloudProviderAWS: {
 			ipv6EnabledForAllDatacenters: true,
 		},
-		kubermaticv1.CloudProviderAzure: {
+		kubermaticeev1.CloudProviderAzure: {
 			ipv6EnabledForAllDatacenters: true,
 		},
-		kubermaticv1.CloudProviderBringYourOwn: {
+		kubermaticeev1.CloudProviderBringYourOwn: {
 			ipv6EnabledForAllDatacenters: true,
 		},
-		kubermaticv1.CloudProviderDigitalocean: {
+		kubermaticeev1.CloudProviderDigitalocean: {
 			ipv6EnabledForAllDatacenters: true,
 		},
-		kubermaticv1.CloudProviderGCP: {
+		kubermaticeev1.CloudProviderGCP: {
 			ipv6EnabledForAllDatacenters: true,
 		},
-		kubermaticv1.CloudProviderHetzner: {
+		kubermaticeev1.CloudProviderHetzner: {
 			ipv6EnabledForAllDatacenters: true,
 		},
-		kubermaticv1.CloudProviderOpenStack: {
+		kubermaticeev1.CloudProviderOpenStack: {
 			ipv6EnabledForAllDatacenters: false,
 		},
-		kubermaticv1.CloudProviderPacket: {
+		kubermaticeev1.CloudProviderPacket: {
 			ipv6EnabledForAllDatacenters: true,
 		},
-		kubermaticv1.CloudProviderVSphere: {
+		kubermaticeev1.CloudProviderVSphere: {
 			ipv6EnabledForAllDatacenters: false,
 		},
 	}
 )
 
-func IsIPv6KnownProvider(provider kubermaticv1.CloudProvider) bool {
+func IsIPv6KnownProvider(provider kubermaticeev1.CloudProvider) bool {
 	_, isIPv6KnownProvider := knownIPv6CloudProviders[provider]
 	return isIPv6KnownProvider
 }
 
 // IsIPv6EnabledDatacenter returns true if IPv6 is enabled for the datacenter.
-func IsIPv6EnabledDatacenter(dc *kubermaticv1.Datacenter) bool {
+func IsIPv6EnabledDatacenter(dc *kubermaticeev1.Datacenter) bool {
 	provider, err := DatacenterCloudProviderName(&dc.Spec)
 	if err != nil {
 		return false
@@ -79,9 +79,9 @@ func IsIPv6EnabledDatacenter(dc *kubermaticv1.Datacenter) bool {
 	var flag *bool
 
 	switch provider {
-	case kubermaticv1.CloudProviderOpenStack:
+	case kubermaticeev1.CloudProviderOpenStack:
 		flag = dc.Spec.OpenStack.IPv6Enabled
-	case kubermaticv1.CloudProviderVSphere:
+	case kubermaticeev1.CloudProviderVSphere:
 		flag = dc.Spec.VSphere.IPv6Enabled
 	}
 

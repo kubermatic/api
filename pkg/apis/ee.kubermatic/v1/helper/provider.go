@@ -19,26 +19,26 @@ package helper
 import (
 	"fmt"
 
-	kubermaticv1 "k8c.io/api/v3/pkg/apis/ee.kubermatic/v1"
+	kubermaticeev1 "k8c.io/api/v3/pkg/apis/ee.kubermatic/v1"
 )
 
 // ExternalClusterCloudProviderName returns the provider name for the given ExternalClusterCloudSpec.
-func ExternalClusterCloudProviderName(spec kubermaticv1.ExternalClusterCloudSpec) (kubermaticv1.ExternalClusterProvider, error) {
-	var providers []kubermaticv1.ExternalClusterProvider
+func ExternalClusterCloudProviderName(spec kubermaticeev1.ExternalClusterCloudSpec) (kubermaticeev1.ExternalClusterProvider, error) {
+	var providers []kubermaticeev1.ExternalClusterProvider
 	if spec.AKS != nil {
-		providers = append(providers, kubermaticv1.ExternalClusterProviderAKS)
+		providers = append(providers, kubermaticeev1.ExternalClusterProviderAKS)
 	}
 	if spec.EKS != nil {
-		providers = append(providers, kubermaticv1.ExternalClusterProviderEKS)
+		providers = append(providers, kubermaticeev1.ExternalClusterProviderEKS)
 	}
 	if spec.GKE != nil {
-		providers = append(providers, kubermaticv1.ExternalClusterProviderGKE)
+		providers = append(providers, kubermaticeev1.ExternalClusterProviderGKE)
 	}
 	if spec.KubeOne != nil {
-		providers = append(providers, kubermaticv1.ExternalClusterProviderKubeOne)
+		providers = append(providers, kubermaticeev1.ExternalClusterProviderKubeOne)
 	}
 	if spec.BringYourOwn != nil {
-		providers = append(providers, kubermaticv1.ExternalClusterProviderBringYourOwn)
+		providers = append(providers, kubermaticeev1.ExternalClusterProviderBringYourOwn)
 	}
 	if len(providers) == 0 {
 		return "", nil
@@ -50,52 +50,52 @@ func ExternalClusterCloudProviderName(spec kubermaticv1.ExternalClusterCloudSpec
 }
 
 // ClusterCloudProviderName returns the provider name for the given CloudSpec.
-func ClusterCloudProviderName(spec kubermaticv1.CloudSpec) (kubermaticv1.CloudProvider, error) {
-	var providers []kubermaticv1.CloudProvider
+func ClusterCloudProviderName(spec kubermaticeev1.CloudSpec) (kubermaticeev1.CloudProvider, error) {
+	var providers []kubermaticeev1.CloudProvider
 	if spec.AWS != nil {
-		providers = append(providers, kubermaticv1.CloudProviderAWS)
+		providers = append(providers, kubermaticeev1.CloudProviderAWS)
 	}
 	if spec.Alibaba != nil {
-		providers = append(providers, kubermaticv1.CloudProviderAlibaba)
+		providers = append(providers, kubermaticeev1.CloudProviderAlibaba)
 	}
 	if spec.Anexia != nil {
-		providers = append(providers, kubermaticv1.CloudProviderAnexia)
+		providers = append(providers, kubermaticeev1.CloudProviderAnexia)
 	}
 	if spec.Azure != nil {
-		providers = append(providers, kubermaticv1.CloudProviderAzure)
+		providers = append(providers, kubermaticeev1.CloudProviderAzure)
 	}
 	if spec.BringYourOwn != nil {
-		providers = append(providers, kubermaticv1.CloudProviderBringYourOwn)
+		providers = append(providers, kubermaticeev1.CloudProviderBringYourOwn)
 	}
 	if spec.Digitalocean != nil {
-		providers = append(providers, kubermaticv1.CloudProviderDigitalocean)
+		providers = append(providers, kubermaticeev1.CloudProviderDigitalocean)
 	}
 	if spec.Fake != nil {
-		providers = append(providers, kubermaticv1.CloudProviderFake)
+		providers = append(providers, kubermaticeev1.CloudProviderFake)
 	}
 	if spec.GCP != nil {
-		providers = append(providers, kubermaticv1.CloudProviderGCP)
+		providers = append(providers, kubermaticeev1.CloudProviderGCP)
 	}
 	if spec.Hetzner != nil {
-		providers = append(providers, kubermaticv1.CloudProviderHetzner)
+		providers = append(providers, kubermaticeev1.CloudProviderHetzner)
 	}
 	if spec.KubeVirt != nil {
-		providers = append(providers, kubermaticv1.CloudProviderKubeVirt)
+		providers = append(providers, kubermaticeev1.CloudProviderKubeVirt)
 	}
 	if spec.OpenStack != nil {
-		providers = append(providers, kubermaticv1.CloudProviderOpenStack)
+		providers = append(providers, kubermaticeev1.CloudProviderOpenStack)
 	}
 	if spec.Packet != nil {
-		providers = append(providers, kubermaticv1.CloudProviderPacket)
+		providers = append(providers, kubermaticeev1.CloudProviderPacket)
 	}
 	if spec.VSphere != nil {
-		providers = append(providers, kubermaticv1.CloudProviderVSphere)
+		providers = append(providers, kubermaticeev1.CloudProviderVSphere)
 	}
 	if spec.Nutanix != nil {
-		providers = append(providers, kubermaticv1.CloudProviderNutanix)
+		providers = append(providers, kubermaticeev1.CloudProviderNutanix)
 	}
 	if spec.VMwareCloudDirector != nil {
-		providers = append(providers, kubermaticv1.CloudProviderVMwareCloudDirector)
+		providers = append(providers, kubermaticeev1.CloudProviderVMwareCloudDirector)
 	}
 	if len(providers) == 0 {
 		return "", nil
@@ -107,55 +107,55 @@ func ClusterCloudProviderName(spec kubermaticv1.CloudSpec) (kubermaticv1.CloudPr
 }
 
 // DatacenterCloudProviderName returns the provider name for the given Datacenter.
-func DatacenterCloudProviderName(spec *kubermaticv1.DatacenterSpec) (kubermaticv1.CloudProvider, error) {
+func DatacenterCloudProviderName(spec *kubermaticeev1.DatacenterSpec) (kubermaticeev1.CloudProvider, error) {
 	if spec == nil {
 		return "", nil
 	}
-	var providers []kubermaticv1.CloudProvider
+	var providers []kubermaticeev1.CloudProvider
 	if spec.BringYourOwn != nil {
-		providers = append(providers, kubermaticv1.CloudProviderBringYourOwn)
+		providers = append(providers, kubermaticeev1.CloudProviderBringYourOwn)
 	}
 	if spec.Digitalocean != nil {
-		providers = append(providers, kubermaticv1.CloudProviderDigitalocean)
+		providers = append(providers, kubermaticeev1.CloudProviderDigitalocean)
 	}
 	if spec.AWS != nil {
-		providers = append(providers, kubermaticv1.CloudProviderAWS)
+		providers = append(providers, kubermaticeev1.CloudProviderAWS)
 	}
 	if spec.OpenStack != nil {
-		providers = append(providers, kubermaticv1.CloudProviderOpenStack)
+		providers = append(providers, kubermaticeev1.CloudProviderOpenStack)
 	}
 	if spec.Packet != nil {
-		providers = append(providers, kubermaticv1.CloudProviderPacket)
+		providers = append(providers, kubermaticeev1.CloudProviderPacket)
 	}
 	if spec.Hetzner != nil {
-		providers = append(providers, kubermaticv1.CloudProviderHetzner)
+		providers = append(providers, kubermaticeev1.CloudProviderHetzner)
 	}
 	if spec.VSphere != nil {
-		providers = append(providers, kubermaticv1.CloudProviderVSphere)
+		providers = append(providers, kubermaticeev1.CloudProviderVSphere)
 	}
 	if spec.Azure != nil {
-		providers = append(providers, kubermaticv1.CloudProviderAzure)
+		providers = append(providers, kubermaticeev1.CloudProviderAzure)
 	}
 	if spec.GCP != nil {
-		providers = append(providers, kubermaticv1.CloudProviderGCP)
+		providers = append(providers, kubermaticeev1.CloudProviderGCP)
 	}
 	if spec.Fake != nil {
-		providers = append(providers, kubermaticv1.CloudProviderFake)
+		providers = append(providers, kubermaticeev1.CloudProviderFake)
 	}
 	if spec.KubeVirt != nil {
-		providers = append(providers, kubermaticv1.CloudProviderKubeVirt)
+		providers = append(providers, kubermaticeev1.CloudProviderKubeVirt)
 	}
 	if spec.Alibaba != nil {
-		providers = append(providers, kubermaticv1.CloudProviderAlibaba)
+		providers = append(providers, kubermaticeev1.CloudProviderAlibaba)
 	}
 	if spec.Anexia != nil {
-		providers = append(providers, kubermaticv1.CloudProviderAnexia)
+		providers = append(providers, kubermaticeev1.CloudProviderAnexia)
 	}
 	if spec.Nutanix != nil {
-		providers = append(providers, kubermaticv1.CloudProviderNutanix)
+		providers = append(providers, kubermaticeev1.CloudProviderNutanix)
 	}
 	if spec.VMwareCloudDirector != nil {
-		providers = append(providers, kubermaticv1.CloudProviderVMwareCloudDirector)
+		providers = append(providers, kubermaticeev1.CloudProviderVMwareCloudDirector)
 	}
 	if len(providers) == 0 {
 		return "", nil

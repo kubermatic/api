@@ -17,7 +17,7 @@ limitations under the License.
 package helper
 
 import (
-	kubermaticv1 "k8c.io/api/v3/pkg/apis/ee.kubermatic/v1"
+	kubermaticeev1 "k8c.io/api/v3/pkg/apis/ee.kubermatic/v1"
 
 	corev1 "k8s.io/api/core/v1"
 	apiequality "k8s.io/apimachinery/pkg/api/equality"
@@ -27,14 +27,14 @@ import (
 // SetClusterCondition sets a condition on the given cluster using the provided type, status,
 // reason and message. It also adds the Kubermatic version and timestamps.
 func SetClusterCondition(
-	c *kubermaticv1.Cluster,
+	c *kubermaticeev1.Cluster,
 	kkpVersion string,
-	conditionType kubermaticv1.ClusterConditionType,
+	conditionType kubermaticeev1.ClusterConditionType,
 	status corev1.ConditionStatus,
 	reason string,
 	message string,
 ) {
-	newCondition := kubermaticv1.ClusterCondition{
+	newCondition := kubermaticeev1.ClusterCondition{
 		Status:            status,
 		KubermaticVersion: kkpVersion,
 		Reason:            reason,
@@ -62,15 +62,15 @@ func SetClusterCondition(
 	}
 
 	if c.Status.Conditions == nil {
-		c.Status.Conditions = map[kubermaticv1.ClusterConditionType]kubermaticv1.ClusterCondition{}
+		c.Status.Conditions = map[kubermaticeev1.ClusterConditionType]kubermaticeev1.ClusterCondition{}
 	}
 	c.Status.Conditions[conditionType] = newCondition
 }
 
 // SetSeedCondition sets a condition on the given seed using the provided type, status,
 // reason and message.
-func SetSeedCondition(seed *kubermaticv1.Seed, conditionType kubermaticv1.SeedConditionType, status corev1.ConditionStatus, reason string, message string) {
-	newCondition := kubermaticv1.SeedCondition{
+func SetSeedCondition(seed *kubermaticeev1.Seed, conditionType kubermaticeev1.SeedConditionType, status corev1.ConditionStatus, reason string, message string) {
+	newCondition := kubermaticeev1.SeedCondition{
 		Status:  status,
 		Reason:  reason,
 		Message: message,
@@ -97,7 +97,7 @@ func SetSeedCondition(seed *kubermaticv1.Seed, conditionType kubermaticv1.SeedCo
 	}
 
 	if seed.Status.Conditions == nil {
-		seed.Status.Conditions = map[kubermaticv1.SeedConditionType]kubermaticv1.SeedCondition{}
+		seed.Status.Conditions = map[kubermaticeev1.SeedConditionType]kubermaticeev1.SeedCondition{}
 	}
 	seed.Status.Conditions[conditionType] = newCondition
 }

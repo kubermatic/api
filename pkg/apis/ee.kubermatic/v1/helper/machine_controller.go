@@ -20,31 +20,31 @@ import (
 	"errors"
 	"fmt"
 
-	kubermaticv1 "k8c.io/api/v3/pkg/apis/ee.kubermatic/v1"
+	kubermaticeev1 "k8c.io/api/v3/pkg/apis/ee.kubermatic/v1"
 	machinecontroller "k8c.io/api/v3/pkg/apis/machine-controller"
 )
 
 var (
-	cloudProviderMap = map[kubermaticv1.CloudProvider]machinecontroller.CloudProvider{
-		kubermaticv1.CloudProviderFake:                machinecontroller.CloudProviderFake,
-		kubermaticv1.CloudProviderAlibaba:             machinecontroller.CloudProviderAlibaba,
-		kubermaticv1.CloudProviderAnexia:              machinecontroller.CloudProviderAnexia,
-		kubermaticv1.CloudProviderAWS:                 machinecontroller.CloudProviderAWS,
-		kubermaticv1.CloudProviderAzure:               machinecontroller.CloudProviderAzure,
-		kubermaticv1.CloudProviderBringYourOwn:        machinecontroller.CloudProvider(""),
-		kubermaticv1.CloudProviderDigitalocean:        machinecontroller.CloudProviderDigitalocean,
-		kubermaticv1.CloudProviderGCP:                 machinecontroller.CloudProviderGoogle,
-		kubermaticv1.CloudProviderHetzner:             machinecontroller.CloudProviderHetzner,
-		kubermaticv1.CloudProviderKubeVirt:            machinecontroller.CloudProviderKubeVirt,
-		kubermaticv1.CloudProviderNutanix:             machinecontroller.CloudProviderNutanix,
-		kubermaticv1.CloudProviderOpenStack:           machinecontroller.CloudProviderOpenStack,
-		kubermaticv1.CloudProviderPacket:              machinecontroller.CloudProviderPacket,
-		kubermaticv1.CloudProviderVMwareCloudDirector: machinecontroller.CloudProviderVMwareCloudDirector,
-		kubermaticv1.CloudProviderVSphere:             machinecontroller.CloudProviderVSphere,
+	cloudProviderMap = map[kubermaticeev1.CloudProvider]machinecontroller.CloudProvider{
+		kubermaticeev1.CloudProviderFake:                machinecontroller.CloudProviderFake,
+		kubermaticeev1.CloudProviderAlibaba:             machinecontroller.CloudProviderAlibaba,
+		kubermaticeev1.CloudProviderAnexia:              machinecontroller.CloudProviderAnexia,
+		kubermaticeev1.CloudProviderAWS:                 machinecontroller.CloudProviderAWS,
+		kubermaticeev1.CloudProviderAzure:               machinecontroller.CloudProviderAzure,
+		kubermaticeev1.CloudProviderBringYourOwn:        machinecontroller.CloudProvider(""),
+		kubermaticeev1.CloudProviderDigitalocean:        machinecontroller.CloudProviderDigitalocean,
+		kubermaticeev1.CloudProviderGCP:                 machinecontroller.CloudProviderGoogle,
+		kubermaticeev1.CloudProviderHetzner:             machinecontroller.CloudProviderHetzner,
+		kubermaticeev1.CloudProviderKubeVirt:            machinecontroller.CloudProviderKubeVirt,
+		kubermaticeev1.CloudProviderNutanix:             machinecontroller.CloudProviderNutanix,
+		kubermaticeev1.CloudProviderOpenStack:           machinecontroller.CloudProviderOpenStack,
+		kubermaticeev1.CloudProviderPacket:              machinecontroller.CloudProviderPacket,
+		kubermaticeev1.CloudProviderVMwareCloudDirector: machinecontroller.CloudProviderVMwareCloudDirector,
+		kubermaticeev1.CloudProviderVSphere:             machinecontroller.CloudProviderVSphere,
 	}
 )
 
-func CloudProviderToMachineController(provider kubermaticv1.CloudProvider) (machinecontroller.CloudProvider, error) {
+func CloudProviderToMachineController(provider kubermaticeev1.CloudProvider) (machinecontroller.CloudProvider, error) {
 	mapped, exists := cloudProviderMap[provider]
 	if !exists {
 		return machinecontroller.CloudProvider(""), fmt.Errorf("unknown cloud provider %q", provider)
@@ -57,11 +57,11 @@ func CloudProviderToMachineController(provider kubermaticv1.CloudProvider) (mach
 	return mapped, nil
 }
 
-func CloudProviderToKKP(provider machinecontroller.CloudProvider) (kubermaticv1.CloudProvider, error) {
+func CloudProviderToKKP(provider machinecontroller.CloudProvider) (kubermaticeev1.CloudProvider, error) {
 	// make sure non-existing mappings in one direction (kkp=>mc) do not accidentally create
 	// a fake mapping when going the other direction (mc=>kkp)
 	if provider == "" {
-		return kubermaticv1.CloudProvider(""), errors.New("no cloud provider given")
+		return kubermaticeev1.CloudProvider(""), errors.New("no cloud provider given")
 	}
 
 	for kkp, mc := range cloudProviderMap {
@@ -70,21 +70,21 @@ func CloudProviderToKKP(provider machinecontroller.CloudProvider) (kubermaticv1.
 		}
 	}
 
-	return kubermaticv1.CloudProvider(""), fmt.Errorf("unknown cloud provider %q", provider)
+	return kubermaticeev1.CloudProvider(""), fmt.Errorf("unknown cloud provider %q", provider)
 }
 
 var (
-	operatingSystemMap = map[kubermaticv1.OperatingSystem]machinecontroller.OperatingSystem{
-		kubermaticv1.OperatingSystemUbuntu:       machinecontroller.OperatingSystemUbuntu,
-		kubermaticv1.OperatingSystemCentOS:       machinecontroller.OperatingSystemCentOS,
-		kubermaticv1.OperatingSystemAmazonLinux2: machinecontroller.OperatingSystemAmazonLinux2,
-		kubermaticv1.OperatingSystemRHEL:         machinecontroller.OperatingSystemRHEL,
-		kubermaticv1.OperatingSystemFlatcar:      machinecontroller.OperatingSystemFlatcar,
-		kubermaticv1.OperatingSystemRockyLinux:   machinecontroller.OperatingSystemRockyLinux,
+	operatingSystemMap = map[kubermaticeev1.OperatingSystem]machinecontroller.OperatingSystem{
+		kubermaticeev1.OperatingSystemUbuntu:       machinecontroller.OperatingSystemUbuntu,
+		kubermaticeev1.OperatingSystemCentOS:       machinecontroller.OperatingSystemCentOS,
+		kubermaticeev1.OperatingSystemAmazonLinux2: machinecontroller.OperatingSystemAmazonLinux2,
+		kubermaticeev1.OperatingSystemRHEL:         machinecontroller.OperatingSystemRHEL,
+		kubermaticeev1.OperatingSystemFlatcar:      machinecontroller.OperatingSystemFlatcar,
+		kubermaticeev1.OperatingSystemRockyLinux:   machinecontroller.OperatingSystemRockyLinux,
 	}
 )
 
-func OperatingSystemToMachineController(os kubermaticv1.OperatingSystem) (machinecontroller.OperatingSystem, error) {
+func OperatingSystemToMachineController(os kubermaticeev1.OperatingSystem) (machinecontroller.OperatingSystem, error) {
 	mapped, exists := operatingSystemMap[os]
 	if !exists {
 		return machinecontroller.OperatingSystem(""), fmt.Errorf("unknown operating system %q", os)
@@ -97,11 +97,11 @@ func OperatingSystemToMachineController(os kubermaticv1.OperatingSystem) (machin
 	return mapped, nil
 }
 
-func OperatingSystemToKKP(os machinecontroller.OperatingSystem) (kubermaticv1.OperatingSystem, error) {
+func OperatingSystemToKKP(os machinecontroller.OperatingSystem) (kubermaticeev1.OperatingSystem, error) {
 	// make sure non-existing mappings in one direction (kkp=>mc) do not accidentally create
 	// a fake mapping when going the other direction (mc=>kkp)
 	if os == "" {
-		return kubermaticv1.OperatingSystem(""), errors.New("no operating system given")
+		return kubermaticeev1.OperatingSystem(""), errors.New("no operating system given")
 	}
 
 	for kkp, mc := range operatingSystemMap {
@@ -110,5 +110,5 @@ func OperatingSystemToKKP(os machinecontroller.OperatingSystem) (kubermaticv1.Op
 		}
 	}
 
-	return kubermaticv1.OperatingSystem(""), fmt.Errorf("unknown operating system %q", os)
+	return kubermaticeev1.OperatingSystem(""), fmt.Errorf("unknown operating system %q", os)
 }
