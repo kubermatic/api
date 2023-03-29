@@ -26,9 +26,7 @@ import (
 // +kubebuilder:object:generate=true
 // +kubebuilder:object:root=true
 // +kubebuilder:printcolumn:JSONPath=".spec.name",name="HumanReadableName",type="string"
-// +kubebuilder:printcolumn:JSONPath=".spec.owner",name="Owner",type="string"
-// +kubebuilder:printcolumn:JSONPath=".spec.project",name="Project",type="string"
-// +kubebuilder:printcolumn:JSONPath=".spec.fingerprint",name="Fingerprint",type="string"
+// +kubebuilder:printcolumn:JSONPath=".status.fingerprint",name="Fingerprint",type="string"
 // +kubebuilder:printcolumn:JSONPath=".metadata.creationTimestamp",name="Age",type="date"
 
 // UserSSHKey specifies a users UserSSHKey.
@@ -36,27 +34,17 @@ type UserSSHKey struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec SSHKeySpec `json:"spec,omitempty"`
+	Spec   SSHKeySpec   `json:"spec,omitempty"`
+	Status SSHKeyStatus `json:"status,omitempty"`
 }
 
 type SSHKeySpec struct {
 	// Name is the human readable name for this SSH key.
 	Name string `json:"name"`
-	// Owner is the name of the User object that owns this SSH key.
-	// Deprecated: This field is not used anymore.
-	// +optional
-	Owner string `json:"owner,omitempty"`
-	// Project is the name of the Project object that this SSH key belongs to.
-	// This field is immutable.
-	Project string `json:"project"`
-	// Clusters is the list of cluster names that this SSH key is assigned to.
-	Clusters []string `json:"clusters"`
-	// Fingerprint is calculated server-side based on the supplied public key
-	// and doesn't need to be set by clients.
-	// +optional
-	Fingerprint string `json:"fingerprint"`
 	// PublicKey is the SSH public key.
 	PublicKey string `json:"publicKey"`
+	// Clusters is the list of cluster names that this SSH key is assigned to.
+	Clusters []string `json:"clusters"`
 }
 
 func (sk *UserSSHKey) IsUsedByCluster(clustername string) bool {
@@ -69,6 +57,11 @@ func (sk *UserSSHKey) RemoveFromCluster(clustername string) {
 
 func (sk *UserSSHKey) AddToCluster(clustername string) {
 	sk.Spec.Clusters = sets.List(sets.New(sk.Spec.Clusters...).Insert(clustername))
+}
+
+type SSHKeyStatus struct {
+	// Fingerprint is calculated server-side based on the supplied public key.
+	Fingerprint string `json:"fingerprint"`
 }
 
 // +kubebuilder:object:generate=true
