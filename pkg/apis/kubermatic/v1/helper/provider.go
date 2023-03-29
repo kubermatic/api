@@ -107,7 +107,7 @@ func ClusterCloudProviderName(spec kubermaticv1.CloudSpec) (kubermaticv1.CloudPr
 }
 
 // DatacenterCloudProviderName returns the provider name for the given Datacenter.
-func DatacenterCloudProviderName(spec *kubermaticv1.DatacenterSpec) (kubermaticv1.CloudProvider, error) {
+func DatacenterCloudProviderName(spec *kubermaticv1.DatacenterProviderSpec) (kubermaticv1.CloudProvider, error) {
 	if spec == nil {
 		return "", nil
 	}
@@ -161,7 +161,7 @@ func DatacenterCloudProviderName(spec *kubermaticv1.DatacenterSpec) (kubermaticv
 		return "", nil
 	}
 	if len(providers) != 1 {
-		return "", fmt.Errorf("only one cloud provider can be set in DatacenterSpec: %+v", spec)
+		return "", fmt.Errorf("only one cloud provider can be set in the Datacenter, but the following were set: %+v", spec)
 	}
 	return providers[0], nil
 }

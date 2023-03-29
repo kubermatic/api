@@ -100,18 +100,26 @@ spec:
                     clientID:
                       type: string
                     issuerClientID:
+                      description: IssuerClientID is the application's ID.
                       type: string
                     issuerClientSecret:
+                      description: IssuerClientSecret is the application's secret.
                       type: string
                     issuerCookieKey:
+                      description: IssuerCookieKey is required, used to authenticate the cookie value using HMAC. It is recommended to use a key with 32 or 64 bytes.
                       type: string
                     issuerRedirectURL:
                       type: string
+                    offlineAccessAsScope:
+                      description: 'Optional: OfflineAccessAsScope if true then "offline_access" scope will be used otherwise ''access_type=offline" query param will be passed.'
+                      type: boolean
                     serviceAccountKey:
                       type: string
                     skipTokenIssuerTLSVerify:
+                      description: 'Optional: SkipTokenIssuerTLSVerify skip TLS verification for the token issuer.'
                       type: boolean
                     tokenIssuer:
+                      description: URL of the provider which allows the API server to discover public signing keys.
                       type: string
                   type: object
                 caBundle:
@@ -205,7 +213,7 @@ spec:
                       type: object
                   type: object
                 exposeStrategy:
-                  description: 'ExposeStrategy is the strategy to expose the cluster with. Note: The `seed_dns_overwrite` setting of a Seed''s datacenter doesn''t have any effect if this is set to LoadBalancerStrategy.'
+                  description: ExposeStrategy is the strategy to expose the control planes of user clusters with.
                   enum:
                     - NodePort
                     - LoadBalancer
@@ -250,6 +258,213 @@ spec:
                       type: string
                   required:
                     - domain
+                  type: object
+                metering:
+                  description: MeteringConfiguration contains all the configuration for the metering tool.
+                  properties:
+                    enabled:
+                      type: boolean
+                    reports:
+                      additionalProperties:
+                        properties:
+                          interval:
+                            default: 7
+                            description: Interval defines the number of days consulted in the metering report.
+                            format: int32
+                            minimum: 1
+                            type: integer
+                          retention:
+                            description: Retention defines a number of days after which reports are queued for removal. If not set, reports are kept forever. Please note that this functionality works only for object storage that supports an object lifecycle management mechanism.
+                            format: int32
+                            minimum: 1
+                            type: integer
+                          schedule:
+                            default: 0 1 * * 6
+                            description: Schedule in Cron format, see https://en.wikipedia.org/wiki/Cron. Please take a note that Schedule is responsible only for setting the time when a report generation mechanism kicks off. The Interval MUST be set independently.
+                            type: string
+                          type:
+                            default:
+                              - cluster
+                              - namespace
+                            description: Types of reports to generate. Available report types are cluster and namespace. By default, all types of reports are generated.
+                            items:
+                              type: string
+                            type: array
+                        type: object
+                      default:
+                        weekly:
+                          interval: 7
+                          schedule: 0 1 * * 6
+                      description: ReportConfigurations is a map of report configuration definitions.
+                      type: object
+                    storageClassName:
+                      description: StorageClassName is the name of the storage class that the metering prometheus instance uses to store metric data for reporting.
+                      type: string
+                    storageSize:
+                      description: StorageSize is the size of the storage class. Default value is 100Gi.
+                      type: string
+                  required:
+                    - enabled
+                    - storageClassName
+                    - storageSize
+                  type: object
+                nodeportProxy:
+                  description: NodeportProxy can be used to configure the NodePort proxy service that is responsible for making user-cluster control planes accessible from the outside. This only takes effect if the ExposeStrategy is set to NodePort.
+                  properties:
+                    annotations:
+                      additionalProperties:
+                        type: string
+                      description: 'Annotations are used to further tweak the LoadBalancer integration with the cloud provider where the seed cluster is running. Deprecated: Use .envoy.loadBalancerService.annotations instead.'
+                      type: object
+                    disable:
+                      description: Disable will prevent the Kubermatic Operator from creating a nodeport-proxy setup on the seed cluster. This should only be used if a suitable replacement is installed (like the nodeport-proxy Helm chart).
+                      type: boolean
+                    envoy:
+                      description: Envoy configures the Envoy application itself.
+                      properties:
+                        dockerRepository:
+                          description: DockerRepository is the repository containing the component's image.
+                          type: string
+                        loadBalancerService:
+                          properties:
+                            annotations:
+                              additionalProperties:
+                                type: string
+                              description: Annotations are used to further tweak the LoadBalancer integration with the cloud provider.
+                              type: object
+                            sourceRanges:
+                              description: 'SourceRanges will restrict loadbalancer service to IP ranges specified using CIDR notation like 172.25.0.0/16. This field will be ignored if the cloud-provider does not support the feature. More info: https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/'
+                              items:
+                                pattern: ^((\d{1,3}\.){3}\d{1,3}\/([0-9]|[1-2][0-9]|3[0-2]))$
+                                type: string
+                              type: array
+                          type: object
+                        resources:
+                          description: Resources describes the requested and maximum allowed CPU/memory usage.
+                          properties:
+                            claims:
+                              description: "Claims lists the names of resources, defined in spec.resourceClaims, that are used by this container. \n This is an alpha field and requires enabling the DynamicResourceAllocation feature gate. \n This field is immutable. It can only be set for containers."
+                              items:
+                                description: ResourceClaim references one entry in PodSpec.ResourceClaims.
+                                properties:
+                                  name:
+                                    description: Name must match the name of one entry in pod.spec.resourceClaims of the Pod where this field is used. It makes that resource available inside a container.
+                                    type: string
+                                required:
+                                  - name
+                                type: object
+                              type: array
+                              x-kubernetes-list-map-keys:
+                                - name
+                              x-kubernetes-list-type: map
+                            limits:
+                              additionalProperties:
+                                anyOf:
+                                  - type: integer
+                                  - type: string
+                                pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                x-kubernetes-int-or-string: true
+                              description: 'Limits describes the maximum amount of compute resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/'
+                              type: object
+                            requests:
+                              additionalProperties:
+                                anyOf:
+                                  - type: integer
+                                  - type: string
+                                pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                x-kubernetes-int-or-string: true
+                              description: 'Requests describes the minimum amount of compute resources required. If Requests is omitted for a container, it defaults to Limits if that is explicitly specified, otherwise to an implementation-defined value. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/'
+                              type: object
+                          type: object
+                      type: object
+                    envoyManager:
+                      description: EnvoyManager configures the Kubermatic-internal Envoy manager.
+                      properties:
+                        dockerRepository:
+                          description: DockerRepository is the repository containing the component's image.
+                          type: string
+                        resources:
+                          description: Resources describes the requested and maximum allowed CPU/memory usage.
+                          properties:
+                            claims:
+                              description: "Claims lists the names of resources, defined in spec.resourceClaims, that are used by this container. \n This is an alpha field and requires enabling the DynamicResourceAllocation feature gate. \n This field is immutable. It can only be set for containers."
+                              items:
+                                description: ResourceClaim references one entry in PodSpec.ResourceClaims.
+                                properties:
+                                  name:
+                                    description: Name must match the name of one entry in pod.spec.resourceClaims of the Pod where this field is used. It makes that resource available inside a container.
+                                    type: string
+                                required:
+                                  - name
+                                type: object
+                              type: array
+                              x-kubernetes-list-map-keys:
+                                - name
+                              x-kubernetes-list-type: map
+                            limits:
+                              additionalProperties:
+                                anyOf:
+                                  - type: integer
+                                  - type: string
+                                pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                x-kubernetes-int-or-string: true
+                              description: 'Limits describes the maximum amount of compute resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/'
+                              type: object
+                            requests:
+                              additionalProperties:
+                                anyOf:
+                                  - type: integer
+                                  - type: string
+                                pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                x-kubernetes-int-or-string: true
+                              description: 'Requests describes the minimum amount of compute resources required. If Requests is omitted for a container, it defaults to Limits if that is explicitly specified, otherwise to an implementation-defined value. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/'
+                              type: object
+                          type: object
+                      type: object
+                    updater:
+                      description: Updater configures the component responsible for updating the LoadBalancer service.
+                      properties:
+                        dockerRepository:
+                          description: DockerRepository is the repository containing the component's image.
+                          type: string
+                        resources:
+                          description: Resources describes the requested and maximum allowed CPU/memory usage.
+                          properties:
+                            claims:
+                              description: "Claims lists the names of resources, defined in spec.resourceClaims, that are used by this container. \n This is an alpha field and requires enabling the DynamicResourceAllocation feature gate. \n This field is immutable. It can only be set for containers."
+                              items:
+                                description: ResourceClaim references one entry in PodSpec.ResourceClaims.
+                                properties:
+                                  name:
+                                    description: Name must match the name of one entry in pod.spec.resourceClaims of the Pod where this field is used. It makes that resource available inside a container.
+                                    type: string
+                                required:
+                                  - name
+                                type: object
+                              type: array
+                              x-kubernetes-list-map-keys:
+                                - name
+                              x-kubernetes-list-type: map
+                            limits:
+                              additionalProperties:
+                                anyOf:
+                                  - type: integer
+                                  - type: string
+                                pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                x-kubernetes-int-or-string: true
+                              description: 'Limits describes the maximum amount of compute resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/'
+                              type: object
+                            requests:
+                              additionalProperties:
+                                anyOf:
+                                  - type: integer
+                                  - type: string
+                                pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                                x-kubernetes-int-or-string: true
+                              description: 'Requests describes the minimum amount of compute resources required. If Requests is omitted for a container, it defaults to Limits if that is explicitly specified, otherwise to an implementation-defined value. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/'
+                              type: object
+                          type: object
+                      type: object
                   type: object
                 proxy:
                   description: Proxy allows to configure Kubermatic to use proxies to talk to the world outside of its cluster.
@@ -1325,12 +1540,51 @@ spec:
                       description: APIServerReplicas configures the replica count for the API-Server deployment inside user clusters.
                       format: int32
                       type: integer
+                    defaultTemplate:
+                      description: DefaultCTemplate is the name of a cluster template that is used to default a new user cluster.
+                      type: string
                     disableApiserverEndpointReconciling:
                       description: DisableAPIServerEndpointReconciling can be used to toggle the `--endpoint-reconciler-type` flag for the Kubernetes API server.
                       type: boolean
                     dnatControllerDockerRepository:
                       description: DNATControllerDockerRepository is the repository containing the dnat-controller image.
                       type: string
+                    etcdBackupRestore:
+                      description: EtcdBackupRestore holds the configuration of the automatic etcd backup restores for the Seed; if this is set, the new backup/restore controllers are enabled for this Seed.
+                      properties:
+                        defaultDestination:
+                          description: DefaultDestination marks the default destination that will be used for the default etcd backup config which is created for every user cluster. Has to correspond to a destination in Destinations. If removed, it removes the related default etcd backup configs.
+                          maxLength: 63
+                          pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
+                          type: string
+                        destinations:
+                          additionalProperties:
+                            description: EtcdBackupDestination defines the bucket name and endpoint as a backup destination, and holds reference to the credentials secret.
+                            properties:
+                              bucketName:
+                                description: BucketName is the bucket name to use for backup and restore.
+                                type: string
+                              credentials:
+                                description: Credentials hold the ref to the secret with backup credentials
+                                properties:
+                                  name:
+                                    description: name is unique within a namespace to reference a secret resource.
+                                    type: string
+                                  namespace:
+                                    description: namespace defines the space within which the secret name must be unique.
+                                    type: string
+                                type: object
+                                x-kubernetes-map-type: atomic
+                              endpoint:
+                                description: Endpoint is the API endpoint to use for backup and restore.
+                                type: string
+                            required:
+                              - bucketName
+                              - endpoint
+                            type: object
+                          description: Destinations stores all the possible destinations where the backups for the Seed can be stored. If not empty, it enables automatic backup and restore for the seed.
+                          type: object
+                      type: object
                     etcdLauncherDockerRepository:
                       description: EtcdLauncherDockerRepository is the repository containing the Kubermatic etcd-launcher image.
                       type: string
@@ -1349,6 +1603,14 @@ spec:
                         imageTag:
                           description: ImageTag is used to override the Machine Controller image. It is only for development, tests and PoC purposes. This field must not be set in production environments.
                           type: string
+                      type: object
+                    mla:
+                      description: KubermaticUserClusterMLAConfiguration allows configuring Monitoring, Logging & Alerting settings.
+                      properties:
+                        enabled:
+                          type: boolean
+                      required:
+                        - enabled
                       type: object
                     monitoring:
                       description: Monitoring can be used to fine-tune to in-cluster Prometheus.
@@ -1385,6 +1647,16 @@ spec:
                     overwriteRegistry:
                       description: OverwriteRegistry specifies a custom Docker registry which will be used for all images used for user clusters (user cluster control plane + addons). This also applies to the KubermaticDockerRepository and DNATControllerDockerRepository fields.
                       type: string
+                    proxySettings:
+                      description: 'Optional: ProxySettings can be used to configure HTTP proxy settings on the worker nodes in user clusters. However, proxy settings on nodes take precedence.'
+                      properties:
+                        httpProxy:
+                          description: 'Optional: If set, this proxy will be configured for both HTTP and HTTPS.'
+                          type: string
+                        noProxy:
+                          description: 'Optional: If set this will be set as NO_PROXY environment variable on the node; The value must be a comma-separated list of domains for which no proxy should be used, e.g. "*.example.com,internal.dev". Note that the in-cluster apiserver URL will be automatically prepended to this value.'
+                          type: string
+                      type: object
                     systemApplications:
                       description: SystemApplications contains configuration for system Applications (such as CNI).
                       properties:

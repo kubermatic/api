@@ -41,43 +41,54 @@ type Datacenter struct {
 	Status DatacenterStatus `json:"status,omitempty"`
 }
 
-/*
-
-	// Optional: This can be used to override the DNS name used for this seed.
-	// By default the seed name is used.
-	SeedDNSOverwrite string `json:"seedDNSOverwrite,omitempty"`
-	// NodeportProxy can be used to configure the NodePort proxy service that is
-	// responsible for making user-cluster control planes accessible from the outside.
-	NodeportProxy *NodeportProxyConfig `json:"nodeportProxy,omitempty"`
-	// Optional: ProxySettings can be used to configure HTTP proxy settings on the
-	// worker nodes in user clusters. However, proxy settings on nodes take precedence.
-	ProxySettings *ProxySettings `json:"proxySettings,omitempty"`
-	// Optional: ExposeStrategy explicitly sets the expose strategy for this seed cluster, if not set, the default provided by the master is used.
-	ExposeStrategy ExposeStrategy `json:"exposeStrategy,omitempty"`
-	// Optional: MLA allows configuring seed level MLA (Monitoring, Logging & Alerting) stack settings.
-	MLA *SeedMLASettings `json:"mla,omitempty"`
-	// DefaultComponentSettings are default values to set for newly created clusters.
-	// Deprecated: Use DefaultClusterTemplate instead.
-	DefaultComponentSettings *ComponentSettings `json:"defaultComponentSettings,omitempty"`
-	// DefaultClusterTemplate is the name of a cluster template of scope "seed" that is used
-	// to default all new created clusters
-	DefaultClusterTemplate string `json:"defaultClusterTemplate,omitempty"`
-	// Metering configures the metering tool on user clusters across the seed.
-	Metering *MeteringConfiguration `json:"metering,omitempty"`
-	// EtcdBackupRestore holds the configuration of the automatic etcd backup restores for the Seed;
-	// if this is set, the new backup/restore controllers are enabled for this Seed.
-	EtcdBackupRestore *EtcdBackupRestore `json:"etcdBackupRestore,omitempty"`
-	// OIDCProviderConfiguration allows to configure OIDC provider at the Seed level.
-	OIDCProviderConfiguration *OIDCProviderConfiguration `json:"oidcProviderConfiguration,omitempty"`
-*/
-
 // DatacenterSpec configures a KKP datacenter. Provider configuration is mutually exclusive,
 // and as such only a single provider can be configured per datacenter.
 type DatacenterSpec struct {
+	// Provider contains cloud-provider related configuration.
+	Provider DatacenterProviderSpec `json:"provider"`
+
 	// Node holds node-specific settings, like e.g. HTTP proxy, Docker
 	// registries and the like. Proxy settings are inherited from the seed if
 	// not specified here.
 	Node *NodeSettings `json:"node,omitempty"`
+
+	// Optional: When defined, only users with an e-mail address on the
+	// given domains can make use of this datacenter. You can define multiple
+	// domains, e.g. "example.com", one of which must match the email domain
+	// exactly (i.e. "example.com" will not match "user@test.example.com").
+	RequiredEmails []string `json:"requiredEmails,omitempty"`
+
+	// Optional: EnforceAuditLogging enforces audit logging on every cluster within the DC,
+	// ignoring cluster-specific settings.
+	EnforceAuditLogging bool `json:"enforceAuditLogging,omitempty"`
+
+	// Optional: EnforcePodSecurityPolicy enforces pod security policy plugin on every clusters within the DC,
+	// ignoring cluster-specific settings.
+	EnforcePodSecurityPolicy bool `json:"enforcePodSecurityPolicy,omitempty"`
+
+	// Optional: ProviderReconciliationInterval is the time that must have passed since a
+	// Cluster's status.lastProviderReconciliation to make the cliuster controller
+	// perform an in-depth provider reconciliation, where for example missing security
+	// groups will be reconciled.
+	// Setting this too low can cause rate limits by the cloud provider, setting this
+	// too high means that *if* a resource at a cloud provider is removed/changed outside
+	// of KKP, it will take this long to fix it.
+	ProviderReconciliationInterval *metav1.Duration `json:"providerReconciliationInterval,omitempty"`
+
+	// Optional: DefaultOperatingSystemProfiles specifies the OperatingSystemProfiles to use for each supported operating system.
+	DefaultOperatingSystemProfiles OperatingSystemProfileList `json:"operatingSystemProfiles,omitempty"`
+
+	// Optional: MachineFlavorFilter is used to filter out allowed machine flavors based on the specified resource limits like CPU, Memory, and GPU etc.
+	MachineFlavorFilter *MachineFlavorFilter `json:"machineFlavorFilter,omitempty"`
+}
+
+// DatacenterSpec configures a KKP datacenter. Provider configuration is mutually exclusive,
+// and as such only a single provider can be configured per datacenter.
+type DatacenterProviderSpec struct {
+	// ProviderName is the name of the cloud provider used for this datacenter.
+	// This must match the given provider spec (e.g. if the providerName is
+	// "aws", then the `aws` field must be set).
+	ProviderName CloudProvider `json:"providerName"`
 	// Digitalocean contains settings for Digitalocean (DO).
 	Digitalocean *DatacenterSpecDigitalocean `json:"digitalocean,omitempty"`
 	// BringYourOwn contains settings for clusters using manually created
@@ -111,35 +122,6 @@ type DatacenterSpec struct {
 	//nolint:staticcheck
 	//lint:ignore SA5008 omitgenyaml is used by the example-yaml-generator
 	Fake *DatacenterSpecFake `json:"fake,omitempty,omitgenyaml"`
-
-	// Optional: When defined, only users with an e-mail address on the
-	// given domains can make use of this datacenter. You can define multiple
-	// domains, e.g. "example.com", one of which must match the email domain
-	// exactly (i.e. "example.com" will not match "user@test.example.com").
-	RequiredEmails []string `json:"requiredEmails,omitempty"`
-
-	// Optional: EnforceAuditLogging enforces audit logging on every cluster within the DC,
-	// ignoring cluster-specific settings.
-	EnforceAuditLogging bool `json:"enforceAuditLogging,omitempty"`
-
-	// Optional: EnforcePodSecurityPolicy enforces pod security policy plugin on every clusters within the DC,
-	// ignoring cluster-specific settings.
-	EnforcePodSecurityPolicy bool `json:"enforcePodSecurityPolicy,omitempty"`
-
-	// Optional: ProviderReconciliationInterval is the time that must have passed since a
-	// Cluster's status.lastProviderReconciliation to make the cliuster controller
-	// perform an in-depth provider reconciliation, where for example missing security
-	// groups will be reconciled.
-	// Setting this too low can cause rate limits by the cloud provider, setting this
-	// too high means that *if* a resource at a cloud provider is removed/changed outside
-	// of KKP, it will take this long to fix it.
-	ProviderReconciliationInterval *metav1.Duration `json:"providerReconciliationInterval,omitempty"`
-
-	// Optional: DefaultOperatingSystemProfiles specifies the OperatingSystemProfiles to use for each supported operating system.
-	DefaultOperatingSystemProfiles OperatingSystemProfileList `json:"operatingSystemProfiles,omitempty"`
-
-	// Optional: MachineFlavorFilter is used to filter out allowed machine flavors based on the specified resource limits like CPU, Memory, and GPU etc.
-	MachineFlavorFilter *MachineFlavorFilter `json:"machineFlavorFilter,omitempty"`
 }
 
 // ImageList defines a map of operating system and the image to use.
@@ -441,38 +423,6 @@ type ContainerRuntimeContainerd struct {
 type ContainerdRegistry struct {
 	// List of registry mirrors to use
 	Mirrors []string `json:"mirrors,omitempty"`
-}
-
-// ProxySettings allow configuring a HTTP proxy for the control planes and nodes.
-type ProxySettings struct {
-	// Optional: If set, this proxy will be configured for both HTTP and HTTPS.
-	HTTPProxy *string `json:"httpProxy,omitempty"`
-	// Optional: If set this will be set as NO_PROXY environment variable on the node;
-	// The value must be a comma-separated list of domains for which no proxy
-	// should be used, e.g. "*.example.com,internal.dev".
-	// Note that the in-cluster apiserver URL will be automatically prepended
-	// to this value.
-	NoProxy *string `json:"noProxy,omitempty"`
-}
-
-func emptyStrPtr(s *string) bool {
-	return s == nil || *s == ""
-}
-
-// Empty returns true if p or all of its children are nil or empty strings.
-func (p *ProxySettings) Empty() bool {
-	return p == nil || (emptyStrPtr(p.HTTPProxy) && emptyStrPtr(p.NoProxy))
-}
-
-// Merge applies the settings from p into dst if the corresponding setting
-// in dst is nil or an empty string.
-func (p *ProxySettings) Merge(dst *ProxySettings) {
-	if emptyStrPtr(dst.HTTPProxy) {
-		dst.HTTPProxy = p.HTTPProxy
-	}
-	if emptyStrPtr(dst.NoProxy) {
-		dst.NoProxy = p.NoProxy
-	}
 }
 
 // DatacenterStatus contains runtime information regarding the datacenter.

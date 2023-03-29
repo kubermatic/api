@@ -62,7 +62,7 @@ func IsIPv6KnownProvider(provider kubermaticv1.CloudProvider) bool {
 
 // IsIPv6EnabledDatacenter returns true if IPv6 is enabled for the datacenter.
 func IsIPv6EnabledDatacenter(dc *kubermaticv1.Datacenter) bool {
-	provider, err := DatacenterCloudProviderName(&dc.Spec)
+	provider, err := DatacenterCloudProviderName(&dc.Spec.Provider)
 	if err != nil {
 		return false
 	}
@@ -80,9 +80,9 @@ func IsIPv6EnabledDatacenter(dc *kubermaticv1.Datacenter) bool {
 
 	switch provider {
 	case kubermaticv1.CloudProviderOpenStack:
-		flag = dc.Spec.OpenStack.IPv6Enabled
+		flag = dc.Spec.Provider.OpenStack.IPv6Enabled
 	case kubermaticv1.CloudProviderVSphere:
-		flag = dc.Spec.VSphere.IPv6Enabled
+		flag = dc.Spec.Provider.VSphere.IPv6Enabled
 	}
 
 	return flag != nil && *flag
