@@ -17,7 +17,7 @@ limitations under the License.
 package v1
 
 import (
-	openpolicyagent "k8c.io/api/v3/pkg/apis/open-policy-agent"
+	kubermaticv1 "k8c.io/api/v3/pkg/apis/kubermatic/v1"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -33,22 +33,7 @@ type ConstraintTemplate struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec ConstraintTemplateSpec `json:"spec,omitempty"`
-}
-
-// ConstraintTemplateSpec is the object representing the gatekeeper constraint template spec and kubermatic related spec.
-type ConstraintTemplateSpec struct {
-	CRD      openpolicyagent.CRD        `json:"crd,omitempty"`
-	Targets  []openpolicyagent.Target   `json:"targets,omitempty"`
-	Selector ConstraintTemplateSelector `json:"selector,omitempty"`
-}
-
-// ConstraintTemplateSelector is the object holding the cluster selection filters.
-type ConstraintTemplateSelector struct {
-	// Providers is a list of cloud providers to which the Constraint Template applies to. Empty means all providers are selected.
-	Providers []CloudProvider `json:"providers,omitempty"`
-	// LabelSelector selects the Clusters to which the Constraint Template applies based on their labels
-	LabelSelector metav1.LabelSelector `json:"labelSelector,omitempty"`
+	kubermaticv1.ConstraintTemplate `json:",inline"`
 }
 
 // +kubebuilder:object:generate=true

@@ -24,7 +24,6 @@ type ExternalClustersGetter interface {
 type ExternalClusterInterface interface {
 	Create(ctx context.Context, externalCluster *v1.ExternalCluster, opts metav1.CreateOptions) (*v1.ExternalCluster, error)
 	Update(ctx context.Context, externalCluster *v1.ExternalCluster, opts metav1.UpdateOptions) (*v1.ExternalCluster, error)
-	UpdateStatus(ctx context.Context, externalCluster *v1.ExternalCluster, opts metav1.UpdateOptions) (*v1.ExternalCluster, error)
 	Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error
 	DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error
 	Get(ctx context.Context, name string, opts metav1.GetOptions) (*v1.ExternalCluster, error)
@@ -113,22 +112,6 @@ func (c *externalClusters) Update(ctx context.Context, externalCluster *v1.Exter
 		Namespace(c.ns).
 		Resource("externalclusters").
 		Name(externalCluster.Name).
-		VersionedParams(&opts, scheme.ParameterCodec).
-		Body(externalCluster).
-		Do(ctx).
-		Into(result)
-	return
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *externalClusters) UpdateStatus(ctx context.Context, externalCluster *v1.ExternalCluster, opts metav1.UpdateOptions) (result *v1.ExternalCluster, err error) {
-	result = &v1.ExternalCluster{}
-	err = c.client.Put().
-		Namespace(c.ns).
-		Resource("externalclusters").
-		Name(externalCluster.Name).
-		SubResource("status").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Body(externalCluster).
 		Do(ctx).

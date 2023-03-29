@@ -24,7 +24,6 @@ type UserSSHKeysGetter interface {
 type UserSSHKeyInterface interface {
 	Create(ctx context.Context, userSSHKey *v1.UserSSHKey, opts metav1.CreateOptions) (*v1.UserSSHKey, error)
 	Update(ctx context.Context, userSSHKey *v1.UserSSHKey, opts metav1.UpdateOptions) (*v1.UserSSHKey, error)
-	UpdateStatus(ctx context.Context, userSSHKey *v1.UserSSHKey, opts metav1.UpdateOptions) (*v1.UserSSHKey, error)
 	Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error
 	DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error
 	Get(ctx context.Context, name string, opts metav1.GetOptions) (*v1.UserSSHKey, error)
@@ -113,22 +112,6 @@ func (c *userSSHKeys) Update(ctx context.Context, userSSHKey *v1.UserSSHKey, opt
 		Namespace(c.ns).
 		Resource("usersshkeys").
 		Name(userSSHKey.Name).
-		VersionedParams(&opts, scheme.ParameterCodec).
-		Body(userSSHKey).
-		Do(ctx).
-		Into(result)
-	return
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *userSSHKeys) UpdateStatus(ctx context.Context, userSSHKey *v1.UserSSHKey, opts metav1.UpdateOptions) (result *v1.UserSSHKey, err error) {
-	result = &v1.UserSSHKey{}
-	err = c.client.Put().
-		Namespace(c.ns).
-		Resource("usersshkeys").
-		Name(userSSHKey.Name).
-		SubResource("status").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Body(userSSHKey).
 		Do(ctx).

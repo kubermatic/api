@@ -17,6 +17,7 @@ limitations under the License.
 package v1
 
 import (
+	kubermaticv1 "k8c.io/api/v3/pkg/apis/kubermatic/v1"
 	"k8c.io/api/v3/pkg/semver"
 
 	corev1 "k8s.io/api/core/v1"
@@ -385,7 +386,7 @@ type KubermaticVersioningConfiguration struct {
 	ProviderIncompatibilities []Incompatibility `json:"providerIncompatibilities,omitempty"`
 
 	// ExternalClusters contains the available and default Kubernetes versions and updates for ExternalClusters.
-	ExternalClusters map[ExternalClusterProvider]ExternalClusterProviderVersioningConfiguration `json:"externalClusters,omitempty"`
+	ExternalClusters map[kubermaticv1.ExternalClusterProvider]ExternalClusterProviderVersioningConfiguration `json:"externalClusters,omitempty"`
 }
 
 // ExternalClusterProviderVersioningConfiguration configures the available and default Kubernetes versions for ExternalCluster Providers.
