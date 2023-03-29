@@ -6,10 +6,10 @@ import (
 	"context"
 	time "time"
 
-	appskubermaticv1 "k8c.io/api/v2/pkg/apis/apps.kubermatic/v1"
-	versioned "k8c.io/api/v2/pkg/generated/clientset/versioned"
-	internalinterfaces "k8c.io/api/v2/pkg/generated/informers/externalversions/internalinterfaces"
-	v1 "k8c.io/api/v2/pkg/generated/listers/apps.kubermatic/v1"
+	appskubermaticv1 "k8c.io/api/v3/pkg/apis/apps.kubermatic/v1"
+	versioned "k8c.io/api/v3/pkg/generated/clientset/versioned"
+	internalinterfaces "k8c.io/api/v3/pkg/generated/informers/externalversions/internalinterfaces"
+	v1 "k8c.io/api/v3/pkg/generated/listers/apps.kubermatic/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	watch "k8s.io/apimachinery/pkg/watch"
@@ -46,13 +46,13 @@ func NewFilteredApplicationInstallationInformer(client versioned.Interface, name
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.AppsV1().ApplicationInstallations(namespace).List(context.TODO(), options)
+				return client.KubermaticAppsV1().ApplicationInstallations(namespace).List(context.TODO(), options)
 			},
 			WatchFunc: func(options metav1.ListOptions) (watch.Interface, error) {
 				if tweakListOptions != nil {
 					tweakListOptions(&options)
 				}
-				return client.AppsV1().ApplicationInstallations(namespace).Watch(context.TODO(), options)
+				return client.KubermaticAppsV1().ApplicationInstallations(namespace).Watch(context.TODO(), options)
 			},
 		},
 		&appskubermaticv1.ApplicationInstallation{},

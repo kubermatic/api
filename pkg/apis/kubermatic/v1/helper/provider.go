@@ -19,7 +19,7 @@ package helper
 import (
 	"fmt"
 
-	kubermaticv1 "k8c.io/api/v2/pkg/apis/kubermatic/v1"
+	kubermaticv1 "k8c.io/api/v3/pkg/apis/kubermatic/v1"
 )
 
 // ExternalClusterCloudProviderName returns the provider name for the given ExternalClusterCloudSpec.

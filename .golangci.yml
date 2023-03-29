@@ -13,26 +13,10 @@
 # limitations under the License.
 
 run:
-  # concurrency=1 lowers memory usage a bit
-  concurrency: 1
   modules-download-mode: readonly
   deadline: 20m
-  build-tags:
-    - ce
-    - cloud
-    - create
-    - dualstack
-    - e2e
-    - ee
-    - integration
-    - ipam
-    - kubevirt
-    - logout
   skip-files:
     - zz_generated.*.go
-    # This package was forked from upstream (in #9826)
-    # and we want to keep it as close to upstream as possible.
-    - pkg/provider/cloud/eks/authenticator
 
 linters:
   enable:
@@ -82,6 +66,15 @@ linters-settings:
   importas:
     no-unaliased: true
     alias:
+      - pkg: k8c.io/api/v3/pkg/apis/kubermatic/v1
+        alias: kubermaticv1
+      - pkg: k8c.io/api/v3/pkg/apis/ee.kubermatic/v1
+        alias: kubermaticeev1
+      - pkg: k8c.io/api/v3/pkg/apis/apps.kubermatic/v1
+        alias: kubermaticappsv1
+      - pkg: k8c.io/api/v3/pkg/apis/ee.apps.kubermatic/v1
+        alias: kubermaticappseev1
+
       - pkg: k8s.io/api/(\w+)/(v[\w\d]+)
         alias: $1$2
       - pkg: k8s.io/apimachinery/pkg/apis/meta/v1

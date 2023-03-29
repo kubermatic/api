@@ -20,8 +20,8 @@ import (
 	"errors"
 	"fmt"
 
-	kubermaticv1 "k8c.io/api/v2/pkg/apis/kubermatic/v1"
-	machinecontroller "k8c.io/api/v2/pkg/apis/machine-controller"
+	kubermaticv1 "k8c.io/api/v3/pkg/apis/kubermatic/v1"
+	machinecontroller "k8c.io/api/v3/pkg/apis/machine-controller"
 )
 
 var (

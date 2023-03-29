@@ -21,6 +21,10 @@ export KUBERMATIC_EDITION ?= ce
 test:
 	./hack/run-tests.sh
 
+.PHONY: build
+build:
+	go build -v ./...
+
 .PHONY: lint
 lint:
 	@# we want tagliatelle to check only CRDs

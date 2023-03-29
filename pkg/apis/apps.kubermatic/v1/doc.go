@@ -15,6 +15,7 @@ limitations under the License.
 */
 
 // +groupName=apps.kubermatic.k8c.io
+// +groupGoName=KubermaticApps
 // +versionName=v1
 // +kubebuilder:object:generate=true
 package v1

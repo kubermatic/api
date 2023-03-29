@@ -19,7 +19,7 @@ set -euo pipefail
 cd $(dirname $0)/..
 source hack/lib.sh
 
-CRD_DIR=crd/k8c.io
+CRD_DIR=crd
 CODEGEN_DIR=pkg/generated
 
 echodate "Removing old generated clients"
@@ -34,29 +34,30 @@ echo "" > /tmp/headerfile
 
 # no deepcopy here, as controller-gen takes care of that
 bash vendor/k8s.io/code-generator/generate-groups.sh client,lister,informer \
-  k8c.io/api/v2/$CODEGEN_DIR \
-  k8c.io/api/v2/pkg/apis \
-  "kubermatic:v1 apps.kubermatic:v1" \
+  k8c.io/api/v3/$CODEGEN_DIR \
+  k8c.io/api/v3/pkg/apis \
+  "kubermatic:v1 ee.kubermatic:v1 apps.kubermatic:v1 ee.apps.kubermatic:v1" \
   --go-header-file /tmp/headerfile
 
 # move generated code to the correct location; this should work regardless where
 # this repository has been cloned to
-mv $GOPATH/src/k8c.io/api/v2/pkg/generated pkg/
+mv $GOPATH/src/k8c.io/api/v3/pkg/generated pkg/
 
 # in case the repository was cloned to the module path in $GOPATH, make sure to
-# remove the leftover v2 directory
-rm -rf v2
+# remove the leftover v3 directory
+rm -rf v3
 
 # cleanup
 rm -rf vendor
 
 # generate CRDs from the Go types
 echodate "Generating CRDs"
+
 go run sigs.k8s.io/controller-tools/cmd/controller-gen \
   crd \
-  object:headerFile=./hack/boilerplate/ce/boilerplate.go.txt \
-  paths=./pkg/... \
-  output:crd:dir=./$CRD_DIR
+  "object:headerFile=./hack/boilerplate/ce/boilerplate.go.txt" \
+  "paths=./pkg/apis/..." \
+  "output:crd:dir=$CRD_DIR"
 
 # beautify CRDs just because we can
 for f in $CRD_DIR/*.yaml; do
@@ -67,56 +68,50 @@ for f in $CRD_DIR/*.yaml; do
   rm "$f.bak"
 done
 
-annotation="kubermatic.k8c.io/location"
-locationMap='{
-  "applicationdefinitions.apps.kubermatic.k8c.io": "master,seed",
-  "applicationinstallations.apps.kubermatic.k8c.io": "usercluster",
-  "addonconfigs.kubermatic.k8c.io": "master",
-  "addons.kubermatic.k8c.io": "seed",
-  "admissionplugins.kubermatic.k8c.io": "master",
-  "alertmanagers.kubermatic.k8c.io": "seed",
-  "allowedregistries.kubermatic.k8c.io": "master",
-  "clusters.kubermatic.k8c.io": "seed",
-  "clustertemplateinstances.kubermatic.k8c.io": "seed",
-  "clustertemplates.kubermatic.k8c.io": "master,seed",
-  "constraints.kubermatic.k8c.io": "master,seed",
-  "constrainttemplates.kubermatic.k8c.io": "master,seed",
-  "customoperatingsystemprofiles.operatingsystemmanager.k8c.io": "seed",
-  "etcdbackupconfigs.kubermatic.k8c.io": "seed",
-  "etcdrestores.kubermatic.k8c.io": "seed",
-  "externalclusters.kubermatic.k8c.io": "master",
-  "groupprojectbindings.kubermatic.k8c.io": "master",
-  "ipamallocations.kubermatic.k8c.io": "master",
-  "ipampools.kubermatic.k8c.io": "master",
-  "kubermaticconfigurations.kubermatic.k8c.io": "master,seed",
-  "kubermaticsettings.kubermatic.k8c.io": "master",
-  "mlaadminsettings.kubermatic.k8c.io": "seed",
-  "presets.kubermatic.k8c.io": "master,seed",
-  "projects.kubermatic.k8c.io": "master,seed",
-  "resourcequotas.kubermatic.k8c.io": "master",
-  "rulegroups.kubermatic.k8c.io": "master",
-  "seeds.kubermatic.k8c.io": "master,seed",
-  "userprojectbindings.kubermatic.k8c.io": "master,seed",
-  "usersshkeys.kubermatic.k8c.io": "master",
-  "users.kubermatic.k8c.io": "master,seed"
-}'
+is_enterprise_extension() {
+  # yq's `contains` function is weird, this is safer
+  # https://mikefarah.gitbook.io/yq/operators/contains
+  yq --exit-status '[.spec.names.categories[] | select(. == "kkpee")] | length == 1' "$1" 2>/dev/null
+}
 
-failure=false
-echodate "Annotating CRDs"
+# create pre-configured collections of CRDs to make installation easier
+prepare_crd_set() {
+  setName="$1"
+  echodate "Preparing $setName CRD set"
+  target="$CRD_DIR/$setName"
 
-for filename in $CRD_DIR/*.yaml; do
-  crdName="$(yq '.metadata.name' "$filename")"
-  location="$(echo "$locationMap" | jq -rc --arg key "$crdName" '.[$key] + ""')"
+  rm -rf "$target"
+  mkdir -p "$target"
+}
 
-  if [ -z "$location" ]; then
-    echo "Error: No location defined for CRD $crdName"
-    failure=true
-    continue
-  fi
+(
+  prepare_crd_set enterprise/seed
+  target="$CRD_DIR/$setName"
 
-  yq --inplace ".metadata.annotations.\"$annotation\" = \"$location\"" "$filename"
-done
+  cp $CRD_DIR/kubermatic.k8c.io_*.yaml "$target/"
+  cp $CRD_DIR/apps.kubermatic.k8c.io_*.yaml "$target/"
+)
 
-if $failure; then
-  exit 1
-fi
+(
+  prepare_crd_set enterprise/kcp
+  target="$CRD_DIR/$setName"
+
+  cp $CRD_DIR/ee.kubermatic.k8c.io_*.yaml "$target/"
+  cp $CRD_DIR/ee.apps.kubermatic.k8c.io_*.yaml "$target/"
+)
+
+(
+  prepare_crd_set community
+  target="$CRD_DIR/$setName"
+
+  cp $CRD_DIR/enterprise/seed/*.yaml "$target/"
+
+  # remove unused, misleading CRDs
+  for f in $target/*.yaml; do
+    if $(is_enterprise_extension "$f"); then
+      rm "$f"
+    fi
+  done
+)
+
+rm $CRD_DIR/*.yaml

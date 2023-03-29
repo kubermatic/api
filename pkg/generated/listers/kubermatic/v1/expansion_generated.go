@@ -106,14 +106,6 @@ type ExternalClusterListerExpansion interface{}
 // ExternalClusterNamespaceLister.
 type ExternalClusterNamespaceListerExpansion interface{}
 
-// GroupProjectBindingListerExpansion allows custom methods to be added to
-// GroupProjectBindingLister.
-type GroupProjectBindingListerExpansion interface{}
-
-// GroupProjectBindingNamespaceListerExpansion allows custom methods to be added to
-// GroupProjectBindingNamespaceLister.
-type GroupProjectBindingNamespaceListerExpansion interface{}
-
 // IPAMAllocationListerExpansion allows custom methods to be added to
 // IPAMAllocationLister.
 type IPAMAllocationListerExpansion interface{}
@@ -162,14 +154,6 @@ type PresetListerExpansion interface{}
 // PresetNamespaceLister.
 type PresetNamespaceListerExpansion interface{}
 
-// ProjectListerExpansion allows custom methods to be added to
-// ProjectLister.
-type ProjectListerExpansion interface{}
-
-// ProjectNamespaceListerExpansion allows custom methods to be added to
-// ProjectNamespaceLister.
-type ProjectNamespaceListerExpansion interface{}
-
 // ResourceQuotaListerExpansion allows custom methods to be added to
 // ResourceQuotaLister.
 type ResourceQuotaListerExpansion interface{}
@@ -201,14 +185,6 @@ type UserListerExpansion interface{}
 // UserNamespaceListerExpansion allows custom methods to be added to
 // UserNamespaceLister.
 type UserNamespaceListerExpansion interface{}
-
-// UserProjectBindingListerExpansion allows custom methods to be added to
-// UserProjectBindingLister.
-type UserProjectBindingListerExpansion interface{}
-
-// UserProjectBindingNamespaceListerExpansion allows custom methods to be added to
-// UserProjectBindingNamespaceLister.
-type UserProjectBindingNamespaceListerExpansion interface{}
 
 // UserSSHKeyListerExpansion allows custom methods to be added to
 // UserSSHKeyLister.

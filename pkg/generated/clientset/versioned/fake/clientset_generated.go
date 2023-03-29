@@ -3,11 +3,15 @@
 package fake
 
 import (
-	clientset "k8c.io/api/v2/pkg/generated/clientset/versioned"
-	appsv1 "k8c.io/api/v2/pkg/generated/clientset/versioned/typed/apps.kubermatic/v1"
-	fakeappsv1 "k8c.io/api/v2/pkg/generated/clientset/versioned/typed/apps.kubermatic/v1/fake"
-	kubermaticv1 "k8c.io/api/v2/pkg/generated/clientset/versioned/typed/kubermatic/v1"
-	fakekubermaticv1 "k8c.io/api/v2/pkg/generated/clientset/versioned/typed/kubermatic/v1/fake"
+	clientset "k8c.io/api/v3/pkg/generated/clientset/versioned"
+	kubermaticappsv1 "k8c.io/api/v3/pkg/generated/clientset/versioned/typed/apps.kubermatic/v1"
+	fakekubermaticappsv1 "k8c.io/api/v3/pkg/generated/clientset/versioned/typed/apps.kubermatic/v1/fake"
+	kubermaticenterpriseappsv1 "k8c.io/api/v3/pkg/generated/clientset/versioned/typed/ee.apps.kubermatic/v1"
+	fakekubermaticenterpriseappsv1 "k8c.io/api/v3/pkg/generated/clientset/versioned/typed/ee.apps.kubermatic/v1/fake"
+	kubermaticenterprisev1 "k8c.io/api/v3/pkg/generated/clientset/versioned/typed/ee.kubermatic/v1"
+	fakekubermaticenterprisev1 "k8c.io/api/v3/pkg/generated/clientset/versioned/typed/ee.kubermatic/v1/fake"
+	kubermaticv1 "k8c.io/api/v3/pkg/generated/clientset/versioned/typed/kubermatic/v1"
+	fakekubermaticv1 "k8c.io/api/v3/pkg/generated/clientset/versioned/typed/kubermatic/v1/fake"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/watch"
 	"k8s.io/client-go/discovery"
@@ -65,9 +69,19 @@ var (
 	_ testing.FakeClient  = &Clientset{}
 )
 
-// AppsV1 retrieves the AppsV1Client
-func (c *Clientset) AppsV1() appsv1.AppsV1Interface {
-	return &fakeappsv1.FakeAppsV1{Fake: &c.Fake}
+// KubermaticAppsV1 retrieves the KubermaticAppsV1Client
+func (c *Clientset) KubermaticAppsV1() kubermaticappsv1.KubermaticAppsV1Interface {
+	return &fakekubermaticappsv1.FakeKubermaticAppsV1{Fake: &c.Fake}
+}
+
+// KubermaticEnterpriseAppsV1 retrieves the KubermaticEnterpriseAppsV1Client
+func (c *Clientset) KubermaticEnterpriseAppsV1() kubermaticenterpriseappsv1.KubermaticEnterpriseAppsV1Interface {
+	return &fakekubermaticenterpriseappsv1.FakeKubermaticEnterpriseAppsV1{Fake: &c.Fake}
+}
+
+// KubermaticEnterpriseV1 retrieves the KubermaticEnterpriseV1Client
+func (c *Clientset) KubermaticEnterpriseV1() kubermaticenterprisev1.KubermaticEnterpriseV1Interface {
+	return &fakekubermaticenterprisev1.FakeKubermaticEnterpriseV1{Fake: &c.Fake}
 }
 
 // KubermaticV1 retrieves the KubermaticV1Client

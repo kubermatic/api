@@ -6,8 +6,10 @@ import (
 	"fmt"
 	"net/http"
 
-	appsv1 "k8c.io/api/v2/pkg/generated/clientset/versioned/typed/apps.kubermatic/v1"
-	kubermaticv1 "k8c.io/api/v2/pkg/generated/clientset/versioned/typed/kubermatic/v1"
+	kubermaticappsv1 "k8c.io/api/v3/pkg/generated/clientset/versioned/typed/apps.kubermatic/v1"
+	kubermaticenterpriseappsv1 "k8c.io/api/v3/pkg/generated/clientset/versioned/typed/ee.apps.kubermatic/v1"
+	kubermaticenterprisev1 "k8c.io/api/v3/pkg/generated/clientset/versioned/typed/ee.kubermatic/v1"
+	kubermaticv1 "k8c.io/api/v3/pkg/generated/clientset/versioned/typed/kubermatic/v1"
 	discovery "k8s.io/client-go/discovery"
 	rest "k8s.io/client-go/rest"
 	flowcontrol "k8s.io/client-go/util/flowcontrol"
@@ -15,20 +17,34 @@ import (
 
 type Interface interface {
 	Discovery() discovery.DiscoveryInterface
-	AppsV1() appsv1.AppsV1Interface
+	KubermaticAppsV1() kubermaticappsv1.KubermaticAppsV1Interface
+	KubermaticEnterpriseAppsV1() kubermaticenterpriseappsv1.KubermaticEnterpriseAppsV1Interface
+	KubermaticEnterpriseV1() kubermaticenterprisev1.KubermaticEnterpriseV1Interface
 	KubermaticV1() kubermaticv1.KubermaticV1Interface
 }
 
 // Clientset contains the clients for groups.
 type Clientset struct {
 	*discovery.DiscoveryClient
-	appsV1       *appsv1.AppsV1Client
-	kubermaticV1 *kubermaticv1.KubermaticV1Client
+	kubermaticAppsV1           *kubermaticappsv1.KubermaticAppsV1Client
+	kubermaticEnterpriseAppsV1 *kubermaticenterpriseappsv1.KubermaticEnterpriseAppsV1Client
+	kubermaticEnterpriseV1     *kubermaticenterprisev1.KubermaticEnterpriseV1Client
+	kubermaticV1               *kubermaticv1.KubermaticV1Client
 }
 
-// AppsV1 retrieves the AppsV1Client
-func (c *Clientset) AppsV1() appsv1.AppsV1Interface {
-	return c.appsV1
+// KubermaticAppsV1 retrieves the KubermaticAppsV1Client
+func (c *Clientset) KubermaticAppsV1() kubermaticappsv1.KubermaticAppsV1Interface {
+	return c.kubermaticAppsV1
+}
+
+// KubermaticEnterpriseAppsV1 retrieves the KubermaticEnterpriseAppsV1Client
+func (c *Clientset) KubermaticEnterpriseAppsV1() kubermaticenterpriseappsv1.KubermaticEnterpriseAppsV1Interface {
+	return c.kubermaticEnterpriseAppsV1
+}
+
+// KubermaticEnterpriseV1 retrieves the KubermaticEnterpriseV1Client
+func (c *Clientset) KubermaticEnterpriseV1() kubermaticenterprisev1.KubermaticEnterpriseV1Interface {
+	return c.kubermaticEnterpriseV1
 }
 
 // KubermaticV1 retrieves the KubermaticV1Client
@@ -80,7 +96,15 @@ func NewForConfigAndClient(c *rest.Config, httpClient *http.Client) (*Clientset,
 
 	var cs Clientset
 	var err error
-	cs.appsV1, err = appsv1.NewForConfigAndClient(&configShallowCopy, httpClient)
+	cs.kubermaticAppsV1, err = kubermaticappsv1.NewForConfigAndClient(&configShallowCopy, httpClient)
+	if err != nil {
+		return nil, err
+	}
+	cs.kubermaticEnterpriseAppsV1, err = kubermaticenterpriseappsv1.NewForConfigAndClient(&configShallowCopy, httpClient)
+	if err != nil {
+		return nil, err
+	}
+	cs.kubermaticEnterpriseV1, err = kubermaticenterprisev1.NewForConfigAndClient(&configShallowCopy, httpClient)
 	if err != nil {
 		return nil, err
 	}
@@ -109,7 +133,9 @@ func NewForConfigOrDie(c *rest.Config) *Clientset {
 // New creates a new Clientset for the given RESTClient.
 func New(c rest.Interface) *Clientset {
 	var cs Clientset
-	cs.appsV1 = appsv1.New(c)
+	cs.kubermaticAppsV1 = kubermaticappsv1.New(c)
+	cs.kubermaticEnterpriseAppsV1 = kubermaticenterpriseappsv1.New(c)
+	cs.kubermaticEnterpriseV1 = kubermaticenterprisev1.New(c)
 	cs.kubermaticV1 = kubermaticv1.New(c)
 
 	cs.DiscoveryClient = discovery.NewDiscoveryClient(c)

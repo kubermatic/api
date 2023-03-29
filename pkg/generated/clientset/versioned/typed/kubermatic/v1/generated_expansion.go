@@ -28,8 +28,6 @@ type EtcdRestoreExpansion interface{}
 
 type ExternalClusterExpansion interface{}
 
-type GroupProjectBindingExpansion interface{}
-
 type IPAMAllocationExpansion interface{}
 
 type IPAMPoolExpansion interface{}
@@ -42,8 +40,6 @@ type MLAAdminSettingExpansion interface{}
 
 type PresetExpansion interface{}
 
-type ProjectExpansion interface{}
-
 type ResourceQuotaExpansion interface{}
 
 type RuleGroupExpansion interface{}
@@ -51,7 +47,5 @@ type RuleGroupExpansion interface{}
 type SeedExpansion interface{}
 
 type UserExpansion interface{}
-
-type UserProjectBindingExpansion interface{}
 
 type UserSSHKeyExpansion interface{}

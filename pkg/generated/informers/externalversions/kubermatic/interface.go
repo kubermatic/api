@@ -3,8 +3,8 @@
 package kubermatic
 
 import (
-	internalinterfaces "k8c.io/api/v2/pkg/generated/informers/externalversions/internalinterfaces"
-	v1 "k8c.io/api/v2/pkg/generated/informers/externalversions/kubermatic/v1"
+	internalinterfaces "k8c.io/api/v3/pkg/generated/informers/externalversions/internalinterfaces"
+	v1 "k8c.io/api/v3/pkg/generated/informers/externalversions/kubermatic/v1"
 )
 
 // Interface provides access to each of this group's versions.

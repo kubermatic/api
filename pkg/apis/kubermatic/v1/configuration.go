@@ -17,7 +17,7 @@ limitations under the License.
 package v1
 
 import (
-	"k8c.io/api/v2/pkg/semver"
+	"k8c.io/api/v3/pkg/semver"
 
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -155,7 +155,7 @@ type KubermaticUIConfiguration struct {
 	DockerTag string `json:"dockerTag,omitempty,omitgenyaml"`
 	// DockerTagSuffix is appended to the KKP version used for referring to the custom dashboard image.
 	// If left empty, either the `DockerTag` if specified or the original dashboard Docker image tag will be used.
-	// With DockerTagSuffix the tag becomes <KKP_VERSION:SUFFIX> i.e. "v2.15.0-SUFFIX".
+	// With DockerTagSuffix the tag becomes <KKP_VERSION:SUFFIX> i.e. "v3.15.0-SUFFIX".
 	DockerTagSuffix string `json:"dockerTagSuffix,omitempty"`
 	// Config sets flags for various dashboard features.
 	Config string `json:"config,omitempty"`
@@ -301,8 +301,8 @@ type KubermaticAddonsConfiguration struct {
 	// the possible addon manifests.
 	DockerRepository string `json:"dockerRepository,omitempty"`
 	// DockerTagSuffix is appended to the tag used for referring to the addons image.
-	// If left empty, the tag will be the KKP version (e.g. "v2.15.0"), with a
-	// suffix it becomes "v2.15.0-SUFFIX".
+	// If left empty, the tag will be the KKP version (e.g. "v3.15.0"), with a
+	// suffix it becomes "v3.15.0-SUFFIX".
 	DockerTagSuffix string `json:"dockerTagSuffix,omitempty"`
 }
 
@@ -383,9 +383,6 @@ type KubermaticVersioningConfiguration struct {
 
 	// ProviderIncompatibilities lists all the Kubernetes version incompatibilities
 	ProviderIncompatibilities []Incompatibility `json:"providerIncompatibilities,omitempty"`
-
-	// ExternalClusters contains the available and default Kubernetes versions and updates for ExternalClusters.
-	ExternalClusters map[ExternalClusterProvider]ExternalClusterProviderVersioningConfiguration `json:"externalClusters,omitempty"`
 }
 
 // ExternalClusterProviderVersioningConfiguration configures the available and default Kubernetes versions for ExternalCluster Providers.

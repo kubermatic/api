@@ -17,7 +17,7 @@ limitations under the License.
 package v1
 
 import (
-	"k8c.io/api/v2/pkg/semver"
+	"k8c.io/api/v3/pkg/semver"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )

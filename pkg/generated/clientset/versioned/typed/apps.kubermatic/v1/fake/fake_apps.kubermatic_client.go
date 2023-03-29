@@ -3,26 +3,26 @@
 package fake
 
 import (
-	v1 "k8c.io/api/v2/pkg/generated/clientset/versioned/typed/apps.kubermatic/v1"
+	v1 "k8c.io/api/v3/pkg/generated/clientset/versioned/typed/apps.kubermatic/v1"
 	rest "k8s.io/client-go/rest"
 	testing "k8s.io/client-go/testing"
 )
 
-type FakeAppsV1 struct {
+type FakeKubermaticAppsV1 struct {
 	*testing.Fake
 }
 
-func (c *FakeAppsV1) ApplicationDefinitions(namespace string) v1.ApplicationDefinitionInterface {
+func (c *FakeKubermaticAppsV1) ApplicationDefinitions(namespace string) v1.ApplicationDefinitionInterface {
 	return &FakeApplicationDefinitions{c, namespace}
 }
 
-func (c *FakeAppsV1) ApplicationInstallations(namespace string) v1.ApplicationInstallationInterface {
+func (c *FakeKubermaticAppsV1) ApplicationInstallations(namespace string) v1.ApplicationInstallationInterface {
 	return &FakeApplicationInstallations{c, namespace}
 }
 
 // RESTClient returns a RESTClient that is used to communicate
 // with API server by this client implementation.
-func (c *FakeAppsV1) RESTClient() rest.Interface {
+func (c *FakeKubermaticAppsV1) RESTClient() rest.Interface {
 	var ret *rest.RESTClient
 	return ret
 }

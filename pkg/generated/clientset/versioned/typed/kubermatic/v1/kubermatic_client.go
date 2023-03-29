@@ -5,8 +5,8 @@ package v1
 import (
 	"net/http"
 
-	v1 "k8c.io/api/v2/pkg/apis/kubermatic/v1"
-	"k8c.io/api/v2/pkg/generated/clientset/versioned/scheme"
+	v1 "k8c.io/api/v3/pkg/apis/kubermatic/v1"
+	"k8c.io/api/v3/pkg/generated/clientset/versioned/scheme"
 	rest "k8s.io/client-go/rest"
 )
 
@@ -25,19 +25,16 @@ type KubermaticV1Interface interface {
 	EtcdBackupConfigsGetter
 	EtcdRestoresGetter
 	ExternalClustersGetter
-	GroupProjectBindingsGetter
 	IPAMAllocationsGetter
 	IPAMPoolsGetter
 	KubermaticConfigurationsGetter
 	KubermaticSettingsGetter
 	MLAAdminSettingsGetter
 	PresetsGetter
-	ProjectsGetter
 	ResourceQuotasGetter
 	RuleGroupsGetter
 	SeedsGetter
 	UsersGetter
-	UserProjectBindingsGetter
 	UserSSHKeysGetter
 }
 
@@ -98,10 +95,6 @@ func (c *KubermaticV1Client) ExternalClusters(namespace string) ExternalClusterI
 	return newExternalClusters(c, namespace)
 }
 
-func (c *KubermaticV1Client) GroupProjectBindings(namespace string) GroupProjectBindingInterface {
-	return newGroupProjectBindings(c, namespace)
-}
-
 func (c *KubermaticV1Client) IPAMAllocations(namespace string) IPAMAllocationInterface {
 	return newIPAMAllocations(c, namespace)
 }
@@ -126,10 +119,6 @@ func (c *KubermaticV1Client) Presets(namespace string) PresetInterface {
 	return newPresets(c, namespace)
 }
 
-func (c *KubermaticV1Client) Projects(namespace string) ProjectInterface {
-	return newProjects(c, namespace)
-}
-
 func (c *KubermaticV1Client) ResourceQuotas(namespace string) ResourceQuotaInterface {
 	return newResourceQuotas(c, namespace)
 }
@@ -144,10 +133,6 @@ func (c *KubermaticV1Client) Seeds(namespace string) SeedInterface {
 
 func (c *KubermaticV1Client) Users(namespace string) UserInterface {
 	return newUsers(c, namespace)
-}
-
-func (c *KubermaticV1Client) UserProjectBindings(namespace string) UserProjectBindingInterface {
-	return newUserProjectBindings(c, namespace)
 }
 
 func (c *KubermaticV1Client) UserSSHKeys(namespace string) UserSSHKeyInterface {

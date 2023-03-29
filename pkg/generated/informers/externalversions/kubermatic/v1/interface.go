@@ -3,7 +3,7 @@
 package v1
 
 import (
-	internalinterfaces "k8c.io/api/v2/pkg/generated/informers/externalversions/internalinterfaces"
+	internalinterfaces "k8c.io/api/v3/pkg/generated/informers/externalversions/internalinterfaces"
 )
 
 // Interface provides access to all the informers in this group version.
@@ -34,8 +34,6 @@ type Interface interface {
 	EtcdRestores() EtcdRestoreInformer
 	// ExternalClusters returns a ExternalClusterInformer.
 	ExternalClusters() ExternalClusterInformer
-	// GroupProjectBindings returns a GroupProjectBindingInformer.
-	GroupProjectBindings() GroupProjectBindingInformer
 	// IPAMAllocations returns a IPAMAllocationInformer.
 	IPAMAllocations() IPAMAllocationInformer
 	// IPAMPools returns a IPAMPoolInformer.
@@ -48,8 +46,6 @@ type Interface interface {
 	MLAAdminSettings() MLAAdminSettingInformer
 	// Presets returns a PresetInformer.
 	Presets() PresetInformer
-	// Projects returns a ProjectInformer.
-	Projects() ProjectInformer
 	// ResourceQuotas returns a ResourceQuotaInformer.
 	ResourceQuotas() ResourceQuotaInformer
 	// RuleGroups returns a RuleGroupInformer.
@@ -58,8 +54,6 @@ type Interface interface {
 	Seeds() SeedInformer
 	// Users returns a UserInformer.
 	Users() UserInformer
-	// UserProjectBindings returns a UserProjectBindingInformer.
-	UserProjectBindings() UserProjectBindingInformer
 	// UserSSHKeys returns a UserSSHKeyInformer.
 	UserSSHKeys() UserSSHKeyInformer
 }
@@ -140,11 +134,6 @@ func (v *version) ExternalClusters() ExternalClusterInformer {
 	return &externalClusterInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
-// GroupProjectBindings returns a GroupProjectBindingInformer.
-func (v *version) GroupProjectBindings() GroupProjectBindingInformer {
-	return &groupProjectBindingInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
-}
-
 // IPAMAllocations returns a IPAMAllocationInformer.
 func (v *version) IPAMAllocations() IPAMAllocationInformer {
 	return &iPAMAllocationInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
@@ -175,11 +164,6 @@ func (v *version) Presets() PresetInformer {
 	return &presetInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
-// Projects returns a ProjectInformer.
-func (v *version) Projects() ProjectInformer {
-	return &projectInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
-}
-
 // ResourceQuotas returns a ResourceQuotaInformer.
 func (v *version) ResourceQuotas() ResourceQuotaInformer {
 	return &resourceQuotaInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
@@ -198,11 +182,6 @@ func (v *version) Seeds() SeedInformer {
 // Users returns a UserInformer.
 func (v *version) Users() UserInformer {
 	return &userInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
-}
-
-// UserProjectBindings returns a UserProjectBindingInformer.
-func (v *version) UserProjectBindings() UserProjectBindingInformer {
-	return &userProjectBindingInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // UserSSHKeys returns a UserSSHKeyInformer.

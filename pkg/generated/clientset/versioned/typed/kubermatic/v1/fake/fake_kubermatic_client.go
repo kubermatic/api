@@ -3,7 +3,7 @@
 package fake
 
 import (
-	v1 "k8c.io/api/v2/pkg/generated/clientset/versioned/typed/kubermatic/v1"
+	v1 "k8c.io/api/v3/pkg/generated/clientset/versioned/typed/kubermatic/v1"
 	rest "k8s.io/client-go/rest"
 	testing "k8s.io/client-go/testing"
 )
@@ -64,10 +64,6 @@ func (c *FakeKubermaticV1) ExternalClusters(namespace string) v1.ExternalCluster
 	return &FakeExternalClusters{c, namespace}
 }
 
-func (c *FakeKubermaticV1) GroupProjectBindings(namespace string) v1.GroupProjectBindingInterface {
-	return &FakeGroupProjectBindings{c, namespace}
-}
-
 func (c *FakeKubermaticV1) IPAMAllocations(namespace string) v1.IPAMAllocationInterface {
 	return &FakeIPAMAllocations{c, namespace}
 }
@@ -92,10 +88,6 @@ func (c *FakeKubermaticV1) Presets(namespace string) v1.PresetInterface {
 	return &FakePresets{c, namespace}
 }
 
-func (c *FakeKubermaticV1) Projects(namespace string) v1.ProjectInterface {
-	return &FakeProjects{c, namespace}
-}
-
 func (c *FakeKubermaticV1) ResourceQuotas(namespace string) v1.ResourceQuotaInterface {
 	return &FakeResourceQuotas{c, namespace}
 }
@@ -110,10 +102,6 @@ func (c *FakeKubermaticV1) Seeds(namespace string) v1.SeedInterface {
 
 func (c *FakeKubermaticV1) Users(namespace string) v1.UserInterface {
 	return &FakeUsers{c, namespace}
-}
-
-func (c *FakeKubermaticV1) UserProjectBindings(namespace string) v1.UserProjectBindingInterface {
-	return &FakeUserProjectBindings{c, namespace}
 }
 
 func (c *FakeKubermaticV1) UserSSHKeys(namespace string) v1.UserSSHKeyInterface {
