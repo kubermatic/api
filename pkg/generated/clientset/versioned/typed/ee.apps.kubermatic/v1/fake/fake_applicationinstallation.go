@@ -86,18 +86,6 @@ func (c *FakeApplicationInstallations) Update(ctx context.Context, applicationIn
 	return obj.(*eeappskubermaticv1.ApplicationInstallation), err
 }
 
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeApplicationInstallations) UpdateStatus(ctx context.Context, applicationInstallation *eeappskubermaticv1.ApplicationInstallation, opts v1.UpdateOptions) (*eeappskubermaticv1.ApplicationInstallation, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(applicationinstallationsResource, "status", c.ns, applicationInstallation), &eeappskubermaticv1.ApplicationInstallation{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*eeappskubermaticv1.ApplicationInstallation), err
-}
-
 // Delete takes name of the applicationInstallation and deletes it. Returns an error if one occurs.
 func (c *FakeApplicationInstallations) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.

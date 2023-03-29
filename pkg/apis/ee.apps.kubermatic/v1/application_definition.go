@@ -31,7 +31,7 @@ type ApplicationDefinition struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec kubermaticappsv1.ApplicationDefinitionSpec `json:"spec,omitempty"`
+	kubermaticappsv1.ApplicationDefinition `json:",inline"`
 }
 
 // +kubebuilder:object:root=true
@@ -40,5 +40,6 @@ type ApplicationDefinition struct {
 type ApplicationDefinitionList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []ApplicationDefinition `json:"items"`
+
+	Items []ApplicationDefinition `json:"items"`
 }

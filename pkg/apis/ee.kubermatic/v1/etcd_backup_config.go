@@ -18,6 +18,7 @@ package v1
 
 import (
 	kubermaticv1 "k8c.io/api/v3/pkg/apis/kubermatic/v1"
+
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
