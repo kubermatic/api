@@ -27,6 +27,8 @@ import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 // +kubebuilder:printcolumn:JSONPath=".metadata.creationTimestamp",name="Age",type="date"
 
 // AllowedRegistry is the object representing an allowed registry.
+//
+// Note that this resource is part of a KKP Enterprise feature and is not used in the Community Edition.
 type AllowedRegistry struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`

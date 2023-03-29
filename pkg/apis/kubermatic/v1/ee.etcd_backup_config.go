@@ -58,7 +58,9 @@ const (
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:JSONPath=".metadata.creationTimestamp",name="Age",type="date"
 
-// EtcdBackupConfig specifies a add-on.
+// EtcdBackupConfig specifies the configuration for a usercluster etcd backup.
+//
+// Note that this resource is part of a KKP Enterprise feature and is not used in the Community Edition.
 type EtcdBackupConfig struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`

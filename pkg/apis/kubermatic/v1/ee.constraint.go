@@ -19,8 +19,6 @@ package v1
 import (
 	"encoding/json"
 
-	kubermaticv1 "k8c.io/api/v3/pkg/apis/kubermatic/v1"
-
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -31,6 +29,8 @@ import (
 // +kubebuilder:printcolumn:JSONPath=".metadata.creationTimestamp",name="Age",type="date"
 
 // Constraint specifies a kubermatic wrapper for the gatekeeper constraints.
+//
+// Note that this resource is part of a KKP Enterprise feature and is not used in the Community Edition.
 type Constraint struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -76,7 +76,7 @@ type ConstraintParameters map[string]json.RawMessage
 // ConstraintSelector is the object holding the cluster selection filters.
 type ConstraintSelector struct {
 	// Providers is a list of cloud providers to which the Constraint applies to. Empty means all providers are selected.
-	Providers []kubermaticv1.CloudProvider `json:"providers,omitempty"`
+	Providers []CloudProvider `json:"providers,omitempty"`
 	// LabelSelector selects the Clusters to which the Constraint applies based on their labels
 	LabelSelector metav1.LabelSelector `json:"labelSelector,omitempty"`
 }

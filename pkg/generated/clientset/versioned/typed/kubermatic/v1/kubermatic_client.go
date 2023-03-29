@@ -16,15 +16,22 @@ type KubermaticV1Interface interface {
 	AddonConfigsGetter
 	AdmissionPluginsGetter
 	AlertmanagersGetter
+	AllowedRegistriesGetter
 	ClustersGetter
 	ClusterTemplatesGetter
 	ClusterTemplateInstancesGetter
+	ConstraintsGetter
+	ConstraintTemplatesGetter
+	EtcdBackupConfigsGetter
+	EtcdRestoresGetter
+	ExternalClustersGetter
 	IPAMAllocationsGetter
 	IPAMPoolsGetter
 	KubermaticConfigurationsGetter
 	KubermaticSettingsGetter
 	MLAAdminSettingsGetter
 	PresetsGetter
+	ResourceQuotasGetter
 	RuleGroupsGetter
 	SeedsGetter
 	UsersGetter
@@ -52,6 +59,10 @@ func (c *KubermaticV1Client) Alertmanagers(namespace string) AlertmanagerInterfa
 	return newAlertmanagers(c, namespace)
 }
 
+func (c *KubermaticV1Client) AllowedRegistries(namespace string) AllowedRegistryInterface {
+	return newAllowedRegistries(c, namespace)
+}
+
 func (c *KubermaticV1Client) Clusters(namespace string) ClusterInterface {
 	return newClusters(c, namespace)
 }
@@ -62,6 +73,26 @@ func (c *KubermaticV1Client) ClusterTemplates(namespace string) ClusterTemplateI
 
 func (c *KubermaticV1Client) ClusterTemplateInstances(namespace string) ClusterTemplateInstanceInterface {
 	return newClusterTemplateInstances(c, namespace)
+}
+
+func (c *KubermaticV1Client) Constraints(namespace string) ConstraintInterface {
+	return newConstraints(c, namespace)
+}
+
+func (c *KubermaticV1Client) ConstraintTemplates(namespace string) ConstraintTemplateInterface {
+	return newConstraintTemplates(c, namespace)
+}
+
+func (c *KubermaticV1Client) EtcdBackupConfigs(namespace string) EtcdBackupConfigInterface {
+	return newEtcdBackupConfigs(c, namespace)
+}
+
+func (c *KubermaticV1Client) EtcdRestores(namespace string) EtcdRestoreInterface {
+	return newEtcdRestores(c, namespace)
+}
+
+func (c *KubermaticV1Client) ExternalClusters(namespace string) ExternalClusterInterface {
+	return newExternalClusters(c, namespace)
 }
 
 func (c *KubermaticV1Client) IPAMAllocations(namespace string) IPAMAllocationInterface {
@@ -86,6 +117,10 @@ func (c *KubermaticV1Client) MLAAdminSettings(namespace string) MLAAdminSettingI
 
 func (c *KubermaticV1Client) Presets(namespace string) PresetInterface {
 	return newPresets(c, namespace)
+}
+
+func (c *KubermaticV1Client) ResourceQuotas(namespace string) ResourceQuotaInterface {
+	return newResourceQuotas(c, namespace)
 }
 
 func (c *KubermaticV1Client) RuleGroups(namespace string) RuleGroupInterface {

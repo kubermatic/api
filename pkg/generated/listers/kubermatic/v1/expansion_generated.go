@@ -34,6 +34,14 @@ type AlertmanagerListerExpansion interface{}
 // AlertmanagerNamespaceLister.
 type AlertmanagerNamespaceListerExpansion interface{}
 
+// AllowedRegistryListerExpansion allows custom methods to be added to
+// AllowedRegistryLister.
+type AllowedRegistryListerExpansion interface{}
+
+// AllowedRegistryNamespaceListerExpansion allows custom methods to be added to
+// AllowedRegistryNamespaceLister.
+type AllowedRegistryNamespaceListerExpansion interface{}
+
 // ClusterListerExpansion allows custom methods to be added to
 // ClusterLister.
 type ClusterListerExpansion interface{}
@@ -57,6 +65,46 @@ type ClusterTemplateInstanceListerExpansion interface{}
 // ClusterTemplateInstanceNamespaceListerExpansion allows custom methods to be added to
 // ClusterTemplateInstanceNamespaceLister.
 type ClusterTemplateInstanceNamespaceListerExpansion interface{}
+
+// ConstraintListerExpansion allows custom methods to be added to
+// ConstraintLister.
+type ConstraintListerExpansion interface{}
+
+// ConstraintNamespaceListerExpansion allows custom methods to be added to
+// ConstraintNamespaceLister.
+type ConstraintNamespaceListerExpansion interface{}
+
+// ConstraintTemplateListerExpansion allows custom methods to be added to
+// ConstraintTemplateLister.
+type ConstraintTemplateListerExpansion interface{}
+
+// ConstraintTemplateNamespaceListerExpansion allows custom methods to be added to
+// ConstraintTemplateNamespaceLister.
+type ConstraintTemplateNamespaceListerExpansion interface{}
+
+// EtcdBackupConfigListerExpansion allows custom methods to be added to
+// EtcdBackupConfigLister.
+type EtcdBackupConfigListerExpansion interface{}
+
+// EtcdBackupConfigNamespaceListerExpansion allows custom methods to be added to
+// EtcdBackupConfigNamespaceLister.
+type EtcdBackupConfigNamespaceListerExpansion interface{}
+
+// EtcdRestoreListerExpansion allows custom methods to be added to
+// EtcdRestoreLister.
+type EtcdRestoreListerExpansion interface{}
+
+// EtcdRestoreNamespaceListerExpansion allows custom methods to be added to
+// EtcdRestoreNamespaceLister.
+type EtcdRestoreNamespaceListerExpansion interface{}
+
+// ExternalClusterListerExpansion allows custom methods to be added to
+// ExternalClusterLister.
+type ExternalClusterListerExpansion interface{}
+
+// ExternalClusterNamespaceListerExpansion allows custom methods to be added to
+// ExternalClusterNamespaceLister.
+type ExternalClusterNamespaceListerExpansion interface{}
 
 // IPAMAllocationListerExpansion allows custom methods to be added to
 // IPAMAllocationLister.
@@ -105,6 +153,14 @@ type PresetListerExpansion interface{}
 // PresetNamespaceListerExpansion allows custom methods to be added to
 // PresetNamespaceLister.
 type PresetNamespaceListerExpansion interface{}
+
+// ResourceQuotaListerExpansion allows custom methods to be added to
+// ResourceQuotaLister.
+type ResourceQuotaListerExpansion interface{}
+
+// ResourceQuotaNamespaceListerExpansion allows custom methods to be added to
+// ResourceQuotaNamespaceLister.
+type ResourceQuotaNamespaceListerExpansion interface{}
 
 // RuleGroupListerExpansion allows custom methods to be added to
 // RuleGroupLister.

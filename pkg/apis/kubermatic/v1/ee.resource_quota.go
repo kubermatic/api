@@ -17,8 +17,6 @@ limitations under the License.
 package v1
 
 import (
-	kubermaticv1 "k8c.io/api/v3/pkg/apis/kubermatic/v1"
-
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -46,6 +44,8 @@ const (
 // +kubebuilder:printcolumn:JSONPath=".spec.subject.kind",name="Subject Kind",type="string"
 
 // ResourceQuota specifies the amount of cluster resources a project can use.
+//
+// Note that this resource is part of a KKP Enterprise feature and is not used in the Community Edition.
 type ResourceQuota struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -59,15 +59,15 @@ type ResourceQuotaSpec struct {
 	// Subject specifies to which entity the quota applies to.
 	Subject ResourceQuotaSubject `json:"subject"`
 	// Quota specifies the current maximum allowed usage of resources.
-	Quota kubermaticv1.ResourceDetails `json:"quota"`
+	Quota ResourceDetails `json:"quota"`
 }
 
 // ResourceQuotaStatus describes the current state of a resource quota.
 type ResourceQuotaStatus struct {
 	// GlobalUsage is holds the current usage of resources for all seeds.
-	GlobalUsage *kubermaticv1.ResourceDetails `json:"globalUsage,omitempty"`
+	GlobalUsage *ResourceDetails `json:"globalUsage,omitempty"`
 	// LocalUsage is holds the current usage of resources for the local seed.
-	LocalUsage *kubermaticv1.ResourceDetails `json:"localUsage,omitempty"`
+	LocalUsage *ResourceDetails `json:"localUsage,omitempty"`
 }
 
 // ResourceQuotaSubject describes the entity to which the quota applies to.

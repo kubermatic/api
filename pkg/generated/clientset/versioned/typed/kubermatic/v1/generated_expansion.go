@@ -10,11 +10,23 @@ type AdmissionPluginExpansion interface{}
 
 type AlertmanagerExpansion interface{}
 
+type AllowedRegistryExpansion interface{}
+
 type ClusterExpansion interface{}
 
 type ClusterTemplateExpansion interface{}
 
 type ClusterTemplateInstanceExpansion interface{}
+
+type ConstraintExpansion interface{}
+
+type ConstraintTemplateExpansion interface{}
+
+type EtcdBackupConfigExpansion interface{}
+
+type EtcdRestoreExpansion interface{}
+
+type ExternalClusterExpansion interface{}
 
 type IPAMAllocationExpansion interface{}
 
@@ -27,6 +39,8 @@ type KubermaticSettingExpansion interface{}
 type MLAAdminSettingExpansion interface{}
 
 type PresetExpansion interface{}
+
+type ResourceQuotaExpansion interface{}
 
 type RuleGroupExpansion interface{}
 

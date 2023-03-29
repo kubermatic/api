@@ -49,6 +49,8 @@ const (
 // +kubebuilder:printcolumn:JSONPath=".metadata.creationTimestamp",name="Age",type="date"
 
 // EtcdRestore specifies how to restore an etcd backup for a usercluster.
+//
+// Note that this resource is part of a KKP Enterprise feature and is not used in the Community Edition.
 type EtcdRestore struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`

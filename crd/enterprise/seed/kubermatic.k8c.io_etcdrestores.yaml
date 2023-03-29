@@ -27,7 +27,7 @@ spec:
       name: v1
       schema:
         openAPIV3Schema:
-          description: EtcdRestore specifies how to restore an etcd backup for a usercluster.
+          description: "EtcdRestore specifies how to restore an etcd backup for a usercluster. \n Note that this resource is part of a KKP Enterprise feature and is not used in the Community Edition."
           properties:
             apiVersion:
               description: 'APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'

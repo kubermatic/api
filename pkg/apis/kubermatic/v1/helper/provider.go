@@ -22,6 +22,33 @@ import (
 	kubermaticv1 "k8c.io/api/v3/pkg/apis/kubermatic/v1"
 )
 
+// ExternalClusterCloudProviderName returns the provider name for the given ExternalClusterCloudSpec.
+func ExternalClusterCloudProviderName(spec kubermaticv1.ExternalClusterCloudSpec) (kubermaticv1.ExternalClusterProvider, error) {
+	var providers []kubermaticv1.ExternalClusterProvider
+	if spec.AKS != nil {
+		providers = append(providers, kubermaticv1.ExternalClusterProviderAKS)
+	}
+	if spec.EKS != nil {
+		providers = append(providers, kubermaticv1.ExternalClusterProviderEKS)
+	}
+	if spec.GKE != nil {
+		providers = append(providers, kubermaticv1.ExternalClusterProviderGKE)
+	}
+	if spec.KubeOne != nil {
+		providers = append(providers, kubermaticv1.ExternalClusterProviderKubeOne)
+	}
+	if spec.BringYourOwn != nil {
+		providers = append(providers, kubermaticv1.ExternalClusterProviderBringYourOwn)
+	}
+	if len(providers) == 0 {
+		return "", nil
+	}
+	if len(providers) != 1 {
+		return "", fmt.Errorf("only one cloud provider can be set in ExternalClusterCloudSpec, but found the following providers: %v", providers)
+	}
+	return providers[0], nil
+}
+
 // ClusterCloudProviderName returns the provider name for the given CloudSpec.
 func ClusterCloudProviderName(spec kubermaticv1.CloudSpec) (kubermaticv1.CloudProvider, error) {
 	var providers []kubermaticv1.CloudProvider

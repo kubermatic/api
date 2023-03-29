@@ -28,6 +28,10 @@ func (c *FakeKubermaticV1) Alertmanagers(namespace string) v1.AlertmanagerInterf
 	return &FakeAlertmanagers{c, namespace}
 }
 
+func (c *FakeKubermaticV1) AllowedRegistries(namespace string) v1.AllowedRegistryInterface {
+	return &FakeAllowedRegistries{c, namespace}
+}
+
 func (c *FakeKubermaticV1) Clusters(namespace string) v1.ClusterInterface {
 	return &FakeClusters{c, namespace}
 }
@@ -38,6 +42,26 @@ func (c *FakeKubermaticV1) ClusterTemplates(namespace string) v1.ClusterTemplate
 
 func (c *FakeKubermaticV1) ClusterTemplateInstances(namespace string) v1.ClusterTemplateInstanceInterface {
 	return &FakeClusterTemplateInstances{c, namespace}
+}
+
+func (c *FakeKubermaticV1) Constraints(namespace string) v1.ConstraintInterface {
+	return &FakeConstraints{c, namespace}
+}
+
+func (c *FakeKubermaticV1) ConstraintTemplates(namespace string) v1.ConstraintTemplateInterface {
+	return &FakeConstraintTemplates{c, namespace}
+}
+
+func (c *FakeKubermaticV1) EtcdBackupConfigs(namespace string) v1.EtcdBackupConfigInterface {
+	return &FakeEtcdBackupConfigs{c, namespace}
+}
+
+func (c *FakeKubermaticV1) EtcdRestores(namespace string) v1.EtcdRestoreInterface {
+	return &FakeEtcdRestores{c, namespace}
+}
+
+func (c *FakeKubermaticV1) ExternalClusters(namespace string) v1.ExternalClusterInterface {
+	return &FakeExternalClusters{c, namespace}
 }
 
 func (c *FakeKubermaticV1) IPAMAllocations(namespace string) v1.IPAMAllocationInterface {
@@ -62,6 +86,10 @@ func (c *FakeKubermaticV1) MLAAdminSettings(namespace string) v1.MLAAdminSetting
 
 func (c *FakeKubermaticV1) Presets(namespace string) v1.PresetInterface {
 	return &FakePresets{c, namespace}
+}
+
+func (c *FakeKubermaticV1) ResourceQuotas(namespace string) v1.ResourceQuotaInterface {
+	return &FakeResourceQuotas{c, namespace}
 }
 
 func (c *FakeKubermaticV1) RuleGroups(namespace string) v1.RuleGroupInterface {

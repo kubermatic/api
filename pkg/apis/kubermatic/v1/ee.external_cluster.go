@@ -19,15 +19,9 @@ package v1
 import (
 	"fmt"
 
-	kubermaticv1 "k8c.io/api/v3/pkg/apis/kubermatic/v1"
 	"k8c.io/api/v3/pkg/semver"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-)
-
-const (
-	// credentialPrefix is the prefix used for the secrets containing cloud provider credentials.
-	credentialPrefix = "credential"
 )
 
 // +genclient
@@ -41,7 +35,9 @@ const (
 // +kubebuilder:printcolumn:JSONPath=".status.condition.phase",name="Phase",type="string"
 // +kubebuilder:printcolumn:JSONPath=".metadata.creationTimestamp",name="Age",type="date"
 
-// ExternalCluster is the object representing an external kubernetes cluster.
+// ExternalCluster is the object representing an external Kubernetes cluster.
+//
+// Note that this resource is part of a KKP Enterprise feature and is not used in the Community Edition.
 type ExternalCluster struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -75,9 +71,9 @@ type ExternalClusterKubeOneCloudSpec struct {
 	// This field is used only to display information.
 	Region string `json:"region,omitempty"`
 
-	CredentialsReference *kubermaticv1.GlobalSecretKeySelector `json:"credentialsReference,omitempty"`
-	SSHReference         *kubermaticv1.GlobalSecretKeySelector `json:"sshReference,omitempty"`
-	ManifestReference    *kubermaticv1.GlobalSecretKeySelector `json:"manifestReference,omitempty"`
+	CredentialsReference *GlobalSecretKeySelector `json:"credentialsReference,omitempty"`
+	SSHReference         *GlobalSecretKeySelector `json:"sshReference,omitempty"`
+	ManifestReference    *GlobalSecretKeySelector `json:"manifestReference,omitempty"`
 }
 
 // +kubebuilder:object:generate=true
@@ -97,7 +93,7 @@ type ExternalClusterSpec struct {
 	HumanReadableName string `json:"humanReadableName"`
 
 	// KubeconfigReference is reference to cluster Kubeconfig
-	KubeconfigReference *kubermaticv1.GlobalSecretKeySelector `json:"kubeconfigReference,omitempty"`
+	KubeconfigReference *GlobalSecretKeySelector `json:"kubeconfigReference,omitempty"`
 
 	// Version defines the desired version of the control plane.
 	Version semver.Semver `json:"version"`
@@ -203,7 +199,7 @@ const (
 type ExternalClusterBringYourOwnCloudSpec struct{}
 
 type ExternalClusterGKECloudSpec struct {
-	CredentialsReference *kubermaticv1.GlobalSecretKeySelector `json:"credentialsReference"`
+	CredentialsReference *GlobalSecretKeySelector `json:"credentialsReference"`
 
 	Name string `json:"name"`
 	// ServiceAccount: The Google Cloud Platform Service Account.
@@ -216,7 +212,7 @@ type ExternalClusterGKECloudSpec struct {
 }
 
 type ExternalClusterEKSCloudSpec struct {
-	CredentialsReference *kubermaticv1.GlobalSecretKeySelector `json:"credentialsReference"`
+	CredentialsReference *GlobalSecretKeySelector `json:"credentialsReference"`
 
 	Name string `json:"name"`
 	// AccessKeyID: AWS Access key ID
@@ -251,7 +247,7 @@ type ExternalClusterEKSCloudSpec struct {
 
 type ExternalClusterAKSCloudSpec struct {
 	// CredentialsReference allows referencing a `Secret` resource instead of passing secret data in this spec.
-	CredentialsReference *kubermaticv1.GlobalSecretKeySelector `json:"credentialsReference"`
+	CredentialsReference *GlobalSecretKeySelector `json:"credentialsReference"`
 
 	Name string `json:"name"`
 	// TenantID: The Azure Active Directory Tenant used for this cluster.
@@ -298,12 +294,12 @@ func (c *ExternalCluster) GetKubeconfigSecretName() string {
 func (c *ExternalCluster) GetCredentialsSecretName() string {
 	// The kubermatic cluster `GetSecretName` method is used to get credential secret name for external cluster
 	// The same is used for the external cluster creation when secret is created
-	cluster := &kubermaticv1.Cluster{
+	cluster := &Cluster{
 		ObjectMeta: metav1.ObjectMeta{
 			Name: c.Name,
 		},
-		Spec: kubermaticv1.ClusterSpec{
-			Cloud: kubermaticv1.CloudSpec{},
+		Spec: ClusterSpec{
+			Cloud: CloudSpec{},
 		},
 	}
 	cloud := c.Spec.CloudSpec
@@ -311,13 +307,13 @@ func (c *ExternalCluster) GetCredentialsSecretName() string {
 		return ""
 	}
 	if cloud.GKE != nil {
-		cluster.Spec.Cloud.GCP = &kubermaticv1.GCPCloudSpec{}
+		cluster.Spec.Cloud.GCP = &GCPCloudSpec{}
 	}
 	if cloud.EKS != nil {
-		cluster.Spec.Cloud.AWS = &kubermaticv1.AWSCloudSpec{}
+		cluster.Spec.Cloud.AWS = &AWSCloudSpec{}
 	}
 	if cloud.AKS != nil {
-		cluster.Spec.Cloud.Azure = &kubermaticv1.AzureCloudSpec{}
+		cluster.Spec.Cloud.Azure = &AzureCloudSpec{}
 	}
 	return cluster.GetSecretName()
 }
