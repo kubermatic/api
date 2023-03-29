@@ -61,10 +61,6 @@ type EtcdRestore struct {
 
 // EtcdRestoreSpec specifies details of an etcd restore.
 type EtcdRestoreSpec struct {
-	// Name defines the name of the restore
-	// The name of the restore file in S3 will be <cluster>-<restore name>
-	// If a schedule is set (see below), -<timestamp> will be appended.
-	Name string `json:"name"`
 	// Cluster is the reference to the cluster whose etcd will be backed up
 	Cluster corev1.ObjectReference `json:"cluster"`
 	// BackupName is the name of the backup to restore from

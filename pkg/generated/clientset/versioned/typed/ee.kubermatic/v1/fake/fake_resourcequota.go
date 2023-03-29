@@ -86,18 +86,6 @@ func (c *FakeResourceQuotas) Update(ctx context.Context, resourceQuota *eekuberm
 	return obj.(*eekubermaticv1.ResourceQuota), err
 }
 
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeResourceQuotas) UpdateStatus(ctx context.Context, resourceQuota *eekubermaticv1.ResourceQuota, opts v1.UpdateOptions) (*eekubermaticv1.ResourceQuota, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(resourcequotasResource, "status", c.ns, resourceQuota), &eekubermaticv1.ResourceQuota{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*eekubermaticv1.ResourceQuota), err
-}
-
 // Delete takes name of the resourceQuota and deletes it. Returns an error if one occurs.
 func (c *FakeResourceQuotas) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.

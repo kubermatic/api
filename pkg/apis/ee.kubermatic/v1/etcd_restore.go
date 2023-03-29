@@ -17,27 +17,8 @@ limitations under the License.
 package v1
 
 import (
-	corev1 "k8s.io/api/core/v1"
+	kubermaticv1 "k8c.io/api/v3/pkg/apis/kubermatic/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-)
-
-// +kubebuilder:validation:Enum=Started;StsRebuilding;Completed;EtcdLauncherNotEnabled
-
-// EtcdRestorePhase represents the lifecycle phase of an EtcdRestore.
-type EtcdRestorePhase string
-
-const (
-	// EtcdRestorePhaseStarted indicates that the restore has started.
-	EtcdRestorePhaseStarted EtcdRestorePhase = "Started"
-
-	// EtcdRestorePhaseStsRebuilding indicates that the old Etcd statefulset has been deleted and is now rebuilding.
-	EtcdRestorePhaseStsRebuilding EtcdRestorePhase = "StsRebuilding"
-
-	// EtcdRestorePhaseCompleted indicates that the old Etcd statefulset has completed successfully.
-	EtcdRestorePhaseCompleted EtcdRestorePhase = "Completed"
-
-	// EtcdRestorePhaseEtcdLauncherNotEnabled indicates that etcd-launcher is not enabled.
-	EtcdRestorePhaseEtcdLauncherNotEnabled EtcdRestorePhase = "EtcdLauncherNotEnabled"
 )
 
 // +genclient
@@ -54,28 +35,7 @@ type EtcdRestore struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   EtcdRestoreSpec   `json:"spec,omitempty"`
-	Status EtcdRestoreStatus `json:"status,omitempty"`
-}
-
-// EtcdRestoreSpec specifies details of an etcd restore.
-type EtcdRestoreSpec struct {
-	// Cluster is the reference to the cluster whose etcd will be backed up
-	Cluster corev1.ObjectReference `json:"cluster"`
-	// BackupName is the name of the backup to restore from
-	BackupName string `json:"backupName"`
-	// BackupDownloadCredentialsSecret is the name of a secret in the cluster-xxx namespace containing
-	// credentials needed to download the backup
-	BackupDownloadCredentialsSecret string `json:"backupDownloadCredentialsSecret,omitempty"`
-	// Destination indicates where the backup was stored. The destination name should correspond to a destination in
-	// the cluster's Seed.Spec.EtcdBackupRestore. If empty, it will use the legacy destination configured in Seed.Spec.BackupRestore
-	Destination string `json:"destination,omitempty"`
-}
-
-type EtcdRestoreStatus struct {
-	Phase EtcdRestorePhase `json:"phase"`
-	// +optional
-	RestoreTime metav1.Time `json:"restoreTime,omitempty"`
+	kubermaticv1.EtcdRestore `json:",inline"`
 }
 
 // +kubebuilder:object:generate=true

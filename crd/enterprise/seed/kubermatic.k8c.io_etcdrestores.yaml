@@ -75,13 +75,9 @@ spec:
                 destination:
                   description: Destination indicates where the backup was stored. The destination name should correspond to a destination in the cluster's Seed.Spec.EtcdBackupRestore. If empty, it will use the legacy destination configured in Seed.Spec.BackupRestore
                   type: string
-                name:
-                  description: Name defines the name of the restore The name of the restore file in S3 will be <cluster>-<restore name> If a schedule is set (see below), -<timestamp> will be appended.
-                  type: string
               required:
                 - backupName
                 - cluster
-                - name
               type: object
             status:
               properties:
