@@ -22,6 +22,8 @@ type ConstraintExpansion interface{}
 
 type ConstraintTemplateExpansion interface{}
 
+type DatacenterExpansion interface{}
+
 type EtcdBackupConfigExpansion interface{}
 
 type EtcdRestoreExpansion interface{}
@@ -43,8 +45,6 @@ type PresetExpansion interface{}
 type ResourceQuotaExpansion interface{}
 
 type RuleGroupExpansion interface{}
-
-type SeedExpansion interface{}
 
 type UserExpansion interface{}
 

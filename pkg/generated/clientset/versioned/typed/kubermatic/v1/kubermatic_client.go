@@ -22,6 +22,7 @@ type KubermaticV1Interface interface {
 	ClusterTemplateInstancesGetter
 	ConstraintsGetter
 	ConstraintTemplatesGetter
+	DatacentersGetter
 	EtcdBackupConfigsGetter
 	EtcdRestoresGetter
 	ExternalClustersGetter
@@ -33,7 +34,6 @@ type KubermaticV1Interface interface {
 	PresetsGetter
 	ResourceQuotasGetter
 	RuleGroupsGetter
-	SeedsGetter
 	UsersGetter
 	UserSSHKeysGetter
 }
@@ -83,6 +83,10 @@ func (c *KubermaticV1Client) ConstraintTemplates(namespace string) ConstraintTem
 	return newConstraintTemplates(c, namespace)
 }
 
+func (c *KubermaticV1Client) Datacenters(namespace string) DatacenterInterface {
+	return newDatacenters(c, namespace)
+}
+
 func (c *KubermaticV1Client) EtcdBackupConfigs(namespace string) EtcdBackupConfigInterface {
 	return newEtcdBackupConfigs(c, namespace)
 }
@@ -125,10 +129,6 @@ func (c *KubermaticV1Client) ResourceQuotas(namespace string) ResourceQuotaInter
 
 func (c *KubermaticV1Client) RuleGroups(namespace string) RuleGroupInterface {
 	return newRuleGroups(c, namespace)
-}
-
-func (c *KubermaticV1Client) Seeds(namespace string) SeedInterface {
-	return newSeeds(c, namespace)
 }
 
 func (c *KubermaticV1Client) Users(namespace string) UserInterface {

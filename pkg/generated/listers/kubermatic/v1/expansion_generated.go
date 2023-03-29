@@ -82,6 +82,14 @@ type ConstraintTemplateListerExpansion interface{}
 // ConstraintTemplateNamespaceLister.
 type ConstraintTemplateNamespaceListerExpansion interface{}
 
+// DatacenterListerExpansion allows custom methods to be added to
+// DatacenterLister.
+type DatacenterListerExpansion interface{}
+
+// DatacenterNamespaceListerExpansion allows custom methods to be added to
+// DatacenterNamespaceLister.
+type DatacenterNamespaceListerExpansion interface{}
+
 // EtcdBackupConfigListerExpansion allows custom methods to be added to
 // EtcdBackupConfigLister.
 type EtcdBackupConfigListerExpansion interface{}
@@ -169,14 +177,6 @@ type RuleGroupListerExpansion interface{}
 // RuleGroupNamespaceListerExpansion allows custom methods to be added to
 // RuleGroupNamespaceLister.
 type RuleGroupNamespaceListerExpansion interface{}
-
-// SeedListerExpansion allows custom methods to be added to
-// SeedLister.
-type SeedListerExpansion interface{}
-
-// SeedNamespaceListerExpansion allows custom methods to be added to
-// SeedNamespaceLister.
-type SeedNamespaceListerExpansion interface{}
 
 // UserListerExpansion allows custom methods to be added to
 // UserLister.

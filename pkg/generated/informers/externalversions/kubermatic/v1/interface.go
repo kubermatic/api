@@ -28,6 +28,8 @@ type Interface interface {
 	Constraints() ConstraintInformer
 	// ConstraintTemplates returns a ConstraintTemplateInformer.
 	ConstraintTemplates() ConstraintTemplateInformer
+	// Datacenters returns a DatacenterInformer.
+	Datacenters() DatacenterInformer
 	// EtcdBackupConfigs returns a EtcdBackupConfigInformer.
 	EtcdBackupConfigs() EtcdBackupConfigInformer
 	// EtcdRestores returns a EtcdRestoreInformer.
@@ -50,8 +52,6 @@ type Interface interface {
 	ResourceQuotas() ResourceQuotaInformer
 	// RuleGroups returns a RuleGroupInformer.
 	RuleGroups() RuleGroupInformer
-	// Seeds returns a SeedInformer.
-	Seeds() SeedInformer
 	// Users returns a UserInformer.
 	Users() UserInformer
 	// UserSSHKeys returns a UserSSHKeyInformer.
@@ -119,6 +119,11 @@ func (v *version) ConstraintTemplates() ConstraintTemplateInformer {
 	return &constraintTemplateInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
+// Datacenters returns a DatacenterInformer.
+func (v *version) Datacenters() DatacenterInformer {
+	return &datacenterInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
 // EtcdBackupConfigs returns a EtcdBackupConfigInformer.
 func (v *version) EtcdBackupConfigs() EtcdBackupConfigInformer {
 	return &etcdBackupConfigInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
@@ -172,11 +177,6 @@ func (v *version) ResourceQuotas() ResourceQuotaInformer {
 // RuleGroups returns a RuleGroupInformer.
 func (v *version) RuleGroups() RuleGroupInformer {
 	return &ruleGroupInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
-}
-
-// Seeds returns a SeedInformer.
-func (v *version) Seeds() SeedInformer {
-	return &seedInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // Users returns a UserInformer.

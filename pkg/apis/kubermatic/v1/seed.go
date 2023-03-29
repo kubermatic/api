@@ -18,182 +18,7 @@ package v1
 
 import (
 	corev1 "k8s.io/api/core/v1"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
-
-// +kubebuilder:validation:Enum=Healthy;Unhealthy;Invalid;Terminating;Paused
-
-type SeedPhase string
-
-// These are the valid phases of a seed.
-const (
-	// SeedPhaseHealthy means the seed is reachable and was successfully reconciled.
-	SeedPhaseHealthy SeedPhase = "Healthy"
-
-	// SeedPhaseUnhealthy means the KKP resources on the seed cluster could not be
-	// successfully reconciled.
-	SeedPhaseUnhealthy SeedPhase = "Unhealthy"
-
-	// SeedPhaseInvalid means the seed kubeconfig is defunct.
-	SeedPhaseInvalid SeedPhase = "Invalid"
-
-	// SeedPhaseTerminating means the seed is currently being deleted.
-	SeedPhaseTerminating SeedPhase = "Terminating"
-
-	// SeedPhasePaused means the seed is not being reconciled because the SkipReconciling
-	// annotation is set.
-	SeedPhasePaused SeedPhase = "Paused"
-)
-
-// +kubebuilder:object:generate=true
-// +kubebuilder:object:root=true
-
-// SeedDatacenterList is the type representing a SeedDatacenterList.
-type SeedList struct {
-	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata,omitempty"`
-
-	// List of seeds
-	Items []Seed `json:"items"`
-}
-
-// +genclient
-// +kubebuilder:object:generate=true
-// +kubebuilder:object:root=true
-// +kubebuilder:subresource:status
-// +kubebuilder:printcolumn:JSONPath=".status.clusters",name="Clusters",type="integer"
-// +kubebuilder:printcolumn:JSONPath=".spec.location",name="Location",type="string"
-// +kubebuilder:printcolumn:JSONPath=".status.versions.kubermatic",name="KKP Version",type="string"
-// +kubebuilder:printcolumn:JSONPath=".status.versions.cluster",name="Cluster Version",type="string"
-// +kubebuilder:printcolumn:JSONPath=".status.phase",name="Phase",type="string"
-// +kubebuilder:printcolumn:JSONPath=".metadata.creationTimestamp",name="Age",type="date"
-
-// Seed is the type representing a Seed cluster. Seed clusters host the the control planes
-// for KKP user clusters.
-type Seed struct {
-	metav1.TypeMeta   `json:",inline"`
-	metav1.ObjectMeta `json:"metadata,omitempty"`
-
-	Spec SeedSpec `json:"spec"`
-	//nolint:staticcheck
-	//lint:ignore SA5008 omitgenyaml is used by the example-yaml-generator
-	Status SeedStatus `json:"status,omitempty,omitgenyaml"`
-}
-
-// SeedStatus contains runtime information regarding the seed.
-type SeedStatus struct {
-	// Phase contains a human readable text to indicate the seed cluster status. No logic should be tied
-	// to this field, as its content can change in between KKP releases.
-	Phase SeedPhase `json:"phase,omitempty"`
-
-	// +kubebuilder:default=0
-	// +kubebuilder:validation:Minimum:=0
-
-	// Clusters is the total number of user clusters that exist on this seed.
-	Clusters int `json:"clusters"`
-
-	// Versions contains information regarding versions of components in the cluster and the cluster
-	// itself.
-	// +optional
-	Versions SeedVersionsStatus `json:"versions,omitempty"`
-
-	// Conditions contains conditions the seed is in, its primary use case is status signaling
-	// between controllers or between controllers and the API.
-	// +optional
-	Conditions map[SeedConditionType]SeedCondition `json:"conditions,omitempty"`
-}
-
-// +kubebuilder:validation:Enum=KubeconfigValid;ResourcesReconciled;ClusterInitialized
-
-// SeedConditionType is used to indicate the type of a seed condition. For all condition
-// types, the `true` value must indicate success.
-type SeedConditionType string
-
-const (
-	// SeedConditionKubeconfigValid indicates that the configured kubeconfig for the seed is valid.
-	// The seed-sync controller manages this condition.
-	SeedConditionKubeconfigValid SeedConditionType = "KubeconfigValid"
-	// SeedConditionResourcesReconciled indicates that the KKP operator has finished setting up the
-	// resources inside the seed cluster.
-	SeedConditionResourcesReconciled SeedConditionType = "ResourcesReconciled"
-	// SeedConditionClusterInitialized indicates that the KKP operator has finished setting up the
-	// CRDs and other prerequisites on the Seed cluster. After this condition is true, other
-	// controllers can begin to create watches and reconcile resources (i.e. this condition is
-	// a precondition to ResourcesReconciled). Once this condition is true, it is never set to false
-	// again.
-	SeedConditionClusterInitialized SeedConditionType = "ClusterInitialized"
-)
-
-type SeedCondition struct {
-	// Status of the condition, one of True, False, Unknown.
-	Status corev1.ConditionStatus `json:"status"`
-	// Last time we got an update on a given condition.
-	LastHeartbeatTime metav1.Time `json:"lastHeartbeatTime"`
-	// Last time the condition transit from one status to another.
-	// +optional
-	LastTransitionTime metav1.Time `json:"lastTransitionTime,omitempty"`
-	// (brief) reason for the condition's last transition.
-	// +optional
-	Reason string `json:"reason,omitempty"`
-	// Human readable message indicating details about last transition.
-	// +optional
-	Message string `json:"message,omitempty"`
-}
-
-// SeedVersionsStatus contains information regarding versions of components in the cluster
-// and the cluster itself.
-type SeedVersionsStatus struct {
-	// Kubermatic is the version of the currently deployed KKP components. Note that a permanent
-	// version skew between master and seed is not supported and KKP setups should never run for
-	// longer times with a skew between the clusters.
-	Kubermatic string `json:"kubermatic,omitempty"`
-	// Cluster is the Kubernetes version of the cluster's control plane.
-	Cluster string `json:"cluster,omitempty"`
-}
-
-// The spec for a seed cluster.
-type SeedSpec struct {
-	// Optional: Country of the seed as ISO-3166 two-letter code, e.g. DE or UK.
-	// For informational purposes in the Kubermatic dashboard only.
-	Country string `json:"country,omitempty"`
-	// Optional: Detailed location of the cluster, like "Hamburg" or "Datacenter 7".
-	// For informational purposes in the Kubermatic dashboard only.
-	Location string `json:"location,omitempty"`
-	// A reference to the Kubeconfig of this cluster. The Kubeconfig must
-	// have cluster-admin privileges. This field is mandatory for every
-	// seed, even if there are no datacenters defined yet.
-	Kubeconfig corev1.ObjectReference `json:"kubeconfig"`
-	// Datacenters contains a map of the possible datacenters (DCs) in this seed.
-	// Each DC must have a globally unique identifier (i.e. names must be unique
-	// across all seeds).
-	Datacenters map[string]Datacenter `json:"datacenters,omitempty"`
-	// Optional: This can be used to override the DNS name used for this seed.
-	// By default the seed name is used.
-	SeedDNSOverwrite string `json:"seedDNSOverwrite,omitempty"`
-	// NodeportProxy can be used to configure the NodePort proxy service that is
-	// responsible for making user-cluster control planes accessible from the outside.
-	NodeportProxy *NodeportProxyConfig `json:"nodeportProxy,omitempty"`
-	// Optional: ProxySettings can be used to configure HTTP proxy settings on the
-	// worker nodes in user clusters. However, proxy settings on nodes take precedence.
-	ProxySettings *ProxySettings `json:"proxySettings,omitempty"`
-	// Optional: ExposeStrategy explicitly sets the expose strategy for this seed cluster, if not set, the default provided by the master is used.
-	ExposeStrategy ExposeStrategy `json:"exposeStrategy,omitempty"`
-	// Optional: MLA allows configuring seed level MLA (Monitoring, Logging & Alerting) stack settings.
-	MLA *SeedMLASettings `json:"mla,omitempty"`
-	// DefaultComponentSettings are default values to set for newly created clusters.
-	// Deprecated: Use DefaultClusterTemplate instead.
-	DefaultComponentSettings *ComponentSettings `json:"defaultComponentSettings,omitempty"`
-	// DefaultClusterTemplate is the name of a cluster template of scope "seed" that is used
-	// to default all new created clusters
-	DefaultClusterTemplate string `json:"defaultClusterTemplate,omitempty"`
-	// Metering configures the metering tool on user clusters across the seed.
-	Metering *MeteringConfiguration `json:"metering,omitempty"`
-	// EtcdBackupRestore holds the configuration of the automatic etcd backup restores for the Seed;
-	// if this is set, the new backup/restore controllers are enabled for this Seed.
-	EtcdBackupRestore *EtcdBackupRestore `json:"etcdBackupRestore,omitempty"`
-	// OIDCProviderConfiguration allows to configure OIDC provider at the Seed level.
-	OIDCProviderConfiguration *OIDCProviderConfiguration `json:"oidcProviderConfiguration,omitempty"`
-}
 
 // EtcdBackupRestore holds the configuration of the automatic backup and restores.
 type EtcdBackupRestore struct {
@@ -342,23 +167,23 @@ type OIDCProviderConfiguration struct {
 	SkipTLSVerify *bool `json:"skipTLSVerify,omitempty"`
 }
 
-// IsEtcdAutomaticBackupEnabled returns true if etcd automatic backup is configured for the seed.
-func (s *Seed) IsEtcdAutomaticBackupEnabled() bool {
-	if cfg := s.Spec.EtcdBackupRestore; cfg != nil {
-		return len(cfg.Destinations) > 0
-	}
-	return false
-}
+// // IsEtcdAutomaticBackupEnabled returns true if etcd automatic backup is configured for the seed.
+// func (s *Seed) IsEtcdAutomaticBackupEnabled() bool {
+// 	if cfg := s.Spec.EtcdBackupRestore; cfg != nil {
+// 		return len(cfg.Destinations) > 0
+// 	}
+// 	return false
+// }
 
-// IsDefaultEtcdAutomaticBackupEnabled returns true if etcd automatic backup with default destination is configured for the seed.
-func (s *Seed) IsDefaultEtcdAutomaticBackupEnabled() bool {
-	return s.IsEtcdAutomaticBackupEnabled() && s.Spec.EtcdBackupRestore.DefaultDestination != ""
-}
+// // IsDefaultEtcdAutomaticBackupEnabled returns true if etcd automatic backup with default destination is configured for the seed.
+// func (s *Seed) IsDefaultEtcdAutomaticBackupEnabled() bool {
+// 	return s.IsEtcdAutomaticBackupEnabled() && s.Spec.EtcdBackupRestore.DefaultDestination != ""
+// }
 
-func (s *Seed) GetEtcdBackupDestination(destinationName string) *BackupDestination {
-	if s.Spec.EtcdBackupRestore == nil {
-		return nil
-	}
+// func (s *Seed) GetEtcdBackupDestination(destinationName string) *BackupDestination {
+// 	if s.Spec.EtcdBackupRestore == nil {
+// 		return nil
+// 	}
 
-	return s.Spec.EtcdBackupRestore.Destinations[destinationName]
-}
+// 	return s.Spec.EtcdBackupRestore.Destinations[destinationName]
+// }

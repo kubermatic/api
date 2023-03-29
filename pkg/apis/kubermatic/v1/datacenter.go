@@ -23,25 +23,62 @@ import (
 	"k8s.io/apimachinery/pkg/util/sets"
 )
 
+// +genclient
+// +kubebuilder:resource:scope=Cluster
+// +kubebuilder:object:generate=true
+// +kubebuilder:object:root=true
+// +kubebuilder:printcolumn:JSONPath=".status.clusters",name="Clusters",type="integer"
+// +kubebuilder:printcolumn:JSONPath=".metadata.creationTimestamp",name="Age",type="date"
+
+// Datacenter is an allowed cloud provider configuration for user clusters. Each cluster
+// must be scheduled to use exactly one of the available datacenters (of the same provider,
+// i.e. an AWS cluster cannot use a Hetzner datacenter).
 type Datacenter struct {
-	// Optional: Country of the seed as ISO-3166 two-letter code, e.g. DE or UK.
-	// For informational purposes in the Kubermatic dashboard only.
-	Country string `json:"country,omitempty"`
-	// Optional: Detailed location of the cluster, like "Hamburg" or "Datacenter 7".
-	// For informational purposes in the Kubermatic dashboard only.
-	Location string `json:"location,omitempty"`
-	// Node holds node-specific settings, like e.g. HTTP proxy, Docker
-	// registries and the like. Proxy settings are inherited from the seed if
-	// not specified here.
-	Node *NodeSettings `json:"node,omitempty"`
-	// Spec describes the cloud provider settings used to manage resources
-	// in this datacenter. Exactly one cloud provider must be defined.
-	Spec DatacenterSpec `json:"spec"`
+	metav1.TypeMeta   `json:",inline"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
+
+	Spec   DatacenterSpec   `json:"spec,omitempty"`
+	Status DatacenterStatus `json:"status,omitempty"`
 }
+
+/*
+
+	// Optional: This can be used to override the DNS name used for this seed.
+	// By default the seed name is used.
+	SeedDNSOverwrite string `json:"seedDNSOverwrite,omitempty"`
+	// NodeportProxy can be used to configure the NodePort proxy service that is
+	// responsible for making user-cluster control planes accessible from the outside.
+	NodeportProxy *NodeportProxyConfig `json:"nodeportProxy,omitempty"`
+	// Optional: ProxySettings can be used to configure HTTP proxy settings on the
+	// worker nodes in user clusters. However, proxy settings on nodes take precedence.
+	ProxySettings *ProxySettings `json:"proxySettings,omitempty"`
+	// Optional: ExposeStrategy explicitly sets the expose strategy for this seed cluster, if not set, the default provided by the master is used.
+	ExposeStrategy ExposeStrategy `json:"exposeStrategy,omitempty"`
+	// Optional: MLA allows configuring seed level MLA (Monitoring, Logging & Alerting) stack settings.
+	MLA *SeedMLASettings `json:"mla,omitempty"`
+	// DefaultComponentSettings are default values to set for newly created clusters.
+	// Deprecated: Use DefaultClusterTemplate instead.
+	DefaultComponentSettings *ComponentSettings `json:"defaultComponentSettings,omitempty"`
+	// DefaultClusterTemplate is the name of a cluster template of scope "seed" that is used
+	// to default all new created clusters
+	DefaultClusterTemplate string `json:"defaultClusterTemplate,omitempty"`
+	// Metering configures the metering tool on user clusters across the seed.
+	Metering *MeteringConfiguration `json:"metering,omitempty"`
+	// EtcdBackupRestore holds the configuration of the automatic etcd backup restores for the Seed;
+	// if this is set, the new backup/restore controllers are enabled for this Seed.
+	EtcdBackupRestore *EtcdBackupRestore `json:"etcdBackupRestore,omitempty"`
+	// OIDCProviderConfiguration allows to configure OIDC provider at the Seed level.
+	OIDCProviderConfiguration *OIDCProviderConfiguration `json:"oidcProviderConfiguration,omitempty"`
+*/
 
 // DatacenterSpec configures a KKP datacenter. Provider configuration is mutually exclusive,
 // and as such only a single provider can be configured per datacenter.
 type DatacenterSpec struct {
+	// Node holds node-specific settings, like e.g. HTTP proxy, Docker
+	// registries and the like. Proxy settings are inherited from the seed if
+	// not specified here.
+	Node *NodeSettings `json:"node,omitempty"`
+	// Digitalocean contains settings for Digitalocean (DO).
 	Digitalocean *DatacenterSpecDigitalocean `json:"digitalocean,omitempty"`
 	// BringYourOwn contains settings for clusters using manually created
 	// nodes via kubeadm.
@@ -436,4 +473,24 @@ func (p *ProxySettings) Merge(dst *ProxySettings) {
 	if emptyStrPtr(dst.NoProxy) {
 		dst.NoProxy = p.NoProxy
 	}
+}
+
+// DatacenterStatus contains runtime information regarding the datacenter.
+type DatacenterStatus struct {
+	// +kubebuilder:default=0
+	// +kubebuilder:validation:Minimum:=0
+
+	// Clusters is the total number of user clusters that exist on this seed.
+	Clusters int `json:"clusters"`
+}
+
+// +kubebuilder:object:generate=true
+// +kubebuilder:object:root=true
+
+// DatacenterList is a list of datacenters.
+type DatacenterList struct {
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata,omitempty"`
+
+	Items []Datacenter `json:"items"`
 }
