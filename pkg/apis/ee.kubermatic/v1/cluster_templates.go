@@ -17,6 +17,8 @@ limitations under the License.
 package v1
 
 import (
+	kubermaticv1 "k8c.io/api/v3/pkg/apis/kubermatic/v1"
+
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -49,11 +51,7 @@ type ClusterTemplate struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	ClusterLabels          map[string]string       `json:"clusterLabels,omitempty"`
-	InheritedClusterLabels map[string]string       `json:"inheritedClusterLabels,omitempty"`
-	Credential             string                  `json:"credential"`
-	UserSSHKeys            []ClusterTemplateSSHKey `json:"userSSHKeys,omitempty"`
-	Spec                   ClusterSpec             `json:"spec,omitempty"`
+	kubermaticv1.ClusterTemplate `json:",inline"`
 }
 
 // +kubebuilder:object:generate=true
@@ -65,13 +63,4 @@ type ClusterTemplateList struct {
 	metav1.ListMeta `json:"metadata,omitempty"`
 
 	Items []ClusterTemplate `json:"items"`
-}
-
-// ClusterTemplateSSHKey is the object for holding SSH key.
-type ClusterTemplateSSHKey struct {
-	// ID is the name of the UserSSHKey object that is supposed to be assigned
-	// to any ClusterTemplateInstance created based on this template.
-	ID string `json:"id"`
-	// Name is the human readable SSH key name.
-	Name string `json:"name"`
 }

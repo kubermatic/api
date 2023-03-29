@@ -13,9 +13,12 @@ spec:
     listKind: MLAAdminSettingList
     plural: mlaadminsettings
     singular: mlaadminsetting
-  scope: Namespaced
+  scope: Cluster
   versions:
     - additionalPrinterColumns:
+        - jsonPath: .spec.clusterName
+          name: Cluster
+          type: string
         - jsonPath: .metadata.creationTimestamp
           name: Age
           type: date

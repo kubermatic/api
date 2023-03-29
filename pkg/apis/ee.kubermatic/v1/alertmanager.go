@@ -23,6 +23,7 @@ import (
 )
 
 // +genclient
+// +kubebuilder:resource:scope=Cluster
 // +kubebuilder:object:generate=true
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
@@ -32,8 +33,7 @@ type Alertmanager struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   kubermaticv1.AlertmanagerSpec   `json:"spec,omitempty"`
-	Status kubermaticv1.AlertmanagerStatus `json:"status,omitempty"`
+	kubermaticv1.Alertmanager `json:",inline"`
 }
 
 // +kubebuilder:object:generate=true

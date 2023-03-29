@@ -86,18 +86,6 @@ func (c *FakeAddons) Update(ctx context.Context, addon *eekubermaticv1.Addon, op
 	return obj.(*eekubermaticv1.Addon), err
 }
 
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeAddons) UpdateStatus(ctx context.Context, addon *eekubermaticv1.Addon, opts v1.UpdateOptions) (*eekubermaticv1.Addon, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(addonsResource, "status", c.ns, addon), &eekubermaticv1.Addon{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*eekubermaticv1.Addon), err
-}
-
 // Delete takes name of the addon and deletes it. Returns an error if one occurs.
 func (c *FakeAddons) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.

@@ -86,6 +86,18 @@ func (c *FakeUserSSHKeys) Update(ctx context.Context, userSSHKey *kubermaticv1.U
 	return obj.(*kubermaticv1.UserSSHKey), err
 }
 
+// UpdateStatus was generated because the type contains a Status member.
+// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
+func (c *FakeUserSSHKeys) UpdateStatus(ctx context.Context, userSSHKey *kubermaticv1.UserSSHKey, opts v1.UpdateOptions) (*kubermaticv1.UserSSHKey, error) {
+	obj, err := c.Fake.
+		Invokes(testing.NewUpdateSubresourceAction(usersshkeysResource, "status", c.ns, userSSHKey), &kubermaticv1.UserSSHKey{})
+
+	if obj == nil {
+		return nil, err
+	}
+	return obj.(*kubermaticv1.UserSSHKey), err
+}
+
 // Delete takes name of the userSSHKey and deletes it. Returns an error if one occurs.
 func (c *FakeUserSSHKeys) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.

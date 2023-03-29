@@ -86,18 +86,6 @@ func (c *FakeExternalClusters) Update(ctx context.Context, externalCluster *eeku
 	return obj.(*eekubermaticv1.ExternalCluster), err
 }
 
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeExternalClusters) UpdateStatus(ctx context.Context, externalCluster *eekubermaticv1.ExternalCluster, opts v1.UpdateOptions) (*eekubermaticv1.ExternalCluster, error) {
-	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(externalclustersResource, "status", c.ns, externalCluster), &eekubermaticv1.ExternalCluster{})
-
-	if obj == nil {
-		return nil, err
-	}
-	return obj.(*eekubermaticv1.ExternalCluster), err
-}
-
 // Delete takes name of the externalCluster and deletes it. Returns an error if one occurs.
 func (c *FakeExternalClusters) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
 	_, err := c.Fake.

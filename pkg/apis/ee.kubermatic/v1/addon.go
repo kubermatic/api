@@ -23,24 +23,21 @@ import (
 )
 
 // +genclient
+// +kubebuilder:resource:scope=Cluster
 // +kubebuilder:object:generate=true
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
+// +kubebuilder:printcolumn:JSONPath=".spec.cluster.name",name="Cluster",type="string"
 // +kubebuilder:printcolumn:JSONPath=".metadata.creationTimestamp",name="Age",type="date"
 
 // Addon specifies a cluster addon. Addons can be installed into user clusters
 // to provide additional manifests for CNIs, CSIs or other applications, which makes
 // addons a necessary component to create functioning user clusters.
-// Addon objects must be created inside cluster namespaces.
 type Addon struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	// Spec describes the desired addon state.
-	Spec kubermaticv1.AddonSpec `json:"spec,omitempty"`
-
-	// Status contains information about the reconciliation status.
-	Status kubermaticv1.AddonStatus `json:"status,omitempty"`
+	kubermaticv1.Addon `json:",inline"`
 }
 
 // +kubebuilder:object:generate=true

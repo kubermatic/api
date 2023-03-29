@@ -36,7 +36,7 @@ type AddonConfig struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec kubermaticv1.AddonConfigSpec `json:"spec,omitempty"`
+	kubermaticv1.AddonConfig `json:",inline"`
 }
 
 // +kubebuilder:object:generate=true

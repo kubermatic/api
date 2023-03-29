@@ -67,30 +67,6 @@ var AllCloudProviders = sets.New(
 	CloudProviderVSphere,
 )
 
-// +kubebuilder:validation:Enum=aks;eks;gke;bringyourown;kubeone
-
-type ExternalClusterProvider string
-
-func (p ExternalClusterProvider) String() string {
-	return string(p)
-}
-
-const (
-	ExternalClusterProviderAKS          ExternalClusterProvider = "aks"
-	ExternalClusterProviderEKS          ExternalClusterProvider = "eks"
-	ExternalClusterProviderGKE          ExternalClusterProvider = "gke"
-	ExternalClusterProviderBringYourOwn ExternalClusterProvider = "bringyourown"
-	ExternalClusterProviderKubeOne      ExternalClusterProvider = "kubeone"
-)
-
-var AllExternalClusterProviders = sets.New(
-	ExternalClusterProviderAKS,
-	ExternalClusterProviderEKS,
-	ExternalClusterProviderGKE,
-	ExternalClusterProviderBringYourOwn,
-	ExternalClusterProviderKubeOne,
-)
-
 // +kubebuilder:validation:Enum=ubuntu;centos;amzn2;rhel;flatcar;rockylinux
 
 // OperatingSystem defines the a node's operating system. Note that these constants may
