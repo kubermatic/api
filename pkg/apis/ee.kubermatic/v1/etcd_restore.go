@@ -41,9 +41,11 @@ const (
 )
 
 // +genclient
+// +kubebuilder:resource:scope=Cluster
 // +kubebuilder:object:generate=true
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
+// +kubebuilder:printcolumn:JSONPath=".spec.cluster.name",name="Cluster",type="string"
 // +kubebuilder:printcolumn:JSONPath=".status.phase",name="Phase",type="string"
 // +kubebuilder:printcolumn:JSONPath=".metadata.creationTimestamp",name="Age",type="date"
 
@@ -58,10 +60,6 @@ type EtcdRestore struct {
 
 // EtcdRestoreSpec specifies details of an etcd restore.
 type EtcdRestoreSpec struct {
-	// Name defines the name of the restore
-	// The name of the restore file in S3 will be <cluster>-<restore name>
-	// If a schedule is set (see below), -<timestamp> will be appended.
-	Name string `json:"name"`
 	// Cluster is the reference to the cluster whose etcd will be backed up
 	Cluster corev1.ObjectReference `json:"cluster"`
 	// BackupName is the name of the backup to restore from
@@ -74,6 +72,12 @@ type EtcdRestoreSpec struct {
 	Destination string `json:"destination,omitempty"`
 }
 
+type EtcdRestoreStatus struct {
+	Phase EtcdRestorePhase `json:"phase"`
+	// +optional
+	RestoreTime metav1.Time `json:"restoreTime,omitempty"`
+}
+
 // +kubebuilder:object:generate=true
 // +kubebuilder:object:root=true
 
@@ -83,10 +87,4 @@ type EtcdRestoreList struct {
 	metav1.ListMeta `json:"metadata,omitempty"`
 
 	Items []EtcdRestore `json:"items"`
-}
-
-type EtcdRestoreStatus struct {
-	Phase EtcdRestorePhase `json:"phase"`
-	// +optional
-	RestoreTime metav1.Time `json:"restoreTime,omitempty"`
 }

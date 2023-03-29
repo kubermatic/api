@@ -23,8 +23,10 @@ import (
 )
 
 // +genclient
+// +kubebuilder:resource:scope=Cluster
 // +kubebuilder:object:generate=true
 // +kubebuilder:object:root=true
+// +kubebuilder:printcolumn:JSONPath=".spec.clusterName",name="Cluster",type="string"
 // +kubebuilder:printcolumn:JSONPath=".metadata.creationTimestamp",name="Age",type="date"
 
 // MLAAdminSetting is the object representing cluster-specific administrator settings

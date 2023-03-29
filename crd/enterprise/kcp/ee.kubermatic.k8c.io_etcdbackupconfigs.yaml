@@ -13,9 +13,12 @@ spec:
     listKind: EtcdBackupConfigList
     plural: etcdbackupconfigs
     singular: etcdbackupconfig
-  scope: Namespaced
+  scope: Cluster
   versions:
     - additionalPrinterColumns:
+        - jsonPath: .spec.cluster.name
+          name: Cluster
+          type: string
         - jsonPath: .metadata.creationTimestamp
           name: Age
           type: date
