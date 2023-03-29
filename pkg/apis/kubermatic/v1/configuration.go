@@ -91,10 +91,8 @@ type KubermaticConfigurationSpec struct {
 	UI *KubermaticUIConfiguration `json:"ui,omitempty"`
 	// API configures the frontend REST API used by the dashboard.
 	API *KubermaticAPIConfiguration `json:"api,omitempty"`
-	// SeedController configures the seed-controller-manager.
-	SeedController *KubermaticSeedControllerConfiguration `json:"seedController,omitempty"`
-	// MasterController configures the master-controller-manager.
-	MasterController *KubermaticMasterControllerConfiguration `json:"masterController,omitempty"`
+	// ControllerManager configures the kubermatic-controller-manager.
+	ControllerManager *KubermaticControllerManagerConfiguration `json:"controllerManager,omitempty"`
 	// Webhook configures the webhook.
 	Webhook *KubermaticWebhookConfiguration `json:"webhook,omitempty"`
 	// UserCluster configures various aspects of the user-created clusters.
@@ -169,8 +167,8 @@ type KubermaticUIConfiguration struct {
 	ExtraVolumes []corev1.Volume `json:"extraVolumes,omitempty"`
 }
 
-// KubermaticSeedControllerConfiguration configures the Kubermatic seed controller-manager.
-type KubermaticSeedControllerConfiguration struct {
+// KubermaticControllerManagerConfiguration configures the Kubermatic seed controller-manager.
+type KubermaticControllerManagerConfiguration struct {
 	// DockerRepository is the repository containing the Kubermatic seed-controller-manager image.
 	DockerRepository string `json:"dockerRepository,omitempty"`
 	// BackupStoreContainer is the container used for shipping etcd snapshots to a backup location.
@@ -184,6 +182,8 @@ type KubermaticSeedControllerConfiguration struct {
 	// MaximumParallelReconciles limits the number of cluster reconciliations
 	// that are active at any given time.
 	MaximumParallelReconciles int `json:"maximumParallelReconciles,omitempty"`
+	// ProjectsMigrator configures the migrator for user projects.
+	ProjectsMigrator *KubermaticProjectsMigratorConfiguration `json:"projectsMigrator,omitempty"`
 	// PProfEndpoint controls the port the seed-controller-manager should listen on to provide pprof
 	// data. This port is never exposed from the container and only available via port-forwardings.
 	PProfEndpoint *string `json:"pprofEndpoint,omitempty"`
@@ -342,23 +342,6 @@ type KubermaticIngressConfiguration struct {
 	// Setting an empty name disables the automatic creation of certificates and disables
 	// the TLS settings on the Kubermatic Ingress.
 	CertificateIssuer *corev1.TypedLocalObjectReference `json:"certificateIssuer,omitempty"`
-}
-
-// KubermaticMasterControllerConfiguration configures the Kubermatic master controller-manager.
-type KubermaticMasterControllerConfiguration struct {
-	// DockerRepository is the repository containing the Kubermatic master-controller-manager image.
-	DockerRepository string `json:"dockerRepository,omitempty"`
-	// ProjectsMigrator configures the migrator for user projects.
-	ProjectsMigrator *KubermaticProjectsMigratorConfiguration `json:"projectsMigrator,omitempty"`
-	// PProfEndpoint controls the port the master-controller-manager should listen on to provide pprof
-	// data. This port is never exposed from the container and only available via port-forwardings.
-	PProfEndpoint *string `json:"pprofEndpoint,omitempty"`
-	// Resources describes the requested and maximum allowed CPU/memory usage.
-	Resources *corev1.ResourceRequirements `json:"resources,omitempty"`
-	// DebugLog enables more verbose logging.
-	DebugLog bool `json:"debugLog,omitempty"`
-	// Replicas sets the number of pod replicas for the master-controller-manager.
-	Replicas *int32 `json:"replicas,omitempty"`
 }
 
 // KubermaticProjectsMigratorConfiguration configures the Kubermatic master controller-manager.
