@@ -552,6 +552,10 @@ type EtcdBackupDestination struct {
 
 // IsEtcdAutomaticBackupEnabled returns true if etcd automatic backup is configured for the seed.
 func (c *KubermaticConfiguration) IsEtcdAutomaticBackupEnabled() bool {
+	if c.Spec.UserCluster == nil {
+		return false
+	}
+
 	if cfg := c.Spec.UserCluster.EtcdBackupRestore; cfg != nil {
 		return len(cfg.Destinations) > 0
 	}
@@ -564,7 +568,7 @@ func (c *KubermaticConfiguration) IsDefaultEtcdAutomaticBackupEnabled() bool {
 }
 
 func (c *KubermaticConfiguration) GetEtcdBackupDestination(destinationName string) *EtcdBackupDestination {
-	if c.Spec.UserCluster.EtcdBackupRestore == nil {
+	if c.Spec.UserCluster == nil || c.Spec.UserCluster.EtcdBackupRestore == nil {
 		return nil
 	}
 
