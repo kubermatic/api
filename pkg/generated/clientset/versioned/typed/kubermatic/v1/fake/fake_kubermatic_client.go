@@ -52,6 +52,10 @@ func (c *FakeKubermaticV1) ConstraintTemplates(namespace string) v1.ConstraintTe
 	return &FakeConstraintTemplates{c, namespace}
 }
 
+func (c *FakeKubermaticV1) Datacenters(namespace string) v1.DatacenterInterface {
+	return &FakeDatacenters{c, namespace}
+}
+
 func (c *FakeKubermaticV1) EtcdBackupConfigs(namespace string) v1.EtcdBackupConfigInterface {
 	return &FakeEtcdBackupConfigs{c, namespace}
 }
@@ -94,10 +98,6 @@ func (c *FakeKubermaticV1) ResourceQuotas(namespace string) v1.ResourceQuotaInte
 
 func (c *FakeKubermaticV1) RuleGroups(namespace string) v1.RuleGroupInterface {
 	return &FakeRuleGroups{c, namespace}
-}
-
-func (c *FakeKubermaticV1) Seeds(namespace string) v1.SeedInterface {
-	return &FakeSeeds{c, namespace}
 }
 
 func (c *FakeKubermaticV1) Users(namespace string) v1.UserInterface {

@@ -17,6 +17,8 @@ limitations under the License.
 package v1
 
 import (
+	kubermaticv1 "k8c.io/api/v3/pkg/apis/kubermatic/v1"
+
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -45,18 +47,6 @@ const (
 	SeedPhasePaused SeedPhase = "Paused"
 )
 
-// +kubebuilder:object:generate=true
-// +kubebuilder:object:root=true
-
-// SeedDatacenterList is the type representing a SeedDatacenterList.
-type SeedList struct {
-	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata,omitempty"`
-
-	// List of seeds
-	Items []Seed `json:"items"`
-}
-
 // +genclient
 // +kubebuilder:object:generate=true
 // +kubebuilder:object:root=true
@@ -69,15 +59,30 @@ type SeedList struct {
 // +kubebuilder:printcolumn:JSONPath=".metadata.creationTimestamp",name="Age",type="date"
 
 // Seed is the type representing a Seed cluster. Seed clusters host the the control planes
-// for KKP user clusters.
+// for KKP user clusters. Seedlets are responsible for registering a seed cluster in the
+// KKP management system, similar to how a kubelet registers a node.
 type Seed struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
 	Spec SeedSpec `json:"spec"`
+
 	//nolint:staticcheck
 	//lint:ignore SA5008 omitgenyaml is used by the example-yaml-generator
 	Status SeedStatus `json:"status,omitempty,omitgenyaml"`
+}
+
+// The spec for a seed cluster.
+type SeedSpec struct {
+	// Optional: Country of the seed as ISO-3166 two-letter code, e.g. DE or UK.
+	// For informational purposes in the Kubermatic dashboard only.
+	Country string `json:"country,omitempty"`
+	// Optional: Detailed location of the cluster, like "Hamburg" or "Datacenter 7".
+	// For informational purposes in the Kubermatic dashboard only.
+	Location string `json:"location,omitempty"`
+	// Datacenters contains a map of all datacenters (DCs) on this seed. The datacenter
+	// names are not globally unique, i.e. two seeds can both have a "test" datacenter.
+	Datacenters map[string]kubermaticv1.DatacenterSpec `json:"datacenters,omitempty"`
 }
 
 // SeedStatus contains runtime information regarding the seed.
@@ -89,13 +94,17 @@ type SeedStatus struct {
 	// +kubebuilder:default=0
 	// +kubebuilder:validation:Minimum:=0
 
-	// Clusters is the total number of user clusters that exist on this seed.
+	// Clusters is the total number of user clusters that exist on this seed, the sum across all its
+	// datacenters.
 	Clusters int `json:"clusters"`
 
 	// Versions contains information regarding versions of components in the cluster and the cluster
 	// itself.
 	// +optional
 	Versions SeedVersionsStatus `json:"versions,omitempty"`
+
+	// Datacenters contains a map of all datacenter statusses on this seed.
+	Datacenters map[string]kubermaticv1.DatacenterStatus `json:"datacenters,omitempty"`
 
 	// Conditions contains conditions the seed is in, its primary use case is status signaling
 	// between controllers or between controllers and the API.
@@ -151,214 +160,14 @@ type SeedVersionsStatus struct {
 	Cluster string `json:"cluster,omitempty"`
 }
 
-// The spec for a seed cluster.
-type SeedSpec struct {
-	// Optional: Country of the seed as ISO-3166 two-letter code, e.g. DE or UK.
-	// For informational purposes in the Kubermatic dashboard only.
-	Country string `json:"country,omitempty"`
-	// Optional: Detailed location of the cluster, like "Hamburg" or "Datacenter 7".
-	// For informational purposes in the Kubermatic dashboard only.
-	Location string `json:"location,omitempty"`
-	// A reference to the Kubeconfig of this cluster. The Kubeconfig must
-	// have cluster-admin privileges. This field is mandatory for every
-	// seed, even if there are no datacenters defined yet.
-	Kubeconfig corev1.ObjectReference `json:"kubeconfig"`
-	// Datacenters contains a map of the possible datacenters (DCs) in this seed.
-	// Each DC must have a globally unique identifier (i.e. names must be unique
-	// across all seeds).
-	Datacenters map[string]Datacenter `json:"datacenters,omitempty"`
-	// Optional: This can be used to override the DNS name used for this seed.
-	// By default the seed name is used.
-	SeedDNSOverwrite string `json:"seedDNSOverwrite,omitempty"`
-	// NodeportProxy can be used to configure the NodePort proxy service that is
-	// responsible for making user-cluster control planes accessible from the outside.
-	NodeportProxy *NodeportProxyConfig `json:"nodeportProxy,omitempty"`
-	// Optional: ProxySettings can be used to configure HTTP proxy settings on the
-	// worker nodes in user clusters. However, proxy settings on nodes take precedence.
-	ProxySettings *ProxySettings `json:"proxySettings,omitempty"`
-	// Optional: ExposeStrategy explicitly sets the expose strategy for this seed cluster, if not set, the default provided by the master is used.
-	ExposeStrategy ExposeStrategy `json:"exposeStrategy,omitempty"`
-	// Optional: MLA allows configuring seed level MLA (Monitoring, Logging & Alerting) stack settings.
-	MLA *SeedMLASettings `json:"mla,omitempty"`
-	// DefaultComponentSettings are default values to set for newly created clusters.
-	// Deprecated: Use DefaultClusterTemplate instead.
-	DefaultComponentSettings *ComponentSettings `json:"defaultComponentSettings,omitempty"`
-	// DefaultClusterTemplate is the name of a cluster template of scope "seed" that is used
-	// to default all new created clusters
-	DefaultClusterTemplate string `json:"defaultClusterTemplate,omitempty"`
-	// Metering configures the metering tool on user clusters across the seed.
-	Metering *MeteringConfiguration `json:"metering,omitempty"`
-	// EtcdBackupRestore holds the configuration of the automatic etcd backup restores for the Seed;
-	// if this is set, the new backup/restore controllers are enabled for this Seed.
-	EtcdBackupRestore *EtcdBackupRestore `json:"etcdBackupRestore,omitempty"`
-	// OIDCProviderConfiguration allows to configure OIDC provider at the Seed level.
-	OIDCProviderConfiguration *OIDCProviderConfiguration `json:"oidcProviderConfiguration,omitempty"`
-}
+// +kubebuilder:object:generate=true
+// +kubebuilder:object:root=true
 
-// EtcdBackupRestore holds the configuration of the automatic backup and restores.
-type EtcdBackupRestore struct {
-	// Destinations stores all the possible destinations where the backups for the Seed can be stored. If not empty,
-	// it enables automatic backup and restore for the seed.
-	Destinations map[string]*BackupDestination `json:"destinations,omitempty"`
+// SeedList is the type representing a SeedList.
+type SeedList struct {
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata,omitempty"`
 
-	// +kubebuilder:validation:Pattern:=`^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$`
-	// +kubebuilder:validation:MaxLength:=63
-	// +kubebuilder:validation:Type=string
-
-	// DefaultDestination marks the default destination that will be used for the default etcd backup config which is
-	// created for every user cluster. Has to correspond to a destination in Destinations.
-	// If removed, it removes the related default etcd backup configs.
-	DefaultDestination string `json:"defaultDestination,omitempty"`
-}
-
-// BackupDestination defines the bucket name and endpoint as a backup destination, and holds reference to the credentials secret.
-type BackupDestination struct {
-	// Endpoint is the API endpoint to use for backup and restore.
-	Endpoint string `json:"endpoint"`
-	// BucketName is the bucket name to use for backup and restore.
-	BucketName string `json:"bucketName"`
-	// Credentials hold the ref to the secret with backup credentials
-	Credentials *corev1.SecretReference `json:"credentials,omitempty"`
-}
-
-type NodeportProxyConfig struct {
-	// Disable will prevent the Kubermatic Operator from creating a nodeport-proxy
-	// setup on the seed cluster. This should only be used if a suitable replacement
-	// is installed (like the nodeport-proxy Helm chart).
-	Disable bool `json:"disable,omitempty"`
-	// Annotations are used to further tweak the LoadBalancer integration with the
-	// cloud provider where the seed cluster is running.
-	// Deprecated: Use .envoy.loadBalancerService.annotations instead.
-	Annotations map[string]string `json:"annotations,omitempty"`
-	// Envoy configures the Envoy application itself.
-	Envoy *NodePortProxyComponentEnvoy `json:"envoy,omitempty"`
-	// EnvoyManager configures the Kubermatic-internal Envoy manager.
-	EnvoyManager *NodeportProxyComponent `json:"envoyManager,omitempty"`
-	// Updater configures the component responsible for updating the LoadBalancer
-	// service.
-	Updater *NodeportProxyComponent `json:"updater,omitempty"`
-}
-
-type EnvoyLoadBalancerService struct {
-	// Annotations are used to further tweak the LoadBalancer integration with the
-	// cloud provider.
-	Annotations map[string]string `json:"annotations,omitempty"`
-	// SourceRanges will restrict loadbalancer service to IP ranges specified using CIDR notation like 172.25.0.0/16.
-	// This field will be ignored if the cloud-provider does not support the feature.
-	// More info: https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/
-	SourceRanges []CIDR `json:"sourceRanges,omitempty"`
-}
-
-type NodePortProxyComponentEnvoy struct {
-	NodeportProxyComponent `json:",inline"`
-	LoadBalancerService    *EnvoyLoadBalancerService `json:"loadBalancerService,omitempty"`
-}
-
-type NodeportProxyComponent struct {
-	// DockerRepository is the repository containing the component's image.
-	DockerRepository string `json:"dockerRepository,omitempty"`
-	// Resources describes the requested and maximum allowed CPU/memory usage.
-	Resources *corev1.ResourceRequirements `json:"resources,omitempty"`
-}
-
-// SeedMLASettings allow configuring seed level MLA (Monitoring, Logging & Alerting) stack settings.
-type SeedMLASettings struct {
-	// Optional: controls whether the user cluster MLA (Monitoring, Logging & Alerting) stack is enabled in the seed.
-	UserClusterMLAEnabled bool `json:"userClusterMLAEnabled,omitempty"` //nolint:tagliatelle
-}
-
-// MeteringConfiguration contains all the configuration for the metering tool.
-type MeteringConfiguration struct {
-	Enabled bool `json:"enabled"`
-
-	// StorageClassName is the name of the storage class that the metering prometheus instance uses to store metric data for reporting.
-	StorageClassName string `json:"storageClassName"`
-	// StorageSize is the size of the storage class. Default value is 100Gi.
-	StorageSize string `json:"storageSize"`
-
-	// +kubebuilder:default:={weekly: {schedule: "0 1 * * 6", interval: 7}}
-
-	// ReportConfigurations is a map of report configuration definitions.
-	ReportConfigurations map[string]*MeteringReportConfiguration `json:"reports,omitempty"`
-}
-
-type MeteringReportConfiguration struct {
-	// +kubebuilder:default:=`0 1 * * 6`
-
-	// Schedule in Cron format, see https://en.wikipedia.org/wiki/Cron. Please take a note that Schedule is responsible
-	// only for setting the time when a report generation mechanism kicks off. The Interval MUST be set independently.
-	Schedule string `json:"schedule,omitempty"`
-
-	// +kubebuilder:default=7
-	// +kubebuilder:validation:Minimum:=1
-
-	// Interval defines the number of days consulted in the metering report.
-	Interval uint32 `json:"interval,omitempty"`
-
-	// +optional
-	// +kubebuilder:validation:Minimum:=1
-
-	// Retention defines a number of days after which reports are queued for removal. If not set, reports are kept forever.
-	// Please note that this functionality works only for object storage that supports an object lifecycle management mechanism.
-	Retention *uint32 `json:"retention,omitempty"`
-
-	// +optional
-	// +kubebuilder:default:={"cluster","namespace"}
-
-	// Types of reports to generate. Available report types are cluster and namespace. By default, all types of reports are generated.
-	Types []string `json:"type,omitempty"`
-}
-
-// OIDCProviderConfiguration allows to configure OIDC provider at the Seed level. If set, it overwrites the OIDC configuration from the KubermaticConfiguration.
-// OIDC is later used to configure:
-// - access to User Cluster API-Servers (via user kubeconfigs) - https://kubernetes.io/docs/reference/access-authn-authz/authentication/#openid-connect-tokens,
-// - access to User Cluster's Kubernetes Dashboards.
-type OIDCProviderConfiguration struct {
-	// URL of the provider which allows the API server to discover public signing keys.
-	IssuerURL string `json:"issuerURL"`
-
-	// IssuerClientID is the application's ID.
-	IssuerClientID string `json:"issuerClientID"`
-
-	// IssuerClientSecret is the application's secret.
-	IssuerClientSecret string `json:"issuerClientSecret"`
-
-	// Optional: CookieHashKey is required, used to authenticate the cookie value using HMAC.
-	// It is recommended to use a key with 32 or 64 bytes.
-	// If not set, configuration is inherited from the default OIDC provider.
-	CookieHashKey *string `json:"cookieHashKey,omitempty"`
-
-	// Optional: CookieSecureMode if true then cookie received only with HTTPS otherwise with HTTP.
-	// If not set, configuration is inherited from the default OIDC provider.
-	CookieSecureMode *bool `json:"cookieSecureMode,omitempty"`
-
-	// Optional:  OfflineAccessAsScope if true then "offline_access" scope will be used
-	// otherwise 'access_type=offline" query param will be passed.
-	// If not set, configuration is inherited from the default OIDC provider.
-	OfflineAccessAsScope *bool `json:"offlineAccessAsScope,omitempty"`
-
-	// Optional: SkipTLSVerify skip TLS verification for the token issuer.
-	// If not set, configuration is inherited from the default OIDC provider.
-	SkipTLSVerify *bool `json:"skipTLSVerify,omitempty"`
-}
-
-// IsEtcdAutomaticBackupEnabled returns true if etcd automatic backup is configured for the seed.
-func (s *Seed) IsEtcdAutomaticBackupEnabled() bool {
-	if cfg := s.Spec.EtcdBackupRestore; cfg != nil {
-		return len(cfg.Destinations) > 0
-	}
-	return false
-}
-
-// IsDefaultEtcdAutomaticBackupEnabled returns true if etcd automatic backup with default destination is configured for the seed.
-func (s *Seed) IsDefaultEtcdAutomaticBackupEnabled() bool {
-	return s.IsEtcdAutomaticBackupEnabled() && s.Spec.EtcdBackupRestore.DefaultDestination != ""
-}
-
-func (s *Seed) GetEtcdBackupDestination(destinationName string) *BackupDestination {
-	if s.Spec.EtcdBackupRestore == nil {
-		return nil
-	}
-
-	return s.Spec.EtcdBackupRestore.Destinations[destinationName]
+	// List of seeds
+	Items []Seed `json:"items"`
 }

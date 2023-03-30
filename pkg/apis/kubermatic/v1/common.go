@@ -206,3 +206,35 @@ type GlobalObjectKeySelector struct {
 
 type GlobalSecretKeySelector GlobalObjectKeySelector
 type GlobalConfigMapKeySelector GlobalObjectKeySelector
+
+// ProxySettings allow configuring a HTTP proxy for the control planes and nodes.
+type ProxySettings struct {
+	// Optional: If set, this proxy will be configured for both HTTP and HTTPS.
+	HTTPProxy *string `json:"httpProxy,omitempty"`
+	// Optional: If set this will be set as NO_PROXY environment variable on the node;
+	// The value must be a comma-separated list of domains for which no proxy
+	// should be used, e.g. "*.example.com,internal.dev".
+	// Note that the in-cluster apiserver URL will be automatically prepended
+	// to this value.
+	NoProxy *string `json:"noProxy,omitempty"`
+}
+
+func emptyStrPtr(s *string) bool {
+	return s == nil || *s == ""
+}
+
+// Empty returns true if p or all of its children are nil or empty strings.
+func (p *ProxySettings) Empty() bool {
+	return p == nil || (emptyStrPtr(p.HTTPProxy) && emptyStrPtr(p.NoProxy))
+}
+
+// Merge applies the settings from p into dst if the corresponding setting
+// in dst is nil or an empty string.
+func (p *ProxySettings) Merge(dst *ProxySettings) {
+	if emptyStrPtr(dst.HTTPProxy) {
+		dst.HTTPProxy = p.HTTPProxy
+	}
+	if emptyStrPtr(dst.NoProxy) {
+		dst.NoProxy = p.NoProxy
+	}
+}

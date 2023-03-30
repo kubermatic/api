@@ -66,38 +66,3 @@ func SetClusterCondition(
 	}
 	c.Status.Conditions[conditionType] = newCondition
 }
-
-// SetSeedCondition sets a condition on the given seed using the provided type, status,
-// reason and message.
-func SetSeedCondition(seed *kubermaticv1.Seed, conditionType kubermaticv1.SeedConditionType, status corev1.ConditionStatus, reason string, message string) {
-	newCondition := kubermaticv1.SeedCondition{
-		Status:  status,
-		Reason:  reason,
-		Message: message,
-	}
-
-	oldCondition, hadCondition := seed.Status.Conditions[conditionType]
-	if hadCondition {
-		conditionCopy := oldCondition.DeepCopy()
-
-		// Reset the times before comparing
-		conditionCopy.LastHeartbeatTime.Reset()
-		conditionCopy.LastTransitionTime.Reset()
-
-		if apiequality.Semantic.DeepEqual(*conditionCopy, newCondition) {
-			return
-		}
-	}
-
-	now := metav1.Now()
-	newCondition.LastHeartbeatTime = now
-	newCondition.LastTransitionTime = oldCondition.LastTransitionTime
-	if hadCondition && oldCondition.Status != status {
-		newCondition.LastTransitionTime = now
-	}
-
-	if seed.Status.Conditions == nil {
-		seed.Status.Conditions = map[kubermaticv1.SeedConditionType]kubermaticv1.SeedCondition{}
-	}
-	seed.Status.Conditions[conditionType] = newCondition
-}

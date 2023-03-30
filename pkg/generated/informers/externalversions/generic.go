@@ -126,6 +126,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubermatic().V1().Constraints().Informer()}, nil
 	case kubermaticv1.SchemeGroupVersion.WithResource("constrainttemplates"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubermatic().V1().ConstraintTemplates().Informer()}, nil
+	case kubermaticv1.SchemeGroupVersion.WithResource("datacenters"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubermatic().V1().Datacenters().Informer()}, nil
 	case kubermaticv1.SchemeGroupVersion.WithResource("etcdbackupconfigs"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubermatic().V1().EtcdBackupConfigs().Informer()}, nil
 	case kubermaticv1.SchemeGroupVersion.WithResource("etcdrestores"):
@@ -148,8 +150,6 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubermatic().V1().ResourceQuotas().Informer()}, nil
 	case kubermaticv1.SchemeGroupVersion.WithResource("rulegroups"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubermatic().V1().RuleGroups().Informer()}, nil
-	case kubermaticv1.SchemeGroupVersion.WithResource("seeds"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubermatic().V1().Seeds().Informer()}, nil
 	case kubermaticv1.SchemeGroupVersion.WithResource("users"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubermatic().V1().Users().Informer()}, nil
 	case kubermaticv1.SchemeGroupVersion.WithResource("usersshkeys"):

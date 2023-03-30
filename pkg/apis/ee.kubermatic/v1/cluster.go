@@ -22,6 +22,7 @@ import (
 	"fmt"
 	"strings"
 
+	kubermaticv1 "k8c.io/api/v3/pkg/apis/kubermatic/v1"
 	"k8c.io/api/v3/pkg/semver"
 
 	corev1 "k8s.io/api/core/v1"
@@ -650,6 +651,13 @@ type ComponentSettings struct {
 	KonnectivityProxy *KonnectivityProxySettings `json:"konnectivityProxy,omitempty"`
 }
 
+type NodeportProxyComponent struct {
+	// DockerRepository is the repository containing the component's image.
+	DockerRepository string `json:"dockerRepository,omitempty"`
+	// Resources describes the requested and maximum allowed CPU/memory usage.
+	Resources *corev1.ResourceRequirements `json:"resources,omitempty"`
+}
+
 type APIServerSettings struct {
 	DeploymentSettings `json:",inline"`
 
@@ -1191,7 +1199,7 @@ type KubeVirtCloudSpec struct {
 	// StorageClasses is a list of storage classes from KubeVirt infra cluster that are used for
 	// initialization of user cluster storage classes by the CSI driver kubevirt (hot pluggable disks.
 	// It contains also some flag specifying which one is the default one.
-	StorageClasses []KubeVirtInfraStorageClass `json:"storageClasses,omitempty"`
+	StorageClasses []kubermaticv1.KubeVirtInfraStorageClass `json:"storageClasses,omitempty"`
 	// ImageCloningEnabled flag enable/disable cloning for a cluster.
 	ImageCloningEnabled bool `json:"imageCloningEnabled,omitempty"`
 }

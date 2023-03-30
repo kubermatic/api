@@ -91,18 +91,18 @@ type KubermaticConfigurationSpec struct {
 	UI *KubermaticUIConfiguration `json:"ui,omitempty"`
 	// API configures the frontend REST API used by the dashboard.
 	API *KubermaticAPIConfiguration `json:"api,omitempty"`
-	// SeedController configures the seed-controller-manager.
-	SeedController *KubermaticSeedControllerConfiguration `json:"seedController,omitempty"`
-	// MasterController configures the master-controller-manager.
-	MasterController *KubermaticMasterControllerConfiguration `json:"masterController,omitempty"`
+	// ControllerManager configures the kubermatic-controller-manager.
+	ControllerManager *KubermaticControllerManagerConfiguration `json:"controllerManager,omitempty"`
 	// Webhook configures the webhook.
 	Webhook *KubermaticWebhookConfiguration `json:"webhook,omitempty"`
 	// UserCluster configures various aspects of the user-created clusters.
 	UserCluster *KubermaticUserClusterConfiguration `json:"userCluster,omitempty"`
-	// ExposeStrategy is the strategy to expose the cluster with.
-	// Note: The `seed_dns_overwrite` setting of a Seed's datacenter doesn't have any effect
-	// if this is set to LoadBalancerStrategy.
+	// ExposeStrategy is the strategy to expose the control planes of user clusters with.
 	ExposeStrategy ExposeStrategy `json:"exposeStrategy,omitempty"`
+	// NodeportProxy can be used to configure the NodePort proxy service that is
+	// responsible for making user-cluster control planes accessible from the outside. This only
+	// takes effect if the ExposeStrategy is set to NodePort.
+	NodeportProxy *NodeportProxyConfig `json:"nodeportProxy,omitempty"`
 	// Ingress contains settings for making the API and UI accessible remotely.
 	Ingress KubermaticIngressConfiguration `json:"ingress,omitempty"`
 	// Versions configures the available and default Kubernetes versions and updates.
@@ -111,19 +111,33 @@ type KubermaticConfigurationSpec struct {
 	VerticalPodAutoscaler *KubermaticVPAConfiguration `json:"verticalPodAutoscaler,omitempty"`
 	// Proxy allows to configure Kubermatic to use proxies to talk to the
 	// world outside of its cluster.
-	Proxy *KubermaticProxyConfiguration `json:"proxy,omitempty"`
+	Proxy    *KubermaticProxyConfiguration `json:"proxy,omitempty"`
+	Metering *MeteringConfiguration        `json:"metering,omitempty"`
 }
 
 // KubermaticAuthConfiguration defines keys and URLs for Dex.
+// OIDC is later used to configure:
+// - access to User Cluster API-Servers (via user kubeconfigs) - https://kubernetes.io/docs/reference/access-authn-authz/authentication/#openid-connect-tokens,
+// - access to User Cluster's Kubernetes Dashboards.
 type KubermaticAuthConfiguration struct {
-	ClientID                 string `json:"clientID,omitempty"`
-	TokenIssuer              string `json:"tokenIssuer,omitempty"`
-	IssuerRedirectURL        string `json:"issuerRedirectURL,omitempty"`
-	IssuerClientID           string `json:"issuerClientID,omitempty"`
-	IssuerClientSecret       string `json:"issuerClientSecret,omitempty"`
-	IssuerCookieKey          string `json:"issuerCookieKey,omitempty"`
-	ServiceAccountKey        string `json:"serviceAccountKey,omitempty"`
-	SkipTokenIssuerTLSVerify bool   `json:"skipTokenIssuerTLSVerify,omitempty"`
+	ClientID string `json:"clientID,omitempty"`
+	// URL of the provider which allows the API server to discover public signing keys.
+	TokenIssuer       string `json:"tokenIssuer,omitempty"`
+	IssuerRedirectURL string `json:"issuerRedirectURL,omitempty"`
+	// IssuerClientID is the application's ID.
+	IssuerClientID string `json:"issuerClientID,omitempty"`
+	// IssuerClientSecret is the application's secret.
+	IssuerClientSecret string `json:"issuerClientSecret,omitempty"`
+	// IssuerCookieKey is required, used to authenticate the cookie value using HMAC.
+	// It is recommended to use a key with 32 or 64 bytes.
+	IssuerCookieKey   string `json:"issuerCookieKey,omitempty"`
+	ServiceAccountKey string `json:"serviceAccountKey,omitempty"`
+	// Optional: SkipTokenIssuerTLSVerify skip TLS verification for the token issuer.
+	SkipTokenIssuerTLSVerify bool `json:"skipTokenIssuerTLSVerify,omitempty"`
+
+	// Optional: OfflineAccessAsScope if true then "offline_access" scope will be used
+	// otherwise 'access_type=offline" query param will be passed.
+	OfflineAccessAsScope *bool `json:"offlineAccessAsScope,omitempty"`
 }
 
 // KubermaticAPIConfiguration configures the dashboard.
@@ -169,8 +183,8 @@ type KubermaticUIConfiguration struct {
 	ExtraVolumes []corev1.Volume `json:"extraVolumes,omitempty"`
 }
 
-// KubermaticSeedControllerConfiguration configures the Kubermatic seed controller-manager.
-type KubermaticSeedControllerConfiguration struct {
+// KubermaticControllerManagerConfiguration configures the Kubermatic seed controller-manager.
+type KubermaticControllerManagerConfiguration struct {
 	// DockerRepository is the repository containing the Kubermatic seed-controller-manager image.
 	DockerRepository string `json:"dockerRepository,omitempty"`
 	// BackupStoreContainer is the container used for shipping etcd snapshots to a backup location.
@@ -184,6 +198,8 @@ type KubermaticSeedControllerConfiguration struct {
 	// MaximumParallelReconciles limits the number of cluster reconciliations
 	// that are active at any given time.
 	MaximumParallelReconciles int `json:"maximumParallelReconciles,omitempty"`
+	// ProjectsMigrator configures the migrator for user projects.
+	ProjectsMigrator *KubermaticProjectsMigratorConfiguration `json:"projectsMigrator,omitempty"`
 	// PProfEndpoint controls the port the seed-controller-manager should listen on to provide pprof
 	// data. This port is never exposed from the container and only available via port-forwardings.
 	PProfEndpoint *string `json:"pprofEndpoint,omitempty"`
@@ -212,6 +228,8 @@ type KubermaticWebhookConfiguration struct {
 
 // KubermaticUserClusterConfiguration controls various aspects of the user-created clusters.
 type KubermaticUserClusterConfiguration struct {
+	// DefaultCTemplate is the name of a cluster template that is used to default a new user cluster.
+	DefaultTemplate string `json:"defaultTemplate,omitempty"`
 	// KubermaticDockerRepository is the repository containing the Kubermatic user-cluster-controller-manager image.
 	KubermaticDockerRepository string `json:"kubermaticDockerRepository,omitempty"`
 	// DNATControllerDockerRepository is the repository containing the
@@ -243,7 +261,19 @@ type KubermaticUserClusterConfiguration struct {
 	// MachineController configures the Machine Controller
 	MachineController *MachineControllerConfiguration `json:"machineController,omitempty"`
 	// OperatingSystemManager configures the image repo and the tag version for osm deployment.
-	OperatingSystemManager *OperatingSystemManager `json:"operatingSystemManager,omitempty"`
+	OperatingSystemManager *OperatingSystemManager                `json:"operatingSystemManager,omitempty"`
+	MLA                    *KubermaticUserClusterMLAConfiguration `json:"mla,omitempty"`
+	// EtcdBackupRestore holds the configuration of the automatic etcd backup restores for the Seed;
+	// if this is set, the new backup/restore controllers are enabled for this Seed.
+	EtcdBackupRestore *EtcdBackupRestore `json:"etcdBackupRestore,omitempty"`
+	// Optional: ProxySettings can be used to configure HTTP proxy settings on the
+	// worker nodes in user clusters. However, proxy settings on nodes take precedence.
+	ProxySettings *ProxySettings `json:"proxySettings,omitempty"`
+}
+
+// KubermaticUserClusterMLAConfiguration allows configuring Monitoring, Logging & Alerting settings.
+type KubermaticUserClusterMLAConfiguration struct {
+	Enabled bool `json:"enabled"`
 }
 
 // KubermaticUserClusterMonitoringConfiguration can be used to fine-tune to in-cluster Prometheus.
@@ -342,23 +372,6 @@ type KubermaticIngressConfiguration struct {
 	// Setting an empty name disables the automatic creation of certificates and disables
 	// the TLS settings on the Kubermatic Ingress.
 	CertificateIssuer *corev1.TypedLocalObjectReference `json:"certificateIssuer,omitempty"`
-}
-
-// KubermaticMasterControllerConfiguration configures the Kubermatic master controller-manager.
-type KubermaticMasterControllerConfiguration struct {
-	// DockerRepository is the repository containing the Kubermatic master-controller-manager image.
-	DockerRepository string `json:"dockerRepository,omitempty"`
-	// ProjectsMigrator configures the migrator for user projects.
-	ProjectsMigrator *KubermaticProjectsMigratorConfiguration `json:"projectsMigrator,omitempty"`
-	// PProfEndpoint controls the port the master-controller-manager should listen on to provide pprof
-	// data. This port is never exposed from the container and only available via port-forwardings.
-	PProfEndpoint *string `json:"pprofEndpoint,omitempty"`
-	// Resources describes the requested and maximum allowed CPU/memory usage.
-	Resources *corev1.ResourceRequirements `json:"resources,omitempty"`
-	// DebugLog enables more verbose logging.
-	DebugLog bool `json:"debugLog,omitempty"`
-	// Replicas sets the number of pod replicas for the master-controller-manager.
-	Replicas *int32 `json:"replicas,omitempty"`
 }
 
 // KubermaticProjectsMigratorConfiguration configures the Kubermatic master controller-manager.
@@ -467,6 +480,135 @@ type KubermaticProxyConfiguration struct {
 	// list if proxying is configured (i.e. HTTP/HTTPS are not empty):
 	// "127.0.0.1/8", "localhost", ".local", ".local.", "kubernetes", ".default", ".svc"
 	NoProxy string `json:"noProxy,omitempty"`
+}
+
+// MeteringConfiguration contains all the configuration for the metering tool.
+type MeteringConfiguration struct {
+	Enabled bool `json:"enabled"`
+
+	// StorageClassName is the name of the storage class that the metering prometheus instance uses to store metric data for reporting.
+	StorageClassName string `json:"storageClassName"`
+	// StorageSize is the size of the storage class. Default value is 100Gi.
+	StorageSize string `json:"storageSize"`
+
+	// +kubebuilder:default:={weekly: {schedule: "0 1 * * 6", interval: 7}}
+
+	// ReportConfigurations is a map of report configuration definitions.
+	ReportConfigurations map[string]*MeteringReportConfiguration `json:"reports,omitempty"`
+}
+
+type MeteringReportConfiguration struct {
+	// +kubebuilder:default:=`0 1 * * 6`
+
+	// Schedule in Cron format, see https://en.wikipedia.org/wiki/Cron. Please take a note that Schedule is responsible
+	// only for setting the time when a report generation mechanism kicks off. The Interval MUST be set independently.
+	Schedule string `json:"schedule,omitempty"`
+
+	// +kubebuilder:default=7
+	// +kubebuilder:validation:Minimum:=1
+
+	// Interval defines the number of days consulted in the metering report.
+	Interval uint32 `json:"interval,omitempty"`
+
+	// +optional
+	// +kubebuilder:validation:Minimum:=1
+
+	// Retention defines a number of days after which reports are queued for removal. If not set, reports are kept forever.
+	// Please note that this functionality works only for object storage that supports an object lifecycle management mechanism.
+	Retention *uint32 `json:"retention,omitempty"`
+
+	// +optional
+	// +kubebuilder:default:={"cluster","namespace"}
+
+	// Types of reports to generate. Available report types are cluster and namespace. By default, all types of reports are generated.
+	Types []string `json:"type,omitempty"`
+}
+
+// EtcdBackupRestore holds the configuration of the automatic backup and restores.
+type EtcdBackupRestore struct {
+	// Destinations stores all the possible destinations where the backups for the Seed can be stored. If not empty,
+	// it enables automatic backup and restore for the seed.
+	Destinations map[string]*EtcdBackupDestination `json:"destinations,omitempty"`
+
+	// +kubebuilder:validation:Pattern:=`^[a-z0-9]([-a-z0-9]*[a-z0-9])?(\\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*$`
+	// +kubebuilder:validation:MaxLength:=63
+	// +kubebuilder:validation:Type=string
+
+	// DefaultDestination marks the default destination that will be used for the default etcd backup config which is
+	// created for every user cluster. Has to correspond to a destination in Destinations.
+	// If removed, it removes the related default etcd backup configs.
+	DefaultDestination string `json:"defaultDestination,omitempty"`
+}
+
+// EtcdBackupDestination defines the bucket name and endpoint as a backup destination, and holds reference to the credentials secret.
+type EtcdBackupDestination struct {
+	// Endpoint is the API endpoint to use for backup and restore.
+	Endpoint string `json:"endpoint"`
+	// BucketName is the bucket name to use for backup and restore.
+	BucketName string `json:"bucketName"`
+	// Credentials hold the ref to the secret with backup credentials
+	Credentials *corev1.SecretReference `json:"credentials,omitempty"`
+}
+
+// IsEtcdAutomaticBackupEnabled returns true if etcd automatic backup is configured for the seed.
+func (c *KubermaticConfiguration) IsEtcdAutomaticBackupEnabled() bool {
+	if cfg := c.Spec.UserCluster.EtcdBackupRestore; cfg != nil {
+		return len(cfg.Destinations) > 0
+	}
+	return false
+}
+
+// IsDefaultEtcdAutomaticBackupEnabled returns true if etcd automatic backup with default destination is configured for the seed.
+func (c *KubermaticConfiguration) IsDefaultEtcdAutomaticBackupEnabled() bool {
+	return c.IsEtcdAutomaticBackupEnabled() && c.Spec.UserCluster.EtcdBackupRestore.DefaultDestination != ""
+}
+
+func (c *KubermaticConfiguration) GetEtcdBackupDestination(destinationName string) *EtcdBackupDestination {
+	if c.Spec.UserCluster.EtcdBackupRestore == nil {
+		return nil
+	}
+
+	return c.Spec.UserCluster.EtcdBackupRestore.Destinations[destinationName]
+}
+
+type NodeportProxyConfig struct {
+	// Disable will prevent the Kubermatic Operator from creating a nodeport-proxy
+	// setup on the seed cluster. This should only be used if a suitable replacement
+	// is installed (like the nodeport-proxy Helm chart).
+	Disable bool `json:"disable,omitempty"`
+	// Annotations are used to further tweak the LoadBalancer integration with the
+	// cloud provider where the seed cluster is running.
+	// Deprecated: Use .envoy.loadBalancerService.annotations instead.
+	Annotations map[string]string `json:"annotations,omitempty"`
+	// Envoy configures the Envoy application itself.
+	Envoy *NodePortProxyComponentEnvoy `json:"envoy,omitempty"`
+	// EnvoyManager configures the Kubermatic-internal Envoy manager.
+	EnvoyManager *NodeportProxyComponent `json:"envoyManager,omitempty"`
+	// Updater configures the component responsible for updating the LoadBalancer
+	// service.
+	Updater *NodeportProxyComponent `json:"updater,omitempty"`
+}
+
+type EnvoyLoadBalancerService struct {
+	// Annotations are used to further tweak the LoadBalancer integration with the
+	// cloud provider.
+	Annotations map[string]string `json:"annotations,omitempty"`
+	// SourceRanges will restrict loadbalancer service to IP ranges specified using CIDR notation like 172.25.0.0/16.
+	// This field will be ignored if the cloud-provider does not support the feature.
+	// More info: https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/
+	SourceRanges []CIDR `json:"sourceRanges,omitempty"`
+}
+
+type NodePortProxyComponentEnvoy struct {
+	NodeportProxyComponent `json:",inline"`
+	LoadBalancerService    *EnvoyLoadBalancerService `json:"loadBalancerService,omitempty"`
+}
+
+type NodeportProxyComponent struct {
+	// DockerRepository is the repository containing the component's image.
+	DockerRepository string `json:"dockerRepository,omitempty"`
+	// Resources describes the requested and maximum allowed CPU/memory usage.
+	Resources *corev1.ResourceRequirements `json:"resources,omitempty"`
 }
 
 // +kubebuilder:object:generate=true
