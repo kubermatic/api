@@ -24,7 +24,6 @@ type EtcdRestoresGetter interface {
 type EtcdRestoreInterface interface {
 	Create(ctx context.Context, etcdRestore *v1.EtcdRestore, opts metav1.CreateOptions) (*v1.EtcdRestore, error)
 	Update(ctx context.Context, etcdRestore *v1.EtcdRestore, opts metav1.UpdateOptions) (*v1.EtcdRestore, error)
-	UpdateStatus(ctx context.Context, etcdRestore *v1.EtcdRestore, opts metav1.UpdateOptions) (*v1.EtcdRestore, error)
 	Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error
 	DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error
 	Get(ctx context.Context, name string, opts metav1.GetOptions) (*v1.EtcdRestore, error)
@@ -113,22 +112,6 @@ func (c *etcdRestores) Update(ctx context.Context, etcdRestore *v1.EtcdRestore, 
 		Namespace(c.ns).
 		Resource("etcdrestores").
 		Name(etcdRestore.Name).
-		VersionedParams(&opts, scheme.ParameterCodec).
-		Body(etcdRestore).
-		Do(ctx).
-		Into(result)
-	return
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *etcdRestores) UpdateStatus(ctx context.Context, etcdRestore *v1.EtcdRestore, opts metav1.UpdateOptions) (result *v1.EtcdRestore, err error) {
-	result = &v1.EtcdRestore{}
-	err = c.client.Put().
-		Namespace(c.ns).
-		Resource("etcdrestores").
-		Name(etcdRestore.Name).
-		SubResource("status").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Body(etcdRestore).
 		Do(ctx).

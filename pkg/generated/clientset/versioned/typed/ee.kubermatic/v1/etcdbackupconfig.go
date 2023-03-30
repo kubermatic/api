@@ -24,7 +24,6 @@ type EtcdBackupConfigsGetter interface {
 type EtcdBackupConfigInterface interface {
 	Create(ctx context.Context, etcdBackupConfig *v1.EtcdBackupConfig, opts metav1.CreateOptions) (*v1.EtcdBackupConfig, error)
 	Update(ctx context.Context, etcdBackupConfig *v1.EtcdBackupConfig, opts metav1.UpdateOptions) (*v1.EtcdBackupConfig, error)
-	UpdateStatus(ctx context.Context, etcdBackupConfig *v1.EtcdBackupConfig, opts metav1.UpdateOptions) (*v1.EtcdBackupConfig, error)
 	Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error
 	DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error
 	Get(ctx context.Context, name string, opts metav1.GetOptions) (*v1.EtcdBackupConfig, error)
@@ -113,22 +112,6 @@ func (c *etcdBackupConfigs) Update(ctx context.Context, etcdBackupConfig *v1.Etc
 		Namespace(c.ns).
 		Resource("etcdbackupconfigs").
 		Name(etcdBackupConfig.Name).
-		VersionedParams(&opts, scheme.ParameterCodec).
-		Body(etcdBackupConfig).
-		Do(ctx).
-		Into(result)
-	return
-}
-
-// UpdateStatus was generated because the type contains a Status member.
-// Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *etcdBackupConfigs) UpdateStatus(ctx context.Context, etcdBackupConfig *v1.EtcdBackupConfig, opts metav1.UpdateOptions) (result *v1.EtcdBackupConfig, err error) {
-	result = &v1.EtcdBackupConfig{}
-	err = c.client.Put().
-		Namespace(c.ns).
-		Resource("etcdbackupconfigs").
-		Name(etcdBackupConfig.Name).
-		SubResource("status").
 		VersionedParams(&opts, scheme.ParameterCodec).
 		Body(etcdBackupConfig).
 		Do(ctx).

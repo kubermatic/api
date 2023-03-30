@@ -32,8 +32,7 @@ type ApplicationInstallation struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   kubermaticappsv1.ApplicationInstallationSpec   `json:"spec,omitempty"`
-	Status kubermaticappsv1.ApplicationInstallationStatus `json:"status,omitempty"`
+	kubermaticappsv1.ApplicationInstallation `json:",inline"`
 }
 
 // +kubebuilder:object:root=true
