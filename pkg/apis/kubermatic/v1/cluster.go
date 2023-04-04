@@ -1019,6 +1019,10 @@ type VMwareCloudDirectorCloudSpec struct {
 	// +optional
 	Password string `json:"password,omitempty"`
 
+	// APIToken is the VMware Cloud Director API token.
+	// +optional
+	APIToken string `json:"apiToken,omitempty"`
+
 	// Organization is the name of organization to use.
 	// +optional
 	Organization string `json:"organization,omitempty"`
