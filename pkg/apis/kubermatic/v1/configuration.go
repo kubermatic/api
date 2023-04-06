@@ -228,6 +228,13 @@ type KubermaticWebhookConfiguration struct {
 
 // KubermaticUserClusterConfiguration controls various aspects of the user-created clusters.
 type KubermaticUserClusterConfiguration struct {
+	// This configures the base domain for all userclusters. Each usercluster will get a subdomain
+	// (named <clustername>.<basedomain>) to allow access to the cluster's controlplane. This
+	// domain should be different from the main ingress (which makes the KKP dashboard available),
+	// as cluster names might collide with other, well-known names and could interfere with the
+	// dashboard. If your dashboard is using "example.com", you could configure the usercluster
+	// base domain as "clusters.example.com".
+	BaseDomain string `json:"baseDomain"`
 	// DefaultCTemplate is the name of a cluster template that is used to default a new user cluster.
 	DefaultTemplate string `json:"defaultTemplate,omitempty"`
 	// KubermaticDockerRepository is the repository containing the Kubermatic user-cluster-controller-manager image.
