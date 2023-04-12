@@ -25,6 +25,7 @@ import (
 // +kubebuilder:resource:scope=Cluster
 // +kubebuilder:object:generate=true
 // +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:JSONPath=".spec.name",name="HumanReadableName",type="string"
 // +kubebuilder:printcolumn:JSONPath=".status.fingerprint",name="Fingerprint",type="string"
 // +kubebuilder:printcolumn:JSONPath=".metadata.creationTimestamp",name="Age",type="date"

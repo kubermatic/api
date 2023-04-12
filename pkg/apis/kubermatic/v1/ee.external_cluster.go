@@ -29,6 +29,7 @@ import (
 // +kubebuilder:resource:categories=kkpee
 // +kubebuilder:object:generate=true
 // +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:JSONPath=".spec.humanReadableName",name="HumanReadableName",type="string"
 // +kubebuilder:printcolumn:JSONPath=".spec.cloudSpec.providerName",name="Provider",type="string"
 // +kubebuilder:printcolumn:JSONPath=".spec.pause",name="Paused",type="boolean"

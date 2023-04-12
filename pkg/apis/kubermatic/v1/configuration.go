@@ -54,6 +54,7 @@ const (
 // +genclient
 // +kubebuilder:object:generate=true
 // +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:JSONPath=".metadata.creationTimestamp",name="Age",type="date"
 
 // KubermaticConfiguration is the configuration required for running Kubermatic.
