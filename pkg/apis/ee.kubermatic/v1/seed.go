@@ -103,7 +103,7 @@ type SeedStatus struct {
 	// +optional
 	Versions SeedVersionsStatus `json:"versions,omitempty"`
 
-	// Datacenters contains a map of all datacenter statusses on this seed.
+	// Datacenters contains a map of all datacenter statuses on this seed.
 	Datacenters map[string]kubermaticv1.DatacenterStatus `json:"datacenters,omitempty"`
 
 	// Conditions contains conditions the seed is in, its primary use case is status signaling

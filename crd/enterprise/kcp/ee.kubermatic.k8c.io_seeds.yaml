@@ -833,7 +833,7 @@ spec:
                     required:
                       - clusters
                     type: object
-                  description: Datacenters contains a map of all datacenter statusses on this seed.
+                  description: Datacenters contains a map of all datacenter statuses on this seed.
                   type: object
                 phase:
                   description: Phase contains a human readable text to indicate the seed cluster status. No logic should be tied to this field, as its content can change in between KKP releases.
