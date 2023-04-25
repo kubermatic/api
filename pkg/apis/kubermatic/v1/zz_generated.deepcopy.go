@@ -2305,6 +2305,11 @@ func (in *DatacenterSpecKubeVirt) DeepCopyInto(out *DatacenterSpecKubeVirt) {
 		*out = new(corev1.PodDNSConfig)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.EnableDefaultNetworkPolicies != nil {
+		in, out := &in.EnableDefaultNetworkPolicies, &out.EnableDefaultNetworkPolicies
+		*out = new(bool)
+		**out = **in
+	}
 	if in.CustomNetworkPolicies != nil {
 		in, out := &in.CustomNetworkPolicies, &out.CustomNetworkPolicies
 		*out = make([]*CustomNetworkPolicy, len(*in))
