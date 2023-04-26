@@ -52,7 +52,7 @@ type ClusterTemplate struct {
 	ClusterLabels          map[string]string       `json:"clusterLabels,omitempty"`
 	InheritedClusterLabels map[string]string       `json:"inheritedClusterLabels,omitempty"`
 	Credential             string                  `json:"credential"`
-	UserSSHKeys            []ClusterTemplateSSHKey `json:"userSSHKeys,omitempty"`
+	SSHKeys                []ClusterTemplateSSHKey `json:"sshKeys,omitempty"`
 	Spec                   ClusterSpec             `json:"spec,omitempty"`
 }
 
@@ -69,7 +69,7 @@ type ClusterTemplateList struct {
 
 // ClusterTemplateSSHKey is the object for holding SSH key.
 type ClusterTemplateSSHKey struct {
-	// ID is the name of the UserSSHKey object that is supposed to be assigned
+	// ID is the name of the SSHKey object that is supposed to be assigned
 	// to any ClusterTemplateInstance created based on this template.
 	ID string `json:"id"`
 	// Name is the human readable SSH key name.

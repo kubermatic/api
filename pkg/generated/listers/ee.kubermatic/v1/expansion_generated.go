@@ -178,6 +178,14 @@ type RuleGroupListerExpansion interface{}
 // RuleGroupNamespaceLister.
 type RuleGroupNamespaceListerExpansion interface{}
 
+// SSHKeyListerExpansion allows custom methods to be added to
+// SSHKeyLister.
+type SSHKeyListerExpansion interface{}
+
+// SSHKeyNamespaceListerExpansion allows custom methods to be added to
+// SSHKeyNamespaceLister.
+type SSHKeyNamespaceListerExpansion interface{}
+
 // SeedListerExpansion allows custom methods to be added to
 // SeedLister.
 type SeedListerExpansion interface{}
@@ -201,11 +209,3 @@ type UserProjectBindingListerExpansion interface{}
 // UserProjectBindingNamespaceListerExpansion allows custom methods to be added to
 // UserProjectBindingNamespaceLister.
 type UserProjectBindingNamespaceListerExpansion interface{}
-
-// UserSSHKeyListerExpansion allows custom methods to be added to
-// UserSSHKeyLister.
-type UserSSHKeyListerExpansion interface{}
-
-// UserSSHKeyNamespaceListerExpansion allows custom methods to be added to
-// UserSSHKeyNamespaceLister.
-type UserSSHKeyNamespaceListerExpansion interface{}

@@ -5,14 +5,14 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.11.3
-  name: usersshkeys.kubermatic.k8c.io
+  name: sshkeys.kubermatic.k8c.io
 spec:
   group: kubermatic.k8c.io
   names:
-    kind: UserSSHKey
-    listKind: UserSSHKeyList
-    plural: usersshkeys
-    singular: usersshkey
+    kind: SSHKey
+    listKind: SSHKeyList
+    plural: sshkeys
+    singular: sshkey
   scope: Cluster
   versions:
     - additionalPrinterColumns:
@@ -28,7 +28,7 @@ spec:
       name: v1
       schema:
         openAPIV3Schema:
-          description: UserSSHKey specifies a users UserSSHKey.
+          description: SSHKey specifies an SSH public key.
           properties:
             apiVersion:
               description: 'APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'

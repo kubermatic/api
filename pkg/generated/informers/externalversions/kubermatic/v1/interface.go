@@ -52,10 +52,10 @@ type Interface interface {
 	ResourceQuotas() ResourceQuotaInformer
 	// RuleGroups returns a RuleGroupInformer.
 	RuleGroups() RuleGroupInformer
+	// SSHKeys returns a SSHKeyInformer.
+	SSHKeys() SSHKeyInformer
 	// Users returns a UserInformer.
 	Users() UserInformer
-	// UserSSHKeys returns a UserSSHKeyInformer.
-	UserSSHKeys() UserSSHKeyInformer
 }
 
 type version struct {
@@ -179,12 +179,12 @@ func (v *version) RuleGroups() RuleGroupInformer {
 	return &ruleGroupInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
+// SSHKeys returns a SSHKeyInformer.
+func (v *version) SSHKeys() SSHKeyInformer {
+	return &sSHKeyInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
 // Users returns a UserInformer.
 func (v *version) Users() UserInformer {
 	return &userInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
-}
-
-// UserSSHKeys returns a UserSSHKeyInformer.
-func (v *version) UserSSHKeys() UserSSHKeyInformer {
-	return &userSSHKeyInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }

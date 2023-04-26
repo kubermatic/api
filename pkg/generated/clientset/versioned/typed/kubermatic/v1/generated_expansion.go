@@ -46,6 +46,6 @@ type ResourceQuotaExpansion interface{}
 
 type RuleGroupExpansion interface{}
 
-type UserExpansion interface{}
+type SSHKeyExpansion interface{}
 
-type UserSSHKeyExpansion interface{}
+type UserExpansion interface{}

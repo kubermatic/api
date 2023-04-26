@@ -52,14 +52,14 @@ type Interface interface {
 	ResourceQuotas() ResourceQuotaInformer
 	// RuleGroups returns a RuleGroupInformer.
 	RuleGroups() RuleGroupInformer
+	// SSHKeys returns a SSHKeyInformer.
+	SSHKeys() SSHKeyInformer
 	// Seeds returns a SeedInformer.
 	Seeds() SeedInformer
 	// Users returns a UserInformer.
 	Users() UserInformer
 	// UserProjectBindings returns a UserProjectBindingInformer.
 	UserProjectBindings() UserProjectBindingInformer
-	// UserSSHKeys returns a UserSSHKeyInformer.
-	UserSSHKeys() UserSSHKeyInformer
 }
 
 type version struct {
@@ -183,6 +183,11 @@ func (v *version) RuleGroups() RuleGroupInformer {
 	return &ruleGroupInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
+// SSHKeys returns a SSHKeyInformer.
+func (v *version) SSHKeys() SSHKeyInformer {
+	return &sSHKeyInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
 // Seeds returns a SeedInformer.
 func (v *version) Seeds() SeedInformer {
 	return &seedInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
@@ -196,9 +201,4 @@ func (v *version) Users() UserInformer {
 // UserProjectBindings returns a UserProjectBindingInformer.
 func (v *version) UserProjectBindings() UserProjectBindingInformer {
 	return &userProjectBindingInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
-}
-
-// UserSSHKeys returns a UserSSHKeyInformer.
-func (v *version) UserSSHKeys() UserSSHKeyInformer {
-	return &userSSHKeyInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }

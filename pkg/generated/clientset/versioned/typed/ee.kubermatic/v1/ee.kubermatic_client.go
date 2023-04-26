@@ -34,10 +34,10 @@ type KubermaticEnterpriseV1Interface interface {
 	PresetsGetter
 	ResourceQuotasGetter
 	RuleGroupsGetter
+	SSHKeysGetter
 	SeedsGetter
 	UsersGetter
 	UserProjectBindingsGetter
-	UserSSHKeysGetter
 }
 
 // KubermaticEnterpriseV1Client is used to interact with features provided by the ee.kubermatic.k8c.io group.
@@ -133,6 +133,10 @@ func (c *KubermaticEnterpriseV1Client) RuleGroups(namespace string) RuleGroupInt
 	return newRuleGroups(c, namespace)
 }
 
+func (c *KubermaticEnterpriseV1Client) SSHKeys(namespace string) SSHKeyInterface {
+	return newSSHKeys(c, namespace)
+}
+
 func (c *KubermaticEnterpriseV1Client) Seeds(namespace string) SeedInterface {
 	return newSeeds(c, namespace)
 }
@@ -143,10 +147,6 @@ func (c *KubermaticEnterpriseV1Client) Users(namespace string) UserInterface {
 
 func (c *KubermaticEnterpriseV1Client) UserProjectBindings(namespace string) UserProjectBindingInterface {
 	return newUserProjectBindings(c, namespace)
-}
-
-func (c *KubermaticEnterpriseV1Client) UserSSHKeys(namespace string) UserSSHKeyInterface {
-	return newUserSSHKeys(c, namespace)
 }
 
 // NewForConfig creates a new KubermaticEnterpriseV1Client for the given config.
