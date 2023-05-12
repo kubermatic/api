@@ -648,6 +648,8 @@ type ComponentSettings struct {
 	NodePortProxyEnvoy *NodeportProxyComponent `json:"nodePortProxyEnvoy,omitempty"`
 	// KonnectivityProxy configures konnectivity-server and konnectivity-agent components.
 	KonnectivityProxy *KonnectivityProxySettings `json:"konnectivityProxy,omitempty"`
+	// UserClusterController configures the KKP usercluster-controller deployed as part of the cluster control plane.
+	UserClusterController *ControllerSettings `json:"userClusterController,omitempty"`
 }
 
 type APIServerSettings struct {
