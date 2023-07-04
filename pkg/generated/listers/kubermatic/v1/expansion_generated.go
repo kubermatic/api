@@ -114,6 +114,14 @@ type ExternalClusterListerExpansion interface{}
 // ExternalClusterNamespaceLister.
 type ExternalClusterNamespaceListerExpansion interface{}
 
+// GrafanaOrgListerExpansion allows custom methods to be added to
+// GrafanaOrgLister.
+type GrafanaOrgListerExpansion interface{}
+
+// GrafanaOrgNamespaceListerExpansion allows custom methods to be added to
+// GrafanaOrgNamespaceLister.
+type GrafanaOrgNamespaceListerExpansion interface{}
+
 // IPAMAllocationListerExpansion allows custom methods to be added to
 // IPAMAllocationLister.
 type IPAMAllocationListerExpansion interface{}

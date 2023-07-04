@@ -79,6 +79,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&EtcdRestoreList{},
 		&ExternalCluster{},
 		&ExternalClusterList{},
+		&GrafanaOrg{},
+		&GrafanaOrgList{},
 		&IPAMAllocation{},
 		&IPAMAllocationList{},
 		&IPAMPool{},

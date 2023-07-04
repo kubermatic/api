@@ -26,6 +26,7 @@ type KubermaticV1Interface interface {
 	EtcdBackupConfigsGetter
 	EtcdRestoresGetter
 	ExternalClustersGetter
+	GrafanaOrgsGetter
 	IPAMAllocationsGetter
 	IPAMPoolsGetter
 	KubermaticConfigurationsGetter
@@ -97,6 +98,10 @@ func (c *KubermaticV1Client) EtcdRestores(namespace string) EtcdRestoreInterface
 
 func (c *KubermaticV1Client) ExternalClusters(namespace string) ExternalClusterInterface {
 	return newExternalClusters(c, namespace)
+}
+
+func (c *KubermaticV1Client) GrafanaOrgs(namespace string) GrafanaOrgInterface {
+	return newGrafanaOrgs(c, namespace)
 }
 
 func (c *KubermaticV1Client) IPAMAllocations(namespace string) IPAMAllocationInterface {

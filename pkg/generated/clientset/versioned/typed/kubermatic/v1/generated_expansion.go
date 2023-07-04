@@ -30,6 +30,8 @@ type EtcdRestoreExpansion interface{}
 
 type ExternalClusterExpansion interface{}
 
+type GrafanaOrgExpansion interface{}
+
 type IPAMAllocationExpansion interface{}
 
 type IPAMPoolExpansion interface{}
