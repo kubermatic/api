@@ -92,6 +92,9 @@ type SettingSpec struct {
 	// MachineDeploymentVMResourceQuota is used to filter out allowed machine flavors based on the specified resource limits like CPU, Memory, and GPU etc.
 	MachineDeploymentVMResourceQuota *MachineFlavorFilter `json:"machineDeploymentVMResourceQuota,omitempty"`
 
+	// AllowedOperatingSystems controls if a given operating system is allowed to be used in a MachineDeployment.
+	AllowedOperatingSystems map[OperatingSystem]bool `json:"allowedOperatingSystems,omitempty"`
+
 	// DefaultProjectResourceQuota allows to configure a default project resource quota which
 	// will be set for all projects that do not have a custom quota already set. EE-version only.
 	// +optional
