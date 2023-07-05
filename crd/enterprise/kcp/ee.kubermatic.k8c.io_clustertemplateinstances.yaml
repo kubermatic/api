@@ -16,9 +16,6 @@ spec:
   scope: Cluster
   versions:
     - additionalPrinterColumns:
-        - jsonPath: .spec.projectID
-          name: ProjectID
-          type: string
         - jsonPath: .spec.clusterTemplateID
           name: ClusterTemplateID
           type: string
@@ -48,15 +45,12 @@ spec:
                   type: string
                 clusterTemplateName:
                   type: string
-                projectID:
-                  type: string
                 replicas:
                   format: int64
                   type: integer
               required:
                 - clusterTemplateID
                 - clusterTemplateName
-                - projectID
                 - replicas
               type: object
           type: object

@@ -22,22 +22,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-const (
-	TemplateScopeUserCluster    = "user"
-	TemplateScopeProjectCluster = "project"
-	TemplateScopeGlobalCluster  = "global"
-	TemplateScopeSeed           = "seed"
-)
-
-const (
-	ClusterTemplateLabelKey                  = "template-id"
-	ClusterTemplateInstanceLabelKey          = "template-instance-id"
-	ClusterTemplateScopeLabelKey             = "scope"
-	ClusterTemplateUserAnnotationKey         = "user"
-	ClusterTemplateProjectLabelKey           = "project-id"
-	ClusterTemplateHumanReadableNameLabelKey = "name"
-)
-
 // +genclient
 // +kubebuilder:resource:scope=Cluster
 // +kubebuilder:object:generate=true

@@ -18,7 +18,6 @@ package v1
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/util/sets"
 )
 
 // +genclient
@@ -42,22 +41,8 @@ type UserSSHKey struct {
 type UserSSHKeySpec struct {
 	// Name is the human readable name for this SSH key.
 	Name string `json:"name"`
-	// Clusters is the list of cluster names that this SSH key is assigned to.
-	Clusters []string `json:"clusters"`
 	// PublicKey is the SSH public key.
 	PublicKey string `json:"publicKey"`
-}
-
-func (sk *UserSSHKey) IsUsedByCluster(clustername string) bool {
-	return sets.New(sk.Spec.Clusters...).Has(clustername)
-}
-
-func (sk *UserSSHKey) RemoveFromCluster(clustername string) {
-	sk.Spec.Clusters = sets.List(sets.New(sk.Spec.Clusters...).Delete(clustername))
-}
-
-func (sk *UserSSHKey) AddToCluster(clustername string) {
-	sk.Spec.Clusters = sets.List(sets.New(sk.Spec.Clusters...).Insert(clustername))
 }
 
 type SSHKeyStatus struct {

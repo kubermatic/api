@@ -18,6 +18,7 @@ package helper
 
 import (
 	kubermaticeev1 "k8c.io/api/v3/pkg/apis/ee.kubermatic/v1"
+	kubermaticv1 "k8c.io/api/v3/pkg/apis/kubermatic/v1"
 
 	corev1 "k8s.io/api/core/v1"
 	apiequality "k8s.io/apimachinery/pkg/api/equality"
@@ -29,12 +30,12 @@ import (
 func SetClusterCondition(
 	c *kubermaticeev1.Cluster,
 	kkpVersion string,
-	conditionType kubermaticeev1.ClusterConditionType,
+	conditionType kubermaticv1.ClusterConditionType,
 	status corev1.ConditionStatus,
 	reason string,
 	message string,
 ) {
-	newCondition := kubermaticeev1.ClusterCondition{
+	newCondition := kubermaticv1.ClusterCondition{
 		Status:            status,
 		KubermaticVersion: kkpVersion,
 		Reason:            reason,
@@ -62,7 +63,7 @@ func SetClusterCondition(
 	}
 
 	if c.Status.Conditions == nil {
-		c.Status.Conditions = map[kubermaticeev1.ClusterConditionType]kubermaticeev1.ClusterCondition{}
+		c.Status.Conditions = map[kubermaticv1.ClusterConditionType]kubermaticv1.ClusterCondition{}
 	}
 	c.Status.Conditions[conditionType] = newCondition
 }

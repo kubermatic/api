@@ -25,14 +25,6 @@ import (
 	netutils "k8s.io/utils/net"
 )
 
-const (
-	// AuthZRoleLabel is the label used by rbac-controller and group-rbac-controller to identify the KKP role a ClusterRole or Role were created for.
-	AuthZRoleLabel = "authz.k8c.io/role"
-
-	// AuthZGroupProjectBindingLabel references the GroupProjectBinding resource that a ClusterRole/Role was created for.
-	AuthZGroupProjectBindingLabel = "authz.k8c.io/group-project-binding"
-)
-
 // +kubebuilder:validation:Pattern:=`^((\d{1,3}\.){3}\d{1,3}\/([0-9]|[1-2][0-9]|3[0-2]))$`
 type CIDR string
 
@@ -237,4 +229,10 @@ func (p *ProxySettings) Merge(dst *ProxySettings) {
 	if emptyStrPtr(dst.NoProxy) {
 		dst.NoProxy = p.NoProxy
 	}
+}
+
+// ClusterReference is a struct that allows referencing a single Cluster object.
+type ClusterReference struct {
+	// Name of the Cluster object.
+	Name string `json:"name"`
 }

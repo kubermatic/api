@@ -28,7 +28,7 @@ spec:
         - jsonPath: .spec.cloud.providerName
           name: Provider
           type: string
-        - jsonPath: .spec.cloud.dc
+        - jsonPath: .spec.cloud.datacenter
           name: Datacenter
           type: string
         - jsonPath: .status.phase
@@ -79,81 +79,6 @@ spec:
                       description: CacheSize is the size of the cache used to download application's sources.
                       pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                       x-kubernetes-int-or-string: true
-                  type: object
-                auditLogging:
-                  description: 'Optional: AuditLogging configures Kubernetes API audit logging (https://kubernetes.io/docs/tasks/debug-application-cluster/audit/) for the user cluster.'
-                  properties:
-                    enabled:
-                      description: Enabled will enable or disable audit logging.
-                      type: boolean
-                    policyPreset:
-                      description: 'Optional: PolicyPreset can be set to utilize a pre-defined set of audit policy rules.'
-                      enum:
-                        - metadata
-                        - recommended
-                        - minimal
-                      type: string
-                    sidecar:
-                      description: 'Optional: Configures the fluent-bit sidecar deployed alongside kube-apiserver.'
-                      properties:
-                        config:
-                          description: AuditSidecarConfiguration defines custom configuration for the fluent-bit sidecar deployed with a kube-apiserver. Also see https://docs.fluentbit.io/manual/v/1.8/administration/configuring-fluent-bit/configuration-file.
-                          properties:
-                            filters:
-                              items:
-                                additionalProperties:
-                                  type: string
-                                type: object
-                              type: array
-                            outputs:
-                              items:
-                                additionalProperties:
-                                  type: string
-                                type: object
-                              type: array
-                            service:
-                              additionalProperties:
-                                type: string
-                              type: object
-                          type: object
-                        resources:
-                          description: ResourceRequirements describes the compute resource requirements.
-                          properties:
-                            claims:
-                              description: "Claims lists the names of resources, defined in spec.resourceClaims, that are used by this container. \n This is an alpha field and requires enabling the DynamicResourceAllocation feature gate. \n This field is immutable. It can only be set for containers."
-                              items:
-                                description: ResourceClaim references one entry in PodSpec.ResourceClaims.
-                                properties:
-                                  name:
-                                    description: Name must match the name of one entry in pod.spec.resourceClaims of the Pod where this field is used. It makes that resource available inside a container.
-                                    type: string
-                                required:
-                                  - name
-                                type: object
-                              type: array
-                              x-kubernetes-list-map-keys:
-                                - name
-                              x-kubernetes-list-type: map
-                            limits:
-                              additionalProperties:
-                                anyOf:
-                                  - type: integer
-                                  - type: string
-                                pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                x-kubernetes-int-or-string: true
-                              description: 'Limits describes the maximum amount of compute resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/'
-                              type: object
-                            requests:
-                              additionalProperties:
-                                anyOf:
-                                  - type: integer
-                                  - type: string
-                                pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                x-kubernetes-int-or-string: true
-                              description: 'Requests describes the minimum amount of compute resources required. If Requests is omitted for a container, it defaults to Limits if that is explicitly specified, otherwise to an implementation-defined value. Requests cannot exceed Limits. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/'
-                              type: object
-                          type: object
-                      type: object
                   type: object
                 cloud:
                   description: Cloud contains information regarding the cloud provider that is responsible for hosting the cluster's workload.
@@ -396,7 +321,7 @@ spec:
                     bringyourown:
                       description: BringYourOwnCloudSpec specifies access data for a bring your own cluster.
                       type: object
-                    dc:
+                    datacenter:
                       description: DatacenterName states the name of a cloud provider "datacenter" (defined in `Seed` resources) this cluster should be deployed into.
                       type: string
                     digitalocean:
@@ -991,7 +916,7 @@ spec:
                         - vmNetName
                       type: object
                   required:
-                    - dc
+                    - datacenter
                     - providerName
                   type: object
                 clusterNetwork:
@@ -1638,63 +1563,6 @@ spec:
                 enableOperatingSystemManager:
                   description: 'Optional: Enables operating-system-manager (OSM), which is responsible for creating and managing worker node configuration. This field is enabled(true) by default.'
                   type: boolean
-                enableUserSSHKeyAgent:
-                  description: 'Optional: Deploys the UserSSHKeyAgent to the user cluster. This field is immutable. If enabled, the agent will be deployed and used to sync user ssh keys attached by users to the cluster. No SSH keys will be synced after node creation if this is disabled.'
-                  type: boolean
-                encryptionConfiguration:
-                  description: 'Optional: Configures encryption-at-rest for Kubernetes API data. This needs the `encryptionAtRest` feature gate.'
-                  properties:
-                    enabled:
-                      description: Enables encryption-at-rest on this cluster.
-                      type: boolean
-                    resources:
-                      description: List of resources that will be stored encrypted in etcd.
-                      items:
-                        type: string
-                      minItems: 1
-                      type: array
-                    secretbox:
-                      description: 'Configuration for the `secretbox` static key encryption scheme as supported by Kubernetes. More info: https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/#providers'
-                      properties:
-                        keys:
-                          description: List of 'secretbox' encryption keys. The first element of this list is considered the "primary" key which will be used for encrypting data while writing it. Additional keys will be used for decrypting data while reading it, if keys higher in the list did not succeed in decrypting it.
-                          items:
-                            description: SecretboxKey stores a key or key reference for encrypting Kubernetes API data at rest with a static key.
-                            properties:
-                              name:
-                                description: Identifier of a key, used in various places to refer to the key.
-                                type: string
-                              secretRef:
-                                description: Instead of passing the sensitive encryption key via the `value` field, a secret can be referenced. The key of the secret referenced here needs to hold a key equivalent to the `value` field.
-                                properties:
-                                  key:
-                                    description: The key of the secret to select from.  Must be a valid secret key.
-                                    type: string
-                                  name:
-                                    description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names TODO: Add other useful fields. apiVersion, kind, uid?'
-                                    type: string
-                                  optional:
-                                    description: Specify whether the Secret or its key must be defined
-                                    type: boolean
-                                required:
-                                  - key
-                                type: object
-                                x-kubernetes-map-type: atomic
-                              value:
-                                description: Value contains a 32-byte random key that is base64 encoded. This is the key used for encryption. Can be generated via `head -c 32 /dev/urandom | base64`, for example.
-                                type: string
-                            required:
-                              - name
-                            type: object
-                          minItems: 1
-                          type: array
-                      required:
-                        - keys
-                      type: object
-                  required:
-                    - enabled
-                    - resources
-                  type: object
                 eventRateLimitConfig:
                   description: 'Optional: Configures the EventRateLimit admission plugin (if enabled via `useEventRateLimitAdmissionPlugin`) to create limits on Kubernetes event generation. The EventRateLimit plugin is capable of comparing and rate limiting incoming `Events` based on several configured buckets.'
                   properties:
@@ -2115,29 +1983,6 @@ spec:
                     type: object
                   description: Conditions contains conditions the cluster is in, its primary use case is status signaling between controllers or between controllers and the API.
                   type: object
-                encryption:
-                  description: Encryption describes the status of the encryption-at-rest feature for encrypted data in etcd.
-                  properties:
-                    activeKey:
-                      description: The current "primary" key used to encrypt data written to etcd. Secondary keys that can be used for decryption (but not encryption) might be configured in the ClusterSpec.
-                      type: string
-                    encryptedResources:
-                      description: List of resources currently encrypted.
-                      items:
-                        type: string
-                      type: array
-                    phase:
-                      description: The current phase of the encryption process. Can be one of `Pending`, `Failed`, `Active` or `EncryptionNeeded`. The `encryption_controller` logic will process the cluster based on the current phase and issue necessary changes to make sure encryption on the cluster is active and updated with what the ClusterSpec defines.
-                      enum:
-                        - Pending
-                        - Failed
-                        - Active
-                        - EncryptionNeeded
-                      type: string
-                  required:
-                    - activeKey
-                    - encryptedResources
-                  type: object
                 errorMessage:
                   description: ErrorMessage contains a default error message in case the controller encountered an error. Will be reset if the error was resolved.
                   type: string
@@ -2157,12 +2002,6 @@ spec:
                         - HealthStatusUp
                         - HealthStatusProvisioning
                       type: string
-                    apiserver:
-                      enum:
-                        - HealthStatusDown
-                        - HealthStatusUp
-                        - HealthStatusProvisioning
-                      type: string
                     applicationController:
                       enum:
                         - HealthStatusDown
@@ -2170,12 +2009,6 @@ spec:
                         - HealthStatusProvisioning
                       type: string
                     cloudProviderInfrastructure:
-                      enum:
-                        - HealthStatusDown
-                        - HealthStatusUp
-                        - HealthStatusProvisioning
-                      type: string
-                    controller:
                       enum:
                         - HealthStatusDown
                         - HealthStatusUp
@@ -2205,7 +2038,25 @@ spec:
                         - HealthStatusUp
                         - HealthStatusProvisioning
                       type: string
+                    kubernetesApiserver:
+                      enum:
+                        - HealthStatusDown
+                        - HealthStatusUp
+                        - HealthStatusProvisioning
+                      type: string
+                    kubernetesControllerManager:
+                      enum:
+                        - HealthStatusDown
+                        - HealthStatusUp
+                        - HealthStatusProvisioning
+                      type: string
                     kubernetesDashboard:
+                      enum:
+                        - HealthStatusDown
+                        - HealthStatusUp
+                        - HealthStatusProvisioning
+                      type: string
+                    kubernetesScheduler:
                       enum:
                         - HealthStatusDown
                         - HealthStatusUp
@@ -2247,12 +2098,6 @@ spec:
                         - HealthStatusUp
                         - HealthStatusProvisioning
                       type: string
-                    scheduler:
-                      enum:
-                        - HealthStatusDown
-                        - HealthStatusUp
-                        - HealthStatusProvisioning
-                      type: string
                     userClusterControllerManager:
                       enum:
                         - HealthStatusDown
@@ -2283,31 +2128,6 @@ spec:
                     - Running
                     - Terminating
                   type: string
-                resourceUsage:
-                  description: ResourceUsage shows the current usage of resources for the cluster.
-                  properties:
-                    cpu:
-                      anyOf:
-                        - type: integer
-                        - type: string
-                      description: CPU holds the quantity of CPU. For the format, please check k8s.io/apimachinery/pkg/api/resource.Quantity.
-                      pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                      x-kubernetes-int-or-string: true
-                    memory:
-                      anyOf:
-                        - type: integer
-                        - type: string
-                      description: Memory represents the quantity of RAM size. For the format, please check k8s.io/apimachinery/pkg/api/resource.Quantity.
-                      pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                      x-kubernetes-int-or-string: true
-                    storage:
-                      anyOf:
-                        - type: integer
-                        - type: string
-                      description: Storage represents the disk size. For the format, please check k8s.io/apimachinery/pkg/api/resource.Quantity.
-                      pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                      x-kubernetes-int-or-string: true
-                  type: object
                 userEmail:
                   description: UserEmail contains the email of the owner of this cluster. During cluster creation only, this field will be used to bind the `cluster-admin` `ClusterRole` to a cluster owner.
                   type: string

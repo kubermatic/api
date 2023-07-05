@@ -17,7 +17,6 @@ limitations under the License.
 package v1
 
 import (
-	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -45,6 +44,7 @@ const (
 // +kubebuilder:resource:categories=kkpee
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
+// +kubebuilder:printcolumn:JSONPath=".spec.cluster.name",name="Cluster",type="string"
 // +kubebuilder:printcolumn:JSONPath=".status.phase",name="Phase",type="string"
 // +kubebuilder:printcolumn:JSONPath=".metadata.creationTimestamp",name="Age",type="date"
 
@@ -61,8 +61,8 @@ type EtcdRestore struct {
 
 // EtcdRestoreSpec specifies details of an etcd restore.
 type EtcdRestoreSpec struct {
-	// Cluster is the reference to the cluster whose etcd will be backed up
-	Cluster corev1.ObjectReference `json:"cluster"`
+	// Cluster is the reference to the cluster whose etcd will be backed up.
+	Cluster ClusterReference `json:"cluster"`
 	// BackupName is the name of the backup to restore from
 	BackupName string `json:"backupName"`
 	// BackupDownloadCredentialsSecret is the name of a secret in the cluster-xxx namespace containing

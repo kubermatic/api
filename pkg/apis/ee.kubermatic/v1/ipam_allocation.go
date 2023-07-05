@@ -17,12 +17,16 @@ limitations under the License.
 package v1
 
 import (
+	kubermaticv1 "k8c.io/api/v3/pkg/apis/kubermatic/v1"
+
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 // +genclient
+// +kubebuilder:resource:scope=Cluster
 // +kubebuilder:object:generate=true
 // +kubebuilder:object:root=true
+// +kubebuilder:printcolumn:JSONPath=".spec.cluster.name",name="Cluster",type="string"
 // +kubebuilder:printcolumn:JSONPath=".metadata.creationTimestamp",name="Age",type="date"
 
 // IPAMAllocation is the object representing an allocation from an IPAMPool
@@ -31,22 +35,7 @@ type IPAMAllocation struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec IPAMAllocationSpec `json:"spec,omitempty"`
-}
-
-// IPAMAllocationSpec specifies an allocation from an IPAMPool
-// made for a particular KKP user cluster.
-type IPAMAllocationSpec struct {
-	// Type is the allocation type that is being used.
-	Type IPAMPoolAllocationType `json:"type"`
-	// DC is the datacenter of the allocation.
-	DC string `json:"dc"`
-	// CIDR is the CIDR that is being used for the allocation.
-	// Set when "type=prefix".
-	CIDR SubnetCIDR `json:"cidr,omitempty"`
-	// Addresses are the IP address ranges that are being used for the allocation.
-	// Set when "type=range".
-	Addresses []string `json:"addresses,omitempty"`
+	kubermaticv1.IPAMAllocation `json:",inline"`
 }
 
 // +kubebuilder:object:generate=true

@@ -18,15 +18,18 @@ spec:
   scope: Namespaced
   versions:
     - additionalPrinterColumns:
-        - jsonPath: .metadata.creationTimestamp
-          name: Age
-          type: date
+        - jsonPath: .spec.cluster.name
+          name: Cluster
+          type: string
         - jsonPath: .spec.subject.name
           name: Subject Name
           type: string
         - jsonPath: .spec.subject.kind
           name: Subject Kind
           type: string
+        - jsonPath: .metadata.creationTimestamp
+          name: Age
+          type: date
       name: v1
       schema:
         openAPIV3Schema:

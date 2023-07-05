@@ -25,7 +25,6 @@ const ClusterTemplateInstanceOwnerAnnotationKey = "owner"
 // +kubebuilder:resource:scope=Cluster
 // +kubebuilder:object:generate=true
 // +kubebuilder:object:root=true
-// +kubebuilder:printcolumn:JSONPath=".spec.projectID",name="ProjectID",type="string"
 // +kubebuilder:printcolumn:JSONPath=".spec.clusterTemplateID",name="ClusterTemplateID",type="string"
 // +kubebuilder:printcolumn:JSONPath=".spec.replicas",name="Replicas",type="integer"
 // +kubebuilder:printcolumn:JSONPath=".metadata.creationTimestamp",name="Age",type="date"
@@ -40,7 +39,6 @@ type ClusterTemplateInstance struct {
 
 // ClusterTemplateInstanceSpec specifies the data for cluster instances.
 type ClusterTemplateInstanceSpec struct {
-	ProjectID           string `json:"projectID"`
 	ClusterTemplateID   string `json:"clusterTemplateID"`
 	ClusterTemplateName string `json:"clusterTemplateName"`
 	Replicas            int64  `json:"replicas"`

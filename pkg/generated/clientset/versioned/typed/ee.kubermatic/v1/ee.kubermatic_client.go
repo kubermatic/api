@@ -22,6 +22,7 @@ type KubermaticEnterpriseV1Interface interface {
 	ClusterTemplateInstancesGetter
 	ConstraintsGetter
 	ConstraintTemplatesGetter
+	DashboardConfigurationsGetter
 	EtcdBackupConfigsGetter
 	EtcdRestoresGetter
 	ExternalClustersGetter
@@ -29,11 +30,11 @@ type KubermaticEnterpriseV1Interface interface {
 	IPAMAllocationsGetter
 	IPAMPoolsGetter
 	KubermaticConfigurationsGetter
-	KubermaticSettingsGetter
-	MLAAdminSettingsGetter
+	MLAClusterConfigurationsGetter
+	MLARuleGroupsGetter
 	PresetsGetter
 	ResourceQuotasGetter
-	RuleGroupsGetter
+	SSHKeyBindingsGetter
 	SeedsGetter
 	UsersGetter
 	UserProjectBindingsGetter
@@ -85,6 +86,10 @@ func (c *KubermaticEnterpriseV1Client) ConstraintTemplates(namespace string) Con
 	return newConstraintTemplates(c, namespace)
 }
 
+func (c *KubermaticEnterpriseV1Client) DashboardConfigurations(namespace string) DashboardConfigurationInterface {
+	return newDashboardConfigurations(c, namespace)
+}
+
 func (c *KubermaticEnterpriseV1Client) EtcdBackupConfigs(namespace string) EtcdBackupConfigInterface {
 	return newEtcdBackupConfigs(c, namespace)
 }
@@ -113,12 +118,12 @@ func (c *KubermaticEnterpriseV1Client) KubermaticConfigurations(namespace string
 	return newKubermaticConfigurations(c, namespace)
 }
 
-func (c *KubermaticEnterpriseV1Client) KubermaticSettings(namespace string) KubermaticSettingInterface {
-	return newKubermaticSettings(c, namespace)
+func (c *KubermaticEnterpriseV1Client) MLAClusterConfigurations(namespace string) MLAClusterConfigurationInterface {
+	return newMLAClusterConfigurations(c, namespace)
 }
 
-func (c *KubermaticEnterpriseV1Client) MLAAdminSettings(namespace string) MLAAdminSettingInterface {
-	return newMLAAdminSettings(c, namespace)
+func (c *KubermaticEnterpriseV1Client) MLARuleGroups(namespace string) MLARuleGroupInterface {
+	return newMLARuleGroups(c, namespace)
 }
 
 func (c *KubermaticEnterpriseV1Client) Presets(namespace string) PresetInterface {
@@ -129,8 +134,8 @@ func (c *KubermaticEnterpriseV1Client) ResourceQuotas(namespace string) Resource
 	return newResourceQuotas(c, namespace)
 }
 
-func (c *KubermaticEnterpriseV1Client) RuleGroups(namespace string) RuleGroupInterface {
-	return newRuleGroups(c, namespace)
+func (c *KubermaticEnterpriseV1Client) SSHKeyBindings(namespace string) SSHKeyBindingInterface {
+	return newSSHKeyBindings(c, namespace)
 }
 
 func (c *KubermaticEnterpriseV1Client) Seeds(namespace string) SeedInterface {

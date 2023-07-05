@@ -15,7 +15,14 @@ spec:
     singular: admissionplugin
   scope: Cluster
   versions:
-    - name: v1
+    - additionalPrinterColumns:
+        - jsonPath: .spec.pluginName
+          name: Plugin
+          type: string
+        - jsonPath: .metadata.creationTimestamp
+          name: Age
+          type: date
+      name: v1
       schema:
         openAPIV3Schema:
           description: AdmissionPlugin is the type representing a AdmissionPlugin.
@@ -32,7 +39,7 @@ spec:
               description: AdmissionPluginSpec specifies admission plugin name and from which k8s version is supported.
               properties:
                 fromVersion:
-                  description: FromVersion flag can be empty. It means the plugin fit to all k8s versions
+                  description: FromVersion flag can be empty. It means the plugin fits to all k8s versions
                   type: string
                 pluginName:
                   type: string
@@ -42,3 +49,4 @@ spec:
           type: object
       served: true
       storage: true
+      subresources: {}

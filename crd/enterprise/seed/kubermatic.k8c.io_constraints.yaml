@@ -18,6 +18,9 @@ spec:
   scope: Namespaced
   versions:
     - additionalPrinterColumns:
+        - jsonPath: .spec.cluster.name
+          name: Cluster
+          type: string
         - jsonPath: .metadata.creationTimestamp
           name: Age
           type: date
@@ -37,6 +40,15 @@ spec:
             spec:
               description: ConstraintSpec specifies the data for the constraint.
               properties:
+                cluster:
+                  description: Cluster is the reference to the cluster that this Constraint belongs to.
+                  properties:
+                    name:
+                      description: Name of the Cluster object.
+                      type: string
+                  required:
+                    - name
+                  type: object
                 constraintType:
                   description: ConstraintType specifies the type of gatekeeper constraint that the constraint applies to
                   type: string
@@ -202,6 +214,7 @@ spec:
                       type: array
                   type: object
               required:
+                - cluster
                 - constraintType
               type: object
           type: object

@@ -16,7 +16,11 @@ limitations under the License.
 
 package v1
 
-import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+import (
+	kubermaticv1 "k8c.io/api/v3/pkg/apis/kubermatic/v1"
+
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+)
 
 // +genclient
 // +kubebuilder:resource:scope=Cluster
@@ -30,14 +34,7 @@ type AllowedRegistry struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec AllowedRegistrySpec `json:"spec,omitempty"`
-}
-
-// AllowedRegistrySpec specifies the data for allowed registry spec.
-type AllowedRegistrySpec struct {
-	// RegistryPrefix contains the prefix of the registry which will be allowed. User clusters will be able to deploy
-	// only images which are prefixed with one of the allowed image registry prefixes.
-	RegistryPrefix string `json:"registryPrefix"`
+	kubermaticv1.AllowedRegistry `json:",inline"`
 }
 
 // +kubebuilder:object:generate=true

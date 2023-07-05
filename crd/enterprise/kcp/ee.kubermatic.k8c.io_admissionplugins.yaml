@@ -16,6 +16,9 @@ spec:
   scope: Cluster
   versions:
     - additionalPrinterColumns:
+        - jsonPath: .spec.pluginName
+          name: Plugin
+          type: string
         - jsonPath: .metadata.creationTimestamp
           name: Age
           type: date
@@ -36,7 +39,7 @@ spec:
               description: AdmissionPluginSpec specifies admission plugin name and from which k8s version is supported.
               properties:
                 fromVersion:
-                  description: FromVersion flag can be empty. It means the plugin fit to all k8s versions
+                  description: FromVersion flag can be empty. It means the plugin fits to all k8s versions
                   type: string
                 pluginName:
                   type: string

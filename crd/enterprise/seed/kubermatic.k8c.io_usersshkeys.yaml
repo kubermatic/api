@@ -40,11 +40,6 @@ spec:
               type: object
             spec:
               properties:
-                clusters:
-                  description: Clusters is the list of cluster names that this SSH key is assigned to.
-                  items:
-                    type: string
-                  type: array
                 name:
                   description: Name is the human readable name for this SSH key.
                   type: string
@@ -52,7 +47,6 @@ spec:
                   description: PublicKey is the SSH public key.
                   type: string
               required:
-                - clusters
                 - name
                 - publicKey
               type: object
