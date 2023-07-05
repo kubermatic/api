@@ -36,6 +36,8 @@ type Interface interface {
 	EtcdRestores() EtcdRestoreInformer
 	// ExternalClusters returns a ExternalClusterInformer.
 	ExternalClusters() ExternalClusterInformer
+	// GrafanaOrgs returns a GrafanaOrgInformer.
+	GrafanaOrgs() GrafanaOrgInformer
 	// IPAMAllocations returns a IPAMAllocationInformer.
 	IPAMAllocations() IPAMAllocationInformer
 	// IPAMPools returns a IPAMPoolInformer.
@@ -137,6 +139,11 @@ func (v *version) EtcdRestores() EtcdRestoreInformer {
 // ExternalClusters returns a ExternalClusterInformer.
 func (v *version) ExternalClusters() ExternalClusterInformer {
 	return &externalClusterInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
+// GrafanaOrgs returns a GrafanaOrgInformer.
+func (v *version) GrafanaOrgs() GrafanaOrgInformer {
+	return &grafanaOrgInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // IPAMAllocations returns a IPAMAllocationInformer.

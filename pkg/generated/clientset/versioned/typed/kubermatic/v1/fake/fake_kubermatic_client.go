@@ -68,6 +68,10 @@ func (c *FakeKubermaticV1) ExternalClusters(namespace string) v1.ExternalCluster
 	return &FakeExternalClusters{c, namespace}
 }
 
+func (c *FakeKubermaticV1) GrafanaOrgs(namespace string) v1.GrafanaOrgInterface {
+	return &FakeGrafanaOrgs{c, namespace}
+}
+
 func (c *FakeKubermaticV1) IPAMAllocations(namespace string) v1.IPAMAllocationInterface {
 	return &FakeIPAMAllocations{c, namespace}
 }

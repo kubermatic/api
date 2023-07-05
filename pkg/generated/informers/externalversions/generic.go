@@ -134,6 +134,8 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubermatic().V1().EtcdRestores().Informer()}, nil
 	case kubermaticv1.SchemeGroupVersion.WithResource("externalclusters"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubermatic().V1().ExternalClusters().Informer()}, nil
+	case kubermaticv1.SchemeGroupVersion.WithResource("grafanaorgs"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubermatic().V1().GrafanaOrgs().Informer()}, nil
 	case kubermaticv1.SchemeGroupVersion.WithResource("ipamallocations"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubermatic().V1().IPAMAllocations().Informer()}, nil
 	case kubermaticv1.SchemeGroupVersion.WithResource("ipampools"):
