@@ -96,14 +96,14 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.KubermaticEnterprise().V1().ResourceQuotas().Informer()}, nil
 	case eekubermaticv1.SchemeGroupVersion.WithResource("rulegroups"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.KubermaticEnterprise().V1().RuleGroups().Informer()}, nil
+	case eekubermaticv1.SchemeGroupVersion.WithResource("sshkeys"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.KubermaticEnterprise().V1().SSHKeys().Informer()}, nil
 	case eekubermaticv1.SchemeGroupVersion.WithResource("seeds"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.KubermaticEnterprise().V1().Seeds().Informer()}, nil
 	case eekubermaticv1.SchemeGroupVersion.WithResource("users"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.KubermaticEnterprise().V1().Users().Informer()}, nil
 	case eekubermaticv1.SchemeGroupVersion.WithResource("userprojectbindings"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.KubermaticEnterprise().V1().UserProjectBindings().Informer()}, nil
-	case eekubermaticv1.SchemeGroupVersion.WithResource("usersshkeys"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.KubermaticEnterprise().V1().UserSSHKeys().Informer()}, nil
 
 		// Group=kubermatic.k8c.io, Version=v1
 	case kubermaticv1.SchemeGroupVersion.WithResource("addons"):
@@ -152,10 +152,10 @@ func (f *sharedInformerFactory) ForResource(resource schema.GroupVersionResource
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubermatic().V1().ResourceQuotas().Informer()}, nil
 	case kubermaticv1.SchemeGroupVersion.WithResource("rulegroups"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubermatic().V1().RuleGroups().Informer()}, nil
+	case kubermaticv1.SchemeGroupVersion.WithResource("sshkeys"):
+		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubermatic().V1().SSHKeys().Informer()}, nil
 	case kubermaticv1.SchemeGroupVersion.WithResource("users"):
 		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubermatic().V1().Users().Informer()}, nil
-	case kubermaticv1.SchemeGroupVersion.WithResource("usersshkeys"):
-		return &genericInformer{resource: resource.GroupResource(), informer: f.Kubermatic().V1().UserSSHKeys().Informer()}, nil
 
 	}
 

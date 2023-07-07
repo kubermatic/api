@@ -30,21 +30,21 @@ import (
 // +kubebuilder:printcolumn:JSONPath=".status.fingerprint",name="Fingerprint",type="string"
 // +kubebuilder:printcolumn:JSONPath=".metadata.creationTimestamp",name="Age",type="date"
 
-// UserSSHKey specifies a user's SSH public key.
-type UserSSHKey struct {
+// SSHKey specifies an SSH public key.
+type SSHKey struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	kubermaticv1.UserSSHKey `json:",inline"`
+	kubermaticv1.SSHKey `json:",inline"`
 }
 
 // +kubebuilder:object:generate=true
 // +kubebuilder:object:root=true
 
-// UserSSHKeyList specifies a list of SSH keys.
-type UserSSHKeyList struct {
+// SSHKeyList specifies a list of SSH keys.
+type SSHKeyList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
 
-	Items []UserSSHKey `json:"items"`
+	Items []SSHKey `json:"items"`
 }

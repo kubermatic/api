@@ -35,8 +35,8 @@ type KubermaticV1Interface interface {
 	PresetsGetter
 	ResourceQuotasGetter
 	RuleGroupsGetter
+	SSHKeysGetter
 	UsersGetter
-	UserSSHKeysGetter
 }
 
 // KubermaticV1Client is used to interact with features provided by the kubermatic.k8c.io group.
@@ -136,12 +136,12 @@ func (c *KubermaticV1Client) RuleGroups(namespace string) RuleGroupInterface {
 	return newRuleGroups(c, namespace)
 }
 
-func (c *KubermaticV1Client) Users(namespace string) UserInterface {
-	return newUsers(c, namespace)
+func (c *KubermaticV1Client) SSHKeys(namespace string) SSHKeyInterface {
+	return newSSHKeys(c, namespace)
 }
 
-func (c *KubermaticV1Client) UserSSHKeys(namespace string) UserSSHKeyInterface {
-	return newUserSSHKeys(c, namespace)
+func (c *KubermaticV1Client) Users(namespace string) UserInterface {
+	return newUsers(c, namespace)
 }
 
 // NewForConfig creates a new KubermaticV1Client for the given config.

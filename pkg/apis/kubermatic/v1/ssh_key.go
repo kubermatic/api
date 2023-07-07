@@ -30,16 +30,16 @@ import (
 // +kubebuilder:printcolumn:JSONPath=".status.fingerprint",name="Fingerprint",type="string"
 // +kubebuilder:printcolumn:JSONPath=".metadata.creationTimestamp",name="Age",type="date"
 
-// UserSSHKey specifies a users UserSSHKey.
-type UserSSHKey struct {
+// SSHKey specifies an SSH public key.
+type SSHKey struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   UserSSHKeySpec `json:"spec,omitempty"`
-	Status SSHKeyStatus   `json:"status,omitempty"`
+	Spec   SSHKeySpec   `json:"spec,omitempty"`
+	Status SSHKeyStatus `json:"status,omitempty"`
 }
 
-type UserSSHKeySpec struct {
+type SSHKeySpec struct {
 	// Name is the human readable name for this SSH key.
 	Name string `json:"name"`
 	// Clusters is the list of cluster names that this SSH key is assigned to.
@@ -48,15 +48,15 @@ type UserSSHKeySpec struct {
 	PublicKey string `json:"publicKey"`
 }
 
-func (sk *UserSSHKey) IsUsedByCluster(clustername string) bool {
+func (sk *SSHKey) IsUsedByCluster(clustername string) bool {
 	return sets.New(sk.Spec.Clusters...).Has(clustername)
 }
 
-func (sk *UserSSHKey) RemoveFromCluster(clustername string) {
+func (sk *SSHKey) RemoveFromCluster(clustername string) {
 	sk.Spec.Clusters = sets.List(sets.New(sk.Spec.Clusters...).Delete(clustername))
 }
 
-func (sk *UserSSHKey) AddToCluster(clustername string) {
+func (sk *SSHKey) AddToCluster(clustername string) {
 	sk.Spec.Clusters = sets.List(sets.New(sk.Spec.Clusters...).Insert(clustername))
 }
 
@@ -68,10 +68,10 @@ type SSHKeyStatus struct {
 // +kubebuilder:object:generate=true
 // +kubebuilder:object:root=true
 
-// UserSSHKeyList specifies a users UserSSHKey.
-type UserSSHKeyList struct {
+// SSHKeyList specifies a users SSHKey.
+type SSHKeyList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
 
-	Items []UserSSHKey `json:"items"`
+	Items []SSHKey `json:"items"`
 }

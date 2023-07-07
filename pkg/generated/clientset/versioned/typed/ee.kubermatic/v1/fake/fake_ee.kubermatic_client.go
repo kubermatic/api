@@ -100,6 +100,10 @@ func (c *FakeKubermaticEnterpriseV1) RuleGroups(namespace string) v1.RuleGroupIn
 	return &FakeRuleGroups{c, namespace}
 }
 
+func (c *FakeKubermaticEnterpriseV1) SSHKeys(namespace string) v1.SSHKeyInterface {
+	return &FakeSSHKeys{c, namespace}
+}
+
 func (c *FakeKubermaticEnterpriseV1) Seeds(namespace string) v1.SeedInterface {
 	return &FakeSeeds{c, namespace}
 }
@@ -110,10 +114,6 @@ func (c *FakeKubermaticEnterpriseV1) Users(namespace string) v1.UserInterface {
 
 func (c *FakeKubermaticEnterpriseV1) UserProjectBindings(namespace string) v1.UserProjectBindingInterface {
 	return &FakeUserProjectBindings{c, namespace}
-}
-
-func (c *FakeKubermaticEnterpriseV1) UserSSHKeys(namespace string) v1.UserSSHKeyInterface {
-	return &FakeUserSSHKeys{c, namespace}
 }
 
 // RESTClient returns a RESTClient that is used to communicate

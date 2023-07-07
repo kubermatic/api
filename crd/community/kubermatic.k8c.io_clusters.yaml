@@ -1638,8 +1638,8 @@ spec:
                 enableOperatingSystemManager:
                   description: 'Optional: Enables operating-system-manager (OSM), which is responsible for creating and managing worker node configuration. This field is enabled(true) by default.'
                   type: boolean
-                enableUserSSHKeyAgent:
-                  description: 'Optional: Deploys the UserSSHKeyAgent to the user cluster. This field is immutable. If enabled, the agent will be deployed and used to sync user ssh keys attached by users to the cluster. No SSH keys will be synced after node creation if this is disabled.'
+                enableSSHKeyAgent:
+                  description: 'Optional: Deploys the SSHKeyAgent to the user cluster. This field is immutable. If enabled, the agent will be deployed and used to sync user ssh keys attached by users to the cluster. No SSH keys will be synced after node creation if this is disabled.'
                   type: boolean
                 encryptionConfiguration:
                   description: 'Optional: Configures encryption-at-rest for Kubernetes API data. This needs the `encryptionAtRest` feature gate.'

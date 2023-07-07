@@ -46,10 +46,10 @@ type ResourceQuotaExpansion interface{}
 
 type RuleGroupExpansion interface{}
 
+type SSHKeyExpansion interface{}
+
 type SeedExpansion interface{}
 
 type UserExpansion interface{}
 
 type UserProjectBindingExpansion interface{}
-
-type UserSSHKeyExpansion interface{}

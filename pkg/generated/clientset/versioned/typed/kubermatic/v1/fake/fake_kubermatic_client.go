@@ -104,12 +104,12 @@ func (c *FakeKubermaticV1) RuleGroups(namespace string) v1.RuleGroupInterface {
 	return &FakeRuleGroups{c, namespace}
 }
 
-func (c *FakeKubermaticV1) Users(namespace string) v1.UserInterface {
-	return &FakeUsers{c, namespace}
+func (c *FakeKubermaticV1) SSHKeys(namespace string) v1.SSHKeyInterface {
+	return &FakeSSHKeys{c, namespace}
 }
 
-func (c *FakeKubermaticV1) UserSSHKeys(namespace string) v1.UserSSHKeyInterface {
-	return &FakeUserSSHKeys{c, namespace}
+func (c *FakeKubermaticV1) Users(namespace string) v1.UserInterface {
+	return &FakeUsers{c, namespace}
 }
 
 // RESTClient returns a RESTClient that is used to communicate

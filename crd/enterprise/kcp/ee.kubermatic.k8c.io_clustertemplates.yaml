@@ -1633,8 +1633,8 @@ spec:
                 enableOperatingSystemManager:
                   description: 'Optional: Enables operating-system-manager (OSM), which is responsible for creating and managing worker node configuration. This field is enabled(true) by default.'
                   type: boolean
-                enableUserSSHKeyAgent:
-                  description: 'Optional: Deploys the UserSSHKeyAgent to the user cluster. This field is immutable. If enabled, the agent will be deployed and used to sync user ssh keys attached by users to the cluster. No SSH keys will be synced after node creation if this is disabled.'
+                enableSSHKeyAgent:
+                  description: 'Optional: Deploys the SSHKeyAgent to the user cluster. This field is immutable. If enabled, the agent will be deployed and used to sync user ssh keys attached by users to the cluster. No SSH keys will be synced after node creation if this is disabled.'
                   type: boolean
                 encryptionConfiguration:
                   description: 'Optional: Configures encryption-at-rest for Kubernetes API data. This needs the `encryptionAtRest` feature gate.'
@@ -2054,12 +2054,12 @@ spec:
                 - humanReadableName
                 - version
               type: object
-            userSSHKeys:
+            sshKeys:
               items:
                 description: ClusterTemplateSSHKey is the object for holding SSH key.
                 properties:
                   id:
-                    description: ID is the name of the UserSSHKey object that is supposed to be assigned to any ClusterTemplateInstance created based on this template.
+                    description: ID is the name of the SSHKey object that is supposed to be assigned to any ClusterTemplateInstance created based on this template.
                     type: string
                   name:
                     description: Name is the human readable SSH key name.

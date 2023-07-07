@@ -99,8 +99,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&RuleGroupList{},
 		&User{},
 		&UserList{},
-		&UserSSHKey{},
-		&UserSSHKeyList{},
+		&SSHKey{},
+		&SSHKeyList{},
 	)
 
 	metav1.AddToGroupVersion(scheme, SchemeGroupVersion)

@@ -188,10 +188,10 @@ type ClusterSpec struct {
 	// `Events` based on several configured buckets.
 	EventRateLimitConfig *EventRateLimitConfig `json:"eventRateLimitConfig,omitempty"`
 
-	// Optional: Deploys the UserSSHKeyAgent to the user cluster. This field is immutable.
+	// Optional: Deploys the SSHKeyAgent to the user cluster. This field is immutable.
 	// If enabled, the agent will be deployed and used to sync user ssh keys attached by users to the cluster.
 	// No SSH keys will be synced after node creation if this is disabled.
-	EnableUserSSHKeyAgent *bool `json:"enableUserSSHKeyAgent,omitempty"`
+	EnableSSHKeyAgent *bool `json:"enableSSHKeyAgent,omitempty"`
 
 	// Optional: Enables operating-system-manager (OSM), which is responsible for creating and managing worker node configuration.
 	// This field is enabled(true) by default.

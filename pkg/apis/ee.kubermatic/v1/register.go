@@ -101,8 +101,8 @@ func addKnownTypes(scheme *runtime.Scheme) error {
 		&UserList{},
 		&UserProjectBinding{},
 		&UserProjectBindingList{},
-		&UserSSHKey{},
-		&UserSSHKeyList{},
+		&SSHKey{},
+		&SSHKeyList{},
 	)
 
 	metav1.AddToGroupVersion(scheme, SchemeGroupVersion)
