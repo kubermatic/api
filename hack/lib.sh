@@ -19,6 +19,29 @@
 # receives a SIGINT
 set -o monitor
 
+repeat() {
+  local end=$1
+  local str="${2:-=}"
+
+  for i in $(seq 1 $end); do
+    echo -n "${str}"
+  done
+}
+
+heading() {
+  local title="$@"
+  echo "$title"
+  repeat ${#title} "="
+  echo
+}
+
+subheading() {
+  local title="$@"
+  echo "$title"
+  repeat ${#title} "-"
+  echo
+}
+
 retry() {
   # Works only with bash but doesn't fail on other shells
   start_time=$(date +%s)
@@ -237,4 +260,61 @@ go_test() {
   else
     go test "$@"
   fi
+}
+
+# use () instead of {} to ensure this runs in subshell
+# so we do not modify the current working directory
+repo_root() (
+  cd "$(dirname "${BASH_SOURCE[0]}")/.."
+  pwd -P
+)
+
+create_openapi_from_crds() {
+  local baseDir="$1"
+  local target="$2"
+  local version="$3"
+
+  echo '{
+  "openapi": "3.0.3",
+  "paths": {}
+}' > "$target"
+
+  local tmpFile="$(mktemp openapiXXX)"
+  local repoRoot="$(repo_root)"
+
+  for crdFile in $baseDir/*.yaml; do
+    # convert to JSON
+    yq e --output-format json "$crdFile" > "$tmpFile"
+
+    jq \
+      -f "$repoRoot/hack/crd-to-openapi.jq" \
+      --arg version "$version" \
+      --arg filename "$(basename "$crdFile")" \
+      --slurpfile crdfiles "$tmpFile" \
+      "$target" > "$target.new"
+
+    mv "$target.new" "$target"
+  done
+
+  rm "$tmpFile"
+}
+
+oasdiff_breaking_apigroups() {
+  # print a list of sorted, unique API groups based on the dummy path we constructed in create_openapi_from_crds
+  jq -r '[.[] | .path | split("/")[1]] | unique | sort | .[]' "$1"
+}
+
+oasdiff_breaking_changes() {
+  # filter breaking changes down to a single API group, usually you will pipe this into a file for further processing
+  jq --arg group "$2" -r '.[] | select(.path | split("/")[1] == $group)' "$1"
+}
+
+oasdiff_breaking_paths() {
+  # print a sorted list of unique paths
+  jq -r -s '[.[].path] | unique | sort | .[]' "$1"
+}
+
+oasdiff_breaking_markdown_list() {
+  # get all breaking changes that affect a given path (path = API group + CRD name)
+  jq --arg path "$2" -s -r '.[] | select(.path == $path) | ("  * " + .text)' "$1"
 }
