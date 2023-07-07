@@ -64,3 +64,17 @@ presubmits:
             requests:
               memory: 1Gi
               cpu: 1
+
+  - name: pre-kubermatic-api-breaking-changes
+    always_run: true
+    decorate: true
+    clone_uri: "ssh://git@github.com/kubermatic/api.git"
+    spec:
+      containers:
+        - image: quay.io/kubermatic/build:go-1.20-node-18-3
+          command:
+            - ./hack/verify-breaking-changes.sh
+          resources:
+            requests:
+              memory: 1Gi
+              cpu: 1
