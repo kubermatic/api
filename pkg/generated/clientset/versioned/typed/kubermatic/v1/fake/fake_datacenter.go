@@ -5,10 +5,9 @@ package fake
 import (
 	"context"
 
-	kubermaticv1 "k8c.io/api/v3/pkg/apis/kubermatic/v1"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	v1 "k8c.io/api/v3/pkg/apis/kubermatic/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
-	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -20,25 +19,25 @@ type FakeDatacenters struct {
 	ns   string
 }
 
-var datacentersResource = schema.GroupVersionResource{Group: "kubermatic.k8c.io", Version: "v1", Resource: "datacenters"}
+var datacentersResource = v1.SchemeGroupVersion.WithResource("datacenters")
 
-var datacentersKind = schema.GroupVersionKind{Group: "kubermatic.k8c.io", Version: "v1", Kind: "Datacenter"}
+var datacentersKind = v1.SchemeGroupVersion.WithKind("Datacenter")
 
 // Get takes name of the datacenter, and returns the corresponding datacenter object, and an error if there is any.
-func (c *FakeDatacenters) Get(ctx context.Context, name string, options v1.GetOptions) (result *kubermaticv1.Datacenter, err error) {
+func (c *FakeDatacenters) Get(ctx context.Context, name string, options metav1.GetOptions) (result *v1.Datacenter, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(datacentersResource, c.ns, name), &kubermaticv1.Datacenter{})
+		Invokes(testing.NewGetAction(datacentersResource, c.ns, name), &v1.Datacenter{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*kubermaticv1.Datacenter), err
+	return obj.(*v1.Datacenter), err
 }
 
 // List takes label and field selectors, and returns the list of Datacenters that match those selectors.
-func (c *FakeDatacenters) List(ctx context.Context, opts v1.ListOptions) (result *kubermaticv1.DatacenterList, err error) {
+func (c *FakeDatacenters) List(ctx context.Context, opts metav1.ListOptions) (result *v1.DatacenterList, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewListAction(datacentersResource, datacentersKind, c.ns, opts), &kubermaticv1.DatacenterList{})
+		Invokes(testing.NewListAction(datacentersResource, datacentersKind, c.ns, opts), &v1.DatacenterList{})
 
 	if obj == nil {
 		return nil, err
@@ -48,8 +47,8 @@ func (c *FakeDatacenters) List(ctx context.Context, opts v1.ListOptions) (result
 	if label == nil {
 		label = labels.Everything()
 	}
-	list := &kubermaticv1.DatacenterList{ListMeta: obj.(*kubermaticv1.DatacenterList).ListMeta}
-	for _, item := range obj.(*kubermaticv1.DatacenterList).Items {
+	list := &v1.DatacenterList{ListMeta: obj.(*v1.DatacenterList).ListMeta}
+	for _, item := range obj.(*v1.DatacenterList).Items {
 		if label.Matches(labels.Set(item.Labels)) {
 			list.Items = append(list.Items, item)
 		}
@@ -58,69 +57,69 @@ func (c *FakeDatacenters) List(ctx context.Context, opts v1.ListOptions) (result
 }
 
 // Watch returns a watch.Interface that watches the requested datacenters.
-func (c *FakeDatacenters) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
+func (c *FakeDatacenters) Watch(ctx context.Context, opts metav1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
 		InvokesWatch(testing.NewWatchAction(datacentersResource, c.ns, opts))
 
 }
 
 // Create takes the representation of a datacenter and creates it.  Returns the server's representation of the datacenter, and an error, if there is any.
-func (c *FakeDatacenters) Create(ctx context.Context, datacenter *kubermaticv1.Datacenter, opts v1.CreateOptions) (result *kubermaticv1.Datacenter, err error) {
+func (c *FakeDatacenters) Create(ctx context.Context, datacenter *v1.Datacenter, opts metav1.CreateOptions) (result *v1.Datacenter, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(datacentersResource, c.ns, datacenter), &kubermaticv1.Datacenter{})
+		Invokes(testing.NewCreateAction(datacentersResource, c.ns, datacenter), &v1.Datacenter{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*kubermaticv1.Datacenter), err
+	return obj.(*v1.Datacenter), err
 }
 
 // Update takes the representation of a datacenter and updates it. Returns the server's representation of the datacenter, and an error, if there is any.
-func (c *FakeDatacenters) Update(ctx context.Context, datacenter *kubermaticv1.Datacenter, opts v1.UpdateOptions) (result *kubermaticv1.Datacenter, err error) {
+func (c *FakeDatacenters) Update(ctx context.Context, datacenter *v1.Datacenter, opts metav1.UpdateOptions) (result *v1.Datacenter, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(datacentersResource, c.ns, datacenter), &kubermaticv1.Datacenter{})
+		Invokes(testing.NewUpdateAction(datacentersResource, c.ns, datacenter), &v1.Datacenter{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*kubermaticv1.Datacenter), err
+	return obj.(*v1.Datacenter), err
 }
 
 // UpdateStatus was generated because the type contains a Status member.
 // Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeDatacenters) UpdateStatus(ctx context.Context, datacenter *kubermaticv1.Datacenter, opts v1.UpdateOptions) (*kubermaticv1.Datacenter, error) {
+func (c *FakeDatacenters) UpdateStatus(ctx context.Context, datacenter *v1.Datacenter, opts metav1.UpdateOptions) (*v1.Datacenter, error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(datacentersResource, "status", c.ns, datacenter), &kubermaticv1.Datacenter{})
+		Invokes(testing.NewUpdateSubresourceAction(datacentersResource, "status", c.ns, datacenter), &v1.Datacenter{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*kubermaticv1.Datacenter), err
+	return obj.(*v1.Datacenter), err
 }
 
 // Delete takes name of the datacenter and deletes it. Returns an error if one occurs.
-func (c *FakeDatacenters) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
+func (c *FakeDatacenters) Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(datacentersResource, c.ns, name, opts), &kubermaticv1.Datacenter{})
+		Invokes(testing.NewDeleteActionWithOptions(datacentersResource, c.ns, name, opts), &v1.Datacenter{})
 
 	return err
 }
 
 // DeleteCollection deletes a collection of objects.
-func (c *FakeDatacenters) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
+func (c *FakeDatacenters) DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error {
 	action := testing.NewDeleteCollectionAction(datacentersResource, c.ns, listOpts)
 
-	_, err := c.Fake.Invokes(action, &kubermaticv1.DatacenterList{})
+	_, err := c.Fake.Invokes(action, &v1.DatacenterList{})
 	return err
 }
 
 // Patch applies the patch and returns the patched datacenter.
-func (c *FakeDatacenters) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *kubermaticv1.Datacenter, err error) {
+func (c *FakeDatacenters) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts metav1.PatchOptions, subresources ...string) (result *v1.Datacenter, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(datacentersResource, c.ns, name, pt, data, subresources...), &kubermaticv1.Datacenter{})
+		Invokes(testing.NewPatchSubresourceAction(datacentersResource, c.ns, name, pt, data, subresources...), &v1.Datacenter{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*kubermaticv1.Datacenter), err
+	return obj.(*v1.Datacenter), err
 }

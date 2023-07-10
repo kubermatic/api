@@ -5,10 +5,9 @@ package fake
 import (
 	"context"
 
-	kubermaticv1 "k8c.io/api/v3/pkg/apis/kubermatic/v1"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	v1 "k8c.io/api/v3/pkg/apis/kubermatic/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
-	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -20,25 +19,25 @@ type FakeKubermaticConfigurations struct {
 	ns   string
 }
 
-var kubermaticconfigurationsResource = schema.GroupVersionResource{Group: "kubermatic.k8c.io", Version: "v1", Resource: "kubermaticconfigurations"}
+var kubermaticconfigurationsResource = v1.SchemeGroupVersion.WithResource("kubermaticconfigurations")
 
-var kubermaticconfigurationsKind = schema.GroupVersionKind{Group: "kubermatic.k8c.io", Version: "v1", Kind: "KubermaticConfiguration"}
+var kubermaticconfigurationsKind = v1.SchemeGroupVersion.WithKind("KubermaticConfiguration")
 
 // Get takes name of the kubermaticConfiguration, and returns the corresponding kubermaticConfiguration object, and an error if there is any.
-func (c *FakeKubermaticConfigurations) Get(ctx context.Context, name string, options v1.GetOptions) (result *kubermaticv1.KubermaticConfiguration, err error) {
+func (c *FakeKubermaticConfigurations) Get(ctx context.Context, name string, options metav1.GetOptions) (result *v1.KubermaticConfiguration, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(kubermaticconfigurationsResource, c.ns, name), &kubermaticv1.KubermaticConfiguration{})
+		Invokes(testing.NewGetAction(kubermaticconfigurationsResource, c.ns, name), &v1.KubermaticConfiguration{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*kubermaticv1.KubermaticConfiguration), err
+	return obj.(*v1.KubermaticConfiguration), err
 }
 
 // List takes label and field selectors, and returns the list of KubermaticConfigurations that match those selectors.
-func (c *FakeKubermaticConfigurations) List(ctx context.Context, opts v1.ListOptions) (result *kubermaticv1.KubermaticConfigurationList, err error) {
+func (c *FakeKubermaticConfigurations) List(ctx context.Context, opts metav1.ListOptions) (result *v1.KubermaticConfigurationList, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewListAction(kubermaticconfigurationsResource, kubermaticconfigurationsKind, c.ns, opts), &kubermaticv1.KubermaticConfigurationList{})
+		Invokes(testing.NewListAction(kubermaticconfigurationsResource, kubermaticconfigurationsKind, c.ns, opts), &v1.KubermaticConfigurationList{})
 
 	if obj == nil {
 		return nil, err
@@ -48,8 +47,8 @@ func (c *FakeKubermaticConfigurations) List(ctx context.Context, opts v1.ListOpt
 	if label == nil {
 		label = labels.Everything()
 	}
-	list := &kubermaticv1.KubermaticConfigurationList{ListMeta: obj.(*kubermaticv1.KubermaticConfigurationList).ListMeta}
-	for _, item := range obj.(*kubermaticv1.KubermaticConfigurationList).Items {
+	list := &v1.KubermaticConfigurationList{ListMeta: obj.(*v1.KubermaticConfigurationList).ListMeta}
+	for _, item := range obj.(*v1.KubermaticConfigurationList).Items {
 		if label.Matches(labels.Set(item.Labels)) {
 			list.Items = append(list.Items, item)
 		}
@@ -58,69 +57,69 @@ func (c *FakeKubermaticConfigurations) List(ctx context.Context, opts v1.ListOpt
 }
 
 // Watch returns a watch.Interface that watches the requested kubermaticConfigurations.
-func (c *FakeKubermaticConfigurations) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
+func (c *FakeKubermaticConfigurations) Watch(ctx context.Context, opts metav1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
 		InvokesWatch(testing.NewWatchAction(kubermaticconfigurationsResource, c.ns, opts))
 
 }
 
 // Create takes the representation of a kubermaticConfiguration and creates it.  Returns the server's representation of the kubermaticConfiguration, and an error, if there is any.
-func (c *FakeKubermaticConfigurations) Create(ctx context.Context, kubermaticConfiguration *kubermaticv1.KubermaticConfiguration, opts v1.CreateOptions) (result *kubermaticv1.KubermaticConfiguration, err error) {
+func (c *FakeKubermaticConfigurations) Create(ctx context.Context, kubermaticConfiguration *v1.KubermaticConfiguration, opts metav1.CreateOptions) (result *v1.KubermaticConfiguration, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(kubermaticconfigurationsResource, c.ns, kubermaticConfiguration), &kubermaticv1.KubermaticConfiguration{})
+		Invokes(testing.NewCreateAction(kubermaticconfigurationsResource, c.ns, kubermaticConfiguration), &v1.KubermaticConfiguration{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*kubermaticv1.KubermaticConfiguration), err
+	return obj.(*v1.KubermaticConfiguration), err
 }
 
 // Update takes the representation of a kubermaticConfiguration and updates it. Returns the server's representation of the kubermaticConfiguration, and an error, if there is any.
-func (c *FakeKubermaticConfigurations) Update(ctx context.Context, kubermaticConfiguration *kubermaticv1.KubermaticConfiguration, opts v1.UpdateOptions) (result *kubermaticv1.KubermaticConfiguration, err error) {
+func (c *FakeKubermaticConfigurations) Update(ctx context.Context, kubermaticConfiguration *v1.KubermaticConfiguration, opts metav1.UpdateOptions) (result *v1.KubermaticConfiguration, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(kubermaticconfigurationsResource, c.ns, kubermaticConfiguration), &kubermaticv1.KubermaticConfiguration{})
+		Invokes(testing.NewUpdateAction(kubermaticconfigurationsResource, c.ns, kubermaticConfiguration), &v1.KubermaticConfiguration{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*kubermaticv1.KubermaticConfiguration), err
+	return obj.(*v1.KubermaticConfiguration), err
 }
 
 // UpdateStatus was generated because the type contains a Status member.
 // Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeKubermaticConfigurations) UpdateStatus(ctx context.Context, kubermaticConfiguration *kubermaticv1.KubermaticConfiguration, opts v1.UpdateOptions) (*kubermaticv1.KubermaticConfiguration, error) {
+func (c *FakeKubermaticConfigurations) UpdateStatus(ctx context.Context, kubermaticConfiguration *v1.KubermaticConfiguration, opts metav1.UpdateOptions) (*v1.KubermaticConfiguration, error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(kubermaticconfigurationsResource, "status", c.ns, kubermaticConfiguration), &kubermaticv1.KubermaticConfiguration{})
+		Invokes(testing.NewUpdateSubresourceAction(kubermaticconfigurationsResource, "status", c.ns, kubermaticConfiguration), &v1.KubermaticConfiguration{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*kubermaticv1.KubermaticConfiguration), err
+	return obj.(*v1.KubermaticConfiguration), err
 }
 
 // Delete takes name of the kubermaticConfiguration and deletes it. Returns an error if one occurs.
-func (c *FakeKubermaticConfigurations) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
+func (c *FakeKubermaticConfigurations) Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(kubermaticconfigurationsResource, c.ns, name, opts), &kubermaticv1.KubermaticConfiguration{})
+		Invokes(testing.NewDeleteActionWithOptions(kubermaticconfigurationsResource, c.ns, name, opts), &v1.KubermaticConfiguration{})
 
 	return err
 }
 
 // DeleteCollection deletes a collection of objects.
-func (c *FakeKubermaticConfigurations) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
+func (c *FakeKubermaticConfigurations) DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error {
 	action := testing.NewDeleteCollectionAction(kubermaticconfigurationsResource, c.ns, listOpts)
 
-	_, err := c.Fake.Invokes(action, &kubermaticv1.KubermaticConfigurationList{})
+	_, err := c.Fake.Invokes(action, &v1.KubermaticConfigurationList{})
 	return err
 }
 
 // Patch applies the patch and returns the patched kubermaticConfiguration.
-func (c *FakeKubermaticConfigurations) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *kubermaticv1.KubermaticConfiguration, err error) {
+func (c *FakeKubermaticConfigurations) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts metav1.PatchOptions, subresources ...string) (result *v1.KubermaticConfiguration, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(kubermaticconfigurationsResource, c.ns, name, pt, data, subresources...), &kubermaticv1.KubermaticConfiguration{})
+		Invokes(testing.NewPatchSubresourceAction(kubermaticconfigurationsResource, c.ns, name, pt, data, subresources...), &v1.KubermaticConfiguration{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*kubermaticv1.KubermaticConfiguration), err
+	return obj.(*v1.KubermaticConfiguration), err
 }

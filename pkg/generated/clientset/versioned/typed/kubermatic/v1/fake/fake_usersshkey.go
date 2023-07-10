@@ -5,10 +5,9 @@ package fake
 import (
 	"context"
 
-	kubermaticv1 "k8c.io/api/v3/pkg/apis/kubermatic/v1"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	v1 "k8c.io/api/v3/pkg/apis/kubermatic/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
-	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -20,25 +19,25 @@ type FakeUserSSHKeys struct {
 	ns   string
 }
 
-var usersshkeysResource = schema.GroupVersionResource{Group: "kubermatic.k8c.io", Version: "v1", Resource: "usersshkeys"}
+var usersshkeysResource = v1.SchemeGroupVersion.WithResource("usersshkeys")
 
-var usersshkeysKind = schema.GroupVersionKind{Group: "kubermatic.k8c.io", Version: "v1", Kind: "UserSSHKey"}
+var usersshkeysKind = v1.SchemeGroupVersion.WithKind("UserSSHKey")
 
 // Get takes name of the userSSHKey, and returns the corresponding userSSHKey object, and an error if there is any.
-func (c *FakeUserSSHKeys) Get(ctx context.Context, name string, options v1.GetOptions) (result *kubermaticv1.UserSSHKey, err error) {
+func (c *FakeUserSSHKeys) Get(ctx context.Context, name string, options metav1.GetOptions) (result *v1.UserSSHKey, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(usersshkeysResource, c.ns, name), &kubermaticv1.UserSSHKey{})
+		Invokes(testing.NewGetAction(usersshkeysResource, c.ns, name), &v1.UserSSHKey{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*kubermaticv1.UserSSHKey), err
+	return obj.(*v1.UserSSHKey), err
 }
 
 // List takes label and field selectors, and returns the list of UserSSHKeys that match those selectors.
-func (c *FakeUserSSHKeys) List(ctx context.Context, opts v1.ListOptions) (result *kubermaticv1.UserSSHKeyList, err error) {
+func (c *FakeUserSSHKeys) List(ctx context.Context, opts metav1.ListOptions) (result *v1.UserSSHKeyList, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewListAction(usersshkeysResource, usersshkeysKind, c.ns, opts), &kubermaticv1.UserSSHKeyList{})
+		Invokes(testing.NewListAction(usersshkeysResource, usersshkeysKind, c.ns, opts), &v1.UserSSHKeyList{})
 
 	if obj == nil {
 		return nil, err
@@ -48,8 +47,8 @@ func (c *FakeUserSSHKeys) List(ctx context.Context, opts v1.ListOptions) (result
 	if label == nil {
 		label = labels.Everything()
 	}
-	list := &kubermaticv1.UserSSHKeyList{ListMeta: obj.(*kubermaticv1.UserSSHKeyList).ListMeta}
-	for _, item := range obj.(*kubermaticv1.UserSSHKeyList).Items {
+	list := &v1.UserSSHKeyList{ListMeta: obj.(*v1.UserSSHKeyList).ListMeta}
+	for _, item := range obj.(*v1.UserSSHKeyList).Items {
 		if label.Matches(labels.Set(item.Labels)) {
 			list.Items = append(list.Items, item)
 		}
@@ -58,69 +57,69 @@ func (c *FakeUserSSHKeys) List(ctx context.Context, opts v1.ListOptions) (result
 }
 
 // Watch returns a watch.Interface that watches the requested userSSHKeys.
-func (c *FakeUserSSHKeys) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
+func (c *FakeUserSSHKeys) Watch(ctx context.Context, opts metav1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
 		InvokesWatch(testing.NewWatchAction(usersshkeysResource, c.ns, opts))
 
 }
 
 // Create takes the representation of a userSSHKey and creates it.  Returns the server's representation of the userSSHKey, and an error, if there is any.
-func (c *FakeUserSSHKeys) Create(ctx context.Context, userSSHKey *kubermaticv1.UserSSHKey, opts v1.CreateOptions) (result *kubermaticv1.UserSSHKey, err error) {
+func (c *FakeUserSSHKeys) Create(ctx context.Context, userSSHKey *v1.UserSSHKey, opts metav1.CreateOptions) (result *v1.UserSSHKey, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(usersshkeysResource, c.ns, userSSHKey), &kubermaticv1.UserSSHKey{})
+		Invokes(testing.NewCreateAction(usersshkeysResource, c.ns, userSSHKey), &v1.UserSSHKey{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*kubermaticv1.UserSSHKey), err
+	return obj.(*v1.UserSSHKey), err
 }
 
 // Update takes the representation of a userSSHKey and updates it. Returns the server's representation of the userSSHKey, and an error, if there is any.
-func (c *FakeUserSSHKeys) Update(ctx context.Context, userSSHKey *kubermaticv1.UserSSHKey, opts v1.UpdateOptions) (result *kubermaticv1.UserSSHKey, err error) {
+func (c *FakeUserSSHKeys) Update(ctx context.Context, userSSHKey *v1.UserSSHKey, opts metav1.UpdateOptions) (result *v1.UserSSHKey, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(usersshkeysResource, c.ns, userSSHKey), &kubermaticv1.UserSSHKey{})
+		Invokes(testing.NewUpdateAction(usersshkeysResource, c.ns, userSSHKey), &v1.UserSSHKey{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*kubermaticv1.UserSSHKey), err
+	return obj.(*v1.UserSSHKey), err
 }
 
 // UpdateStatus was generated because the type contains a Status member.
 // Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeUserSSHKeys) UpdateStatus(ctx context.Context, userSSHKey *kubermaticv1.UserSSHKey, opts v1.UpdateOptions) (*kubermaticv1.UserSSHKey, error) {
+func (c *FakeUserSSHKeys) UpdateStatus(ctx context.Context, userSSHKey *v1.UserSSHKey, opts metav1.UpdateOptions) (*v1.UserSSHKey, error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(usersshkeysResource, "status", c.ns, userSSHKey), &kubermaticv1.UserSSHKey{})
+		Invokes(testing.NewUpdateSubresourceAction(usersshkeysResource, "status", c.ns, userSSHKey), &v1.UserSSHKey{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*kubermaticv1.UserSSHKey), err
+	return obj.(*v1.UserSSHKey), err
 }
 
 // Delete takes name of the userSSHKey and deletes it. Returns an error if one occurs.
-func (c *FakeUserSSHKeys) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
+func (c *FakeUserSSHKeys) Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(usersshkeysResource, c.ns, name, opts), &kubermaticv1.UserSSHKey{})
+		Invokes(testing.NewDeleteActionWithOptions(usersshkeysResource, c.ns, name, opts), &v1.UserSSHKey{})
 
 	return err
 }
 
 // DeleteCollection deletes a collection of objects.
-func (c *FakeUserSSHKeys) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
+func (c *FakeUserSSHKeys) DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error {
 	action := testing.NewDeleteCollectionAction(usersshkeysResource, c.ns, listOpts)
 
-	_, err := c.Fake.Invokes(action, &kubermaticv1.UserSSHKeyList{})
+	_, err := c.Fake.Invokes(action, &v1.UserSSHKeyList{})
 	return err
 }
 
 // Patch applies the patch and returns the patched userSSHKey.
-func (c *FakeUserSSHKeys) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *kubermaticv1.UserSSHKey, err error) {
+func (c *FakeUserSSHKeys) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts metav1.PatchOptions, subresources ...string) (result *v1.UserSSHKey, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(usersshkeysResource, c.ns, name, pt, data, subresources...), &kubermaticv1.UserSSHKey{})
+		Invokes(testing.NewPatchSubresourceAction(usersshkeysResource, c.ns, name, pt, data, subresources...), &v1.UserSSHKey{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*kubermaticv1.UserSSHKey), err
+	return obj.(*v1.UserSSHKey), err
 }

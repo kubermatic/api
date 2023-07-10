@@ -5,10 +5,9 @@ package fake
 import (
 	"context"
 
-	appskubermaticv1 "k8c.io/api/v3/pkg/apis/apps.kubermatic/v1"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	v1 "k8c.io/api/v3/pkg/apis/apps.kubermatic/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
-	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -20,25 +19,25 @@ type FakeApplicationDefinitions struct {
 	ns   string
 }
 
-var applicationdefinitionsResource = schema.GroupVersionResource{Group: "apps.kubermatic.k8c.io", Version: "v1", Resource: "applicationdefinitions"}
+var applicationdefinitionsResource = v1.SchemeGroupVersion.WithResource("applicationdefinitions")
 
-var applicationdefinitionsKind = schema.GroupVersionKind{Group: "apps.kubermatic.k8c.io", Version: "v1", Kind: "ApplicationDefinition"}
+var applicationdefinitionsKind = v1.SchemeGroupVersion.WithKind("ApplicationDefinition")
 
 // Get takes name of the applicationDefinition, and returns the corresponding applicationDefinition object, and an error if there is any.
-func (c *FakeApplicationDefinitions) Get(ctx context.Context, name string, options v1.GetOptions) (result *appskubermaticv1.ApplicationDefinition, err error) {
+func (c *FakeApplicationDefinitions) Get(ctx context.Context, name string, options metav1.GetOptions) (result *v1.ApplicationDefinition, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(applicationdefinitionsResource, c.ns, name), &appskubermaticv1.ApplicationDefinition{})
+		Invokes(testing.NewGetAction(applicationdefinitionsResource, c.ns, name), &v1.ApplicationDefinition{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*appskubermaticv1.ApplicationDefinition), err
+	return obj.(*v1.ApplicationDefinition), err
 }
 
 // List takes label and field selectors, and returns the list of ApplicationDefinitions that match those selectors.
-func (c *FakeApplicationDefinitions) List(ctx context.Context, opts v1.ListOptions) (result *appskubermaticv1.ApplicationDefinitionList, err error) {
+func (c *FakeApplicationDefinitions) List(ctx context.Context, opts metav1.ListOptions) (result *v1.ApplicationDefinitionList, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewListAction(applicationdefinitionsResource, applicationdefinitionsKind, c.ns, opts), &appskubermaticv1.ApplicationDefinitionList{})
+		Invokes(testing.NewListAction(applicationdefinitionsResource, applicationdefinitionsKind, c.ns, opts), &v1.ApplicationDefinitionList{})
 
 	if obj == nil {
 		return nil, err
@@ -48,8 +47,8 @@ func (c *FakeApplicationDefinitions) List(ctx context.Context, opts v1.ListOptio
 	if label == nil {
 		label = labels.Everything()
 	}
-	list := &appskubermaticv1.ApplicationDefinitionList{ListMeta: obj.(*appskubermaticv1.ApplicationDefinitionList).ListMeta}
-	for _, item := range obj.(*appskubermaticv1.ApplicationDefinitionList).Items {
+	list := &v1.ApplicationDefinitionList{ListMeta: obj.(*v1.ApplicationDefinitionList).ListMeta}
+	for _, item := range obj.(*v1.ApplicationDefinitionList).Items {
 		if label.Matches(labels.Set(item.Labels)) {
 			list.Items = append(list.Items, item)
 		}
@@ -58,57 +57,57 @@ func (c *FakeApplicationDefinitions) List(ctx context.Context, opts v1.ListOptio
 }
 
 // Watch returns a watch.Interface that watches the requested applicationDefinitions.
-func (c *FakeApplicationDefinitions) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
+func (c *FakeApplicationDefinitions) Watch(ctx context.Context, opts metav1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
 		InvokesWatch(testing.NewWatchAction(applicationdefinitionsResource, c.ns, opts))
 
 }
 
 // Create takes the representation of a applicationDefinition and creates it.  Returns the server's representation of the applicationDefinition, and an error, if there is any.
-func (c *FakeApplicationDefinitions) Create(ctx context.Context, applicationDefinition *appskubermaticv1.ApplicationDefinition, opts v1.CreateOptions) (result *appskubermaticv1.ApplicationDefinition, err error) {
+func (c *FakeApplicationDefinitions) Create(ctx context.Context, applicationDefinition *v1.ApplicationDefinition, opts metav1.CreateOptions) (result *v1.ApplicationDefinition, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(applicationdefinitionsResource, c.ns, applicationDefinition), &appskubermaticv1.ApplicationDefinition{})
+		Invokes(testing.NewCreateAction(applicationdefinitionsResource, c.ns, applicationDefinition), &v1.ApplicationDefinition{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*appskubermaticv1.ApplicationDefinition), err
+	return obj.(*v1.ApplicationDefinition), err
 }
 
 // Update takes the representation of a applicationDefinition and updates it. Returns the server's representation of the applicationDefinition, and an error, if there is any.
-func (c *FakeApplicationDefinitions) Update(ctx context.Context, applicationDefinition *appskubermaticv1.ApplicationDefinition, opts v1.UpdateOptions) (result *appskubermaticv1.ApplicationDefinition, err error) {
+func (c *FakeApplicationDefinitions) Update(ctx context.Context, applicationDefinition *v1.ApplicationDefinition, opts metav1.UpdateOptions) (result *v1.ApplicationDefinition, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(applicationdefinitionsResource, c.ns, applicationDefinition), &appskubermaticv1.ApplicationDefinition{})
+		Invokes(testing.NewUpdateAction(applicationdefinitionsResource, c.ns, applicationDefinition), &v1.ApplicationDefinition{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*appskubermaticv1.ApplicationDefinition), err
+	return obj.(*v1.ApplicationDefinition), err
 }
 
 // Delete takes name of the applicationDefinition and deletes it. Returns an error if one occurs.
-func (c *FakeApplicationDefinitions) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
+func (c *FakeApplicationDefinitions) Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(applicationdefinitionsResource, c.ns, name, opts), &appskubermaticv1.ApplicationDefinition{})
+		Invokes(testing.NewDeleteActionWithOptions(applicationdefinitionsResource, c.ns, name, opts), &v1.ApplicationDefinition{})
 
 	return err
 }
 
 // DeleteCollection deletes a collection of objects.
-func (c *FakeApplicationDefinitions) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
+func (c *FakeApplicationDefinitions) DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error {
 	action := testing.NewDeleteCollectionAction(applicationdefinitionsResource, c.ns, listOpts)
 
-	_, err := c.Fake.Invokes(action, &appskubermaticv1.ApplicationDefinitionList{})
+	_, err := c.Fake.Invokes(action, &v1.ApplicationDefinitionList{})
 	return err
 }
 
 // Patch applies the patch and returns the patched applicationDefinition.
-func (c *FakeApplicationDefinitions) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *appskubermaticv1.ApplicationDefinition, err error) {
+func (c *FakeApplicationDefinitions) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts metav1.PatchOptions, subresources ...string) (result *v1.ApplicationDefinition, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(applicationdefinitionsResource, c.ns, name, pt, data, subresources...), &appskubermaticv1.ApplicationDefinition{})
+		Invokes(testing.NewPatchSubresourceAction(applicationdefinitionsResource, c.ns, name, pt, data, subresources...), &v1.ApplicationDefinition{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*appskubermaticv1.ApplicationDefinition), err
+	return obj.(*v1.ApplicationDefinition), err
 }

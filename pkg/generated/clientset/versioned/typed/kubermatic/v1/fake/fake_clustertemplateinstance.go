@@ -5,10 +5,9 @@ package fake
 import (
 	"context"
 
-	kubermaticv1 "k8c.io/api/v3/pkg/apis/kubermatic/v1"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	v1 "k8c.io/api/v3/pkg/apis/kubermatic/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
-	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -20,25 +19,25 @@ type FakeClusterTemplateInstances struct {
 	ns   string
 }
 
-var clustertemplateinstancesResource = schema.GroupVersionResource{Group: "kubermatic.k8c.io", Version: "v1", Resource: "clustertemplateinstances"}
+var clustertemplateinstancesResource = v1.SchemeGroupVersion.WithResource("clustertemplateinstances")
 
-var clustertemplateinstancesKind = schema.GroupVersionKind{Group: "kubermatic.k8c.io", Version: "v1", Kind: "ClusterTemplateInstance"}
+var clustertemplateinstancesKind = v1.SchemeGroupVersion.WithKind("ClusterTemplateInstance")
 
 // Get takes name of the clusterTemplateInstance, and returns the corresponding clusterTemplateInstance object, and an error if there is any.
-func (c *FakeClusterTemplateInstances) Get(ctx context.Context, name string, options v1.GetOptions) (result *kubermaticv1.ClusterTemplateInstance, err error) {
+func (c *FakeClusterTemplateInstances) Get(ctx context.Context, name string, options metav1.GetOptions) (result *v1.ClusterTemplateInstance, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(clustertemplateinstancesResource, c.ns, name), &kubermaticv1.ClusterTemplateInstance{})
+		Invokes(testing.NewGetAction(clustertemplateinstancesResource, c.ns, name), &v1.ClusterTemplateInstance{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*kubermaticv1.ClusterTemplateInstance), err
+	return obj.(*v1.ClusterTemplateInstance), err
 }
 
 // List takes label and field selectors, and returns the list of ClusterTemplateInstances that match those selectors.
-func (c *FakeClusterTemplateInstances) List(ctx context.Context, opts v1.ListOptions) (result *kubermaticv1.ClusterTemplateInstanceList, err error) {
+func (c *FakeClusterTemplateInstances) List(ctx context.Context, opts metav1.ListOptions) (result *v1.ClusterTemplateInstanceList, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewListAction(clustertemplateinstancesResource, clustertemplateinstancesKind, c.ns, opts), &kubermaticv1.ClusterTemplateInstanceList{})
+		Invokes(testing.NewListAction(clustertemplateinstancesResource, clustertemplateinstancesKind, c.ns, opts), &v1.ClusterTemplateInstanceList{})
 
 	if obj == nil {
 		return nil, err
@@ -48,8 +47,8 @@ func (c *FakeClusterTemplateInstances) List(ctx context.Context, opts v1.ListOpt
 	if label == nil {
 		label = labels.Everything()
 	}
-	list := &kubermaticv1.ClusterTemplateInstanceList{ListMeta: obj.(*kubermaticv1.ClusterTemplateInstanceList).ListMeta}
-	for _, item := range obj.(*kubermaticv1.ClusterTemplateInstanceList).Items {
+	list := &v1.ClusterTemplateInstanceList{ListMeta: obj.(*v1.ClusterTemplateInstanceList).ListMeta}
+	for _, item := range obj.(*v1.ClusterTemplateInstanceList).Items {
 		if label.Matches(labels.Set(item.Labels)) {
 			list.Items = append(list.Items, item)
 		}
@@ -58,57 +57,57 @@ func (c *FakeClusterTemplateInstances) List(ctx context.Context, opts v1.ListOpt
 }
 
 // Watch returns a watch.Interface that watches the requested clusterTemplateInstances.
-func (c *FakeClusterTemplateInstances) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
+func (c *FakeClusterTemplateInstances) Watch(ctx context.Context, opts metav1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
 		InvokesWatch(testing.NewWatchAction(clustertemplateinstancesResource, c.ns, opts))
 
 }
 
 // Create takes the representation of a clusterTemplateInstance and creates it.  Returns the server's representation of the clusterTemplateInstance, and an error, if there is any.
-func (c *FakeClusterTemplateInstances) Create(ctx context.Context, clusterTemplateInstance *kubermaticv1.ClusterTemplateInstance, opts v1.CreateOptions) (result *kubermaticv1.ClusterTemplateInstance, err error) {
+func (c *FakeClusterTemplateInstances) Create(ctx context.Context, clusterTemplateInstance *v1.ClusterTemplateInstance, opts metav1.CreateOptions) (result *v1.ClusterTemplateInstance, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(clustertemplateinstancesResource, c.ns, clusterTemplateInstance), &kubermaticv1.ClusterTemplateInstance{})
+		Invokes(testing.NewCreateAction(clustertemplateinstancesResource, c.ns, clusterTemplateInstance), &v1.ClusterTemplateInstance{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*kubermaticv1.ClusterTemplateInstance), err
+	return obj.(*v1.ClusterTemplateInstance), err
 }
 
 // Update takes the representation of a clusterTemplateInstance and updates it. Returns the server's representation of the clusterTemplateInstance, and an error, if there is any.
-func (c *FakeClusterTemplateInstances) Update(ctx context.Context, clusterTemplateInstance *kubermaticv1.ClusterTemplateInstance, opts v1.UpdateOptions) (result *kubermaticv1.ClusterTemplateInstance, err error) {
+func (c *FakeClusterTemplateInstances) Update(ctx context.Context, clusterTemplateInstance *v1.ClusterTemplateInstance, opts metav1.UpdateOptions) (result *v1.ClusterTemplateInstance, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(clustertemplateinstancesResource, c.ns, clusterTemplateInstance), &kubermaticv1.ClusterTemplateInstance{})
+		Invokes(testing.NewUpdateAction(clustertemplateinstancesResource, c.ns, clusterTemplateInstance), &v1.ClusterTemplateInstance{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*kubermaticv1.ClusterTemplateInstance), err
+	return obj.(*v1.ClusterTemplateInstance), err
 }
 
 // Delete takes name of the clusterTemplateInstance and deletes it. Returns an error if one occurs.
-func (c *FakeClusterTemplateInstances) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
+func (c *FakeClusterTemplateInstances) Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(clustertemplateinstancesResource, c.ns, name, opts), &kubermaticv1.ClusterTemplateInstance{})
+		Invokes(testing.NewDeleteActionWithOptions(clustertemplateinstancesResource, c.ns, name, opts), &v1.ClusterTemplateInstance{})
 
 	return err
 }
 
 // DeleteCollection deletes a collection of objects.
-func (c *FakeClusterTemplateInstances) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
+func (c *FakeClusterTemplateInstances) DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error {
 	action := testing.NewDeleteCollectionAction(clustertemplateinstancesResource, c.ns, listOpts)
 
-	_, err := c.Fake.Invokes(action, &kubermaticv1.ClusterTemplateInstanceList{})
+	_, err := c.Fake.Invokes(action, &v1.ClusterTemplateInstanceList{})
 	return err
 }
 
 // Patch applies the patch and returns the patched clusterTemplateInstance.
-func (c *FakeClusterTemplateInstances) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *kubermaticv1.ClusterTemplateInstance, err error) {
+func (c *FakeClusterTemplateInstances) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts metav1.PatchOptions, subresources ...string) (result *v1.ClusterTemplateInstance, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(clustertemplateinstancesResource, c.ns, name, pt, data, subresources...), &kubermaticv1.ClusterTemplateInstance{})
+		Invokes(testing.NewPatchSubresourceAction(clustertemplateinstancesResource, c.ns, name, pt, data, subresources...), &v1.ClusterTemplateInstance{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*kubermaticv1.ClusterTemplateInstance), err
+	return obj.(*v1.ClusterTemplateInstance), err
 }

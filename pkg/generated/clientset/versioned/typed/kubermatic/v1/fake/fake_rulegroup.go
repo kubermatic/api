@@ -5,10 +5,9 @@ package fake
 import (
 	"context"
 
-	kubermaticv1 "k8c.io/api/v3/pkg/apis/kubermatic/v1"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	v1 "k8c.io/api/v3/pkg/apis/kubermatic/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
-	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -20,25 +19,25 @@ type FakeRuleGroups struct {
 	ns   string
 }
 
-var rulegroupsResource = schema.GroupVersionResource{Group: "kubermatic.k8c.io", Version: "v1", Resource: "rulegroups"}
+var rulegroupsResource = v1.SchemeGroupVersion.WithResource("rulegroups")
 
-var rulegroupsKind = schema.GroupVersionKind{Group: "kubermatic.k8c.io", Version: "v1", Kind: "RuleGroup"}
+var rulegroupsKind = v1.SchemeGroupVersion.WithKind("RuleGroup")
 
 // Get takes name of the ruleGroup, and returns the corresponding ruleGroup object, and an error if there is any.
-func (c *FakeRuleGroups) Get(ctx context.Context, name string, options v1.GetOptions) (result *kubermaticv1.RuleGroup, err error) {
+func (c *FakeRuleGroups) Get(ctx context.Context, name string, options metav1.GetOptions) (result *v1.RuleGroup, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(rulegroupsResource, c.ns, name), &kubermaticv1.RuleGroup{})
+		Invokes(testing.NewGetAction(rulegroupsResource, c.ns, name), &v1.RuleGroup{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*kubermaticv1.RuleGroup), err
+	return obj.(*v1.RuleGroup), err
 }
 
 // List takes label and field selectors, and returns the list of RuleGroups that match those selectors.
-func (c *FakeRuleGroups) List(ctx context.Context, opts v1.ListOptions) (result *kubermaticv1.RuleGroupList, err error) {
+func (c *FakeRuleGroups) List(ctx context.Context, opts metav1.ListOptions) (result *v1.RuleGroupList, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewListAction(rulegroupsResource, rulegroupsKind, c.ns, opts), &kubermaticv1.RuleGroupList{})
+		Invokes(testing.NewListAction(rulegroupsResource, rulegroupsKind, c.ns, opts), &v1.RuleGroupList{})
 
 	if obj == nil {
 		return nil, err
@@ -48,8 +47,8 @@ func (c *FakeRuleGroups) List(ctx context.Context, opts v1.ListOptions) (result 
 	if label == nil {
 		label = labels.Everything()
 	}
-	list := &kubermaticv1.RuleGroupList{ListMeta: obj.(*kubermaticv1.RuleGroupList).ListMeta}
-	for _, item := range obj.(*kubermaticv1.RuleGroupList).Items {
+	list := &v1.RuleGroupList{ListMeta: obj.(*v1.RuleGroupList).ListMeta}
+	for _, item := range obj.(*v1.RuleGroupList).Items {
 		if label.Matches(labels.Set(item.Labels)) {
 			list.Items = append(list.Items, item)
 		}
@@ -58,57 +57,57 @@ func (c *FakeRuleGroups) List(ctx context.Context, opts v1.ListOptions) (result 
 }
 
 // Watch returns a watch.Interface that watches the requested ruleGroups.
-func (c *FakeRuleGroups) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
+func (c *FakeRuleGroups) Watch(ctx context.Context, opts metav1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
 		InvokesWatch(testing.NewWatchAction(rulegroupsResource, c.ns, opts))
 
 }
 
 // Create takes the representation of a ruleGroup and creates it.  Returns the server's representation of the ruleGroup, and an error, if there is any.
-func (c *FakeRuleGroups) Create(ctx context.Context, ruleGroup *kubermaticv1.RuleGroup, opts v1.CreateOptions) (result *kubermaticv1.RuleGroup, err error) {
+func (c *FakeRuleGroups) Create(ctx context.Context, ruleGroup *v1.RuleGroup, opts metav1.CreateOptions) (result *v1.RuleGroup, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(rulegroupsResource, c.ns, ruleGroup), &kubermaticv1.RuleGroup{})
+		Invokes(testing.NewCreateAction(rulegroupsResource, c.ns, ruleGroup), &v1.RuleGroup{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*kubermaticv1.RuleGroup), err
+	return obj.(*v1.RuleGroup), err
 }
 
 // Update takes the representation of a ruleGroup and updates it. Returns the server's representation of the ruleGroup, and an error, if there is any.
-func (c *FakeRuleGroups) Update(ctx context.Context, ruleGroup *kubermaticv1.RuleGroup, opts v1.UpdateOptions) (result *kubermaticv1.RuleGroup, err error) {
+func (c *FakeRuleGroups) Update(ctx context.Context, ruleGroup *v1.RuleGroup, opts metav1.UpdateOptions) (result *v1.RuleGroup, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(rulegroupsResource, c.ns, ruleGroup), &kubermaticv1.RuleGroup{})
+		Invokes(testing.NewUpdateAction(rulegroupsResource, c.ns, ruleGroup), &v1.RuleGroup{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*kubermaticv1.RuleGroup), err
+	return obj.(*v1.RuleGroup), err
 }
 
 // Delete takes name of the ruleGroup and deletes it. Returns an error if one occurs.
-func (c *FakeRuleGroups) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
+func (c *FakeRuleGroups) Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(rulegroupsResource, c.ns, name, opts), &kubermaticv1.RuleGroup{})
+		Invokes(testing.NewDeleteActionWithOptions(rulegroupsResource, c.ns, name, opts), &v1.RuleGroup{})
 
 	return err
 }
 
 // DeleteCollection deletes a collection of objects.
-func (c *FakeRuleGroups) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
+func (c *FakeRuleGroups) DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error {
 	action := testing.NewDeleteCollectionAction(rulegroupsResource, c.ns, listOpts)
 
-	_, err := c.Fake.Invokes(action, &kubermaticv1.RuleGroupList{})
+	_, err := c.Fake.Invokes(action, &v1.RuleGroupList{})
 	return err
 }
 
 // Patch applies the patch and returns the patched ruleGroup.
-func (c *FakeRuleGroups) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *kubermaticv1.RuleGroup, err error) {
+func (c *FakeRuleGroups) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts metav1.PatchOptions, subresources ...string) (result *v1.RuleGroup, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(rulegroupsResource, c.ns, name, pt, data, subresources...), &kubermaticv1.RuleGroup{})
+		Invokes(testing.NewPatchSubresourceAction(rulegroupsResource, c.ns, name, pt, data, subresources...), &v1.RuleGroup{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*kubermaticv1.RuleGroup), err
+	return obj.(*v1.RuleGroup), err
 }

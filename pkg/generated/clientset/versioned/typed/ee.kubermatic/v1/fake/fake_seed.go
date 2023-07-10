@@ -5,10 +5,9 @@ package fake
 import (
 	"context"
 
-	eekubermaticv1 "k8c.io/api/v3/pkg/apis/ee.kubermatic/v1"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	v1 "k8c.io/api/v3/pkg/apis/ee.kubermatic/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
-	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -20,25 +19,25 @@ type FakeSeeds struct {
 	ns   string
 }
 
-var seedsResource = schema.GroupVersionResource{Group: "ee.kubermatic.k8c.io", Version: "v1", Resource: "seeds"}
+var seedsResource = v1.SchemeGroupVersion.WithResource("seeds")
 
-var seedsKind = schema.GroupVersionKind{Group: "ee.kubermatic.k8c.io", Version: "v1", Kind: "Seed"}
+var seedsKind = v1.SchemeGroupVersion.WithKind("Seed")
 
 // Get takes name of the seed, and returns the corresponding seed object, and an error if there is any.
-func (c *FakeSeeds) Get(ctx context.Context, name string, options v1.GetOptions) (result *eekubermaticv1.Seed, err error) {
+func (c *FakeSeeds) Get(ctx context.Context, name string, options metav1.GetOptions) (result *v1.Seed, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(seedsResource, c.ns, name), &eekubermaticv1.Seed{})
+		Invokes(testing.NewGetAction(seedsResource, c.ns, name), &v1.Seed{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*eekubermaticv1.Seed), err
+	return obj.(*v1.Seed), err
 }
 
 // List takes label and field selectors, and returns the list of Seeds that match those selectors.
-func (c *FakeSeeds) List(ctx context.Context, opts v1.ListOptions) (result *eekubermaticv1.SeedList, err error) {
+func (c *FakeSeeds) List(ctx context.Context, opts metav1.ListOptions) (result *v1.SeedList, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewListAction(seedsResource, seedsKind, c.ns, opts), &eekubermaticv1.SeedList{})
+		Invokes(testing.NewListAction(seedsResource, seedsKind, c.ns, opts), &v1.SeedList{})
 
 	if obj == nil {
 		return nil, err
@@ -48,8 +47,8 @@ func (c *FakeSeeds) List(ctx context.Context, opts v1.ListOptions) (result *eeku
 	if label == nil {
 		label = labels.Everything()
 	}
-	list := &eekubermaticv1.SeedList{ListMeta: obj.(*eekubermaticv1.SeedList).ListMeta}
-	for _, item := range obj.(*eekubermaticv1.SeedList).Items {
+	list := &v1.SeedList{ListMeta: obj.(*v1.SeedList).ListMeta}
+	for _, item := range obj.(*v1.SeedList).Items {
 		if label.Matches(labels.Set(item.Labels)) {
 			list.Items = append(list.Items, item)
 		}
@@ -58,69 +57,69 @@ func (c *FakeSeeds) List(ctx context.Context, opts v1.ListOptions) (result *eeku
 }
 
 // Watch returns a watch.Interface that watches the requested seeds.
-func (c *FakeSeeds) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
+func (c *FakeSeeds) Watch(ctx context.Context, opts metav1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
 		InvokesWatch(testing.NewWatchAction(seedsResource, c.ns, opts))
 
 }
 
 // Create takes the representation of a seed and creates it.  Returns the server's representation of the seed, and an error, if there is any.
-func (c *FakeSeeds) Create(ctx context.Context, seed *eekubermaticv1.Seed, opts v1.CreateOptions) (result *eekubermaticv1.Seed, err error) {
+func (c *FakeSeeds) Create(ctx context.Context, seed *v1.Seed, opts metav1.CreateOptions) (result *v1.Seed, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(seedsResource, c.ns, seed), &eekubermaticv1.Seed{})
+		Invokes(testing.NewCreateAction(seedsResource, c.ns, seed), &v1.Seed{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*eekubermaticv1.Seed), err
+	return obj.(*v1.Seed), err
 }
 
 // Update takes the representation of a seed and updates it. Returns the server's representation of the seed, and an error, if there is any.
-func (c *FakeSeeds) Update(ctx context.Context, seed *eekubermaticv1.Seed, opts v1.UpdateOptions) (result *eekubermaticv1.Seed, err error) {
+func (c *FakeSeeds) Update(ctx context.Context, seed *v1.Seed, opts metav1.UpdateOptions) (result *v1.Seed, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(seedsResource, c.ns, seed), &eekubermaticv1.Seed{})
+		Invokes(testing.NewUpdateAction(seedsResource, c.ns, seed), &v1.Seed{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*eekubermaticv1.Seed), err
+	return obj.(*v1.Seed), err
 }
 
 // UpdateStatus was generated because the type contains a Status member.
 // Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeSeeds) UpdateStatus(ctx context.Context, seed *eekubermaticv1.Seed, opts v1.UpdateOptions) (*eekubermaticv1.Seed, error) {
+func (c *FakeSeeds) UpdateStatus(ctx context.Context, seed *v1.Seed, opts metav1.UpdateOptions) (*v1.Seed, error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(seedsResource, "status", c.ns, seed), &eekubermaticv1.Seed{})
+		Invokes(testing.NewUpdateSubresourceAction(seedsResource, "status", c.ns, seed), &v1.Seed{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*eekubermaticv1.Seed), err
+	return obj.(*v1.Seed), err
 }
 
 // Delete takes name of the seed and deletes it. Returns an error if one occurs.
-func (c *FakeSeeds) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
+func (c *FakeSeeds) Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(seedsResource, c.ns, name, opts), &eekubermaticv1.Seed{})
+		Invokes(testing.NewDeleteActionWithOptions(seedsResource, c.ns, name, opts), &v1.Seed{})
 
 	return err
 }
 
 // DeleteCollection deletes a collection of objects.
-func (c *FakeSeeds) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
+func (c *FakeSeeds) DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error {
 	action := testing.NewDeleteCollectionAction(seedsResource, c.ns, listOpts)
 
-	_, err := c.Fake.Invokes(action, &eekubermaticv1.SeedList{})
+	_, err := c.Fake.Invokes(action, &v1.SeedList{})
 	return err
 }
 
 // Patch applies the patch and returns the patched seed.
-func (c *FakeSeeds) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *eekubermaticv1.Seed, err error) {
+func (c *FakeSeeds) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts metav1.PatchOptions, subresources ...string) (result *v1.Seed, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(seedsResource, c.ns, name, pt, data, subresources...), &eekubermaticv1.Seed{})
+		Invokes(testing.NewPatchSubresourceAction(seedsResource, c.ns, name, pt, data, subresources...), &v1.Seed{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*eekubermaticv1.Seed), err
+	return obj.(*v1.Seed), err
 }
