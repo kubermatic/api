@@ -5,10 +5,9 @@ package fake
 import (
 	"context"
 
-	kubermaticv1 "k8c.io/api/v3/pkg/apis/kubermatic/v1"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	v1 "k8c.io/api/v3/pkg/apis/kubermatic/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
-	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -20,25 +19,25 @@ type FakeAllowedRegistries struct {
 	ns   string
 }
 
-var allowedregistriesResource = schema.GroupVersionResource{Group: "kubermatic.k8c.io", Version: "v1", Resource: "allowedregistries"}
+var allowedregistriesResource = v1.SchemeGroupVersion.WithResource("allowedregistries")
 
-var allowedregistriesKind = schema.GroupVersionKind{Group: "kubermatic.k8c.io", Version: "v1", Kind: "AllowedRegistry"}
+var allowedregistriesKind = v1.SchemeGroupVersion.WithKind("AllowedRegistry")
 
 // Get takes name of the allowedRegistry, and returns the corresponding allowedRegistry object, and an error if there is any.
-func (c *FakeAllowedRegistries) Get(ctx context.Context, name string, options v1.GetOptions) (result *kubermaticv1.AllowedRegistry, err error) {
+func (c *FakeAllowedRegistries) Get(ctx context.Context, name string, options metav1.GetOptions) (result *v1.AllowedRegistry, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(allowedregistriesResource, c.ns, name), &kubermaticv1.AllowedRegistry{})
+		Invokes(testing.NewGetAction(allowedregistriesResource, c.ns, name), &v1.AllowedRegistry{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*kubermaticv1.AllowedRegistry), err
+	return obj.(*v1.AllowedRegistry), err
 }
 
 // List takes label and field selectors, and returns the list of AllowedRegistries that match those selectors.
-func (c *FakeAllowedRegistries) List(ctx context.Context, opts v1.ListOptions) (result *kubermaticv1.AllowedRegistryList, err error) {
+func (c *FakeAllowedRegistries) List(ctx context.Context, opts metav1.ListOptions) (result *v1.AllowedRegistryList, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewListAction(allowedregistriesResource, allowedregistriesKind, c.ns, opts), &kubermaticv1.AllowedRegistryList{})
+		Invokes(testing.NewListAction(allowedregistriesResource, allowedregistriesKind, c.ns, opts), &v1.AllowedRegistryList{})
 
 	if obj == nil {
 		return nil, err
@@ -48,8 +47,8 @@ func (c *FakeAllowedRegistries) List(ctx context.Context, opts v1.ListOptions) (
 	if label == nil {
 		label = labels.Everything()
 	}
-	list := &kubermaticv1.AllowedRegistryList{ListMeta: obj.(*kubermaticv1.AllowedRegistryList).ListMeta}
-	for _, item := range obj.(*kubermaticv1.AllowedRegistryList).Items {
+	list := &v1.AllowedRegistryList{ListMeta: obj.(*v1.AllowedRegistryList).ListMeta}
+	for _, item := range obj.(*v1.AllowedRegistryList).Items {
 		if label.Matches(labels.Set(item.Labels)) {
 			list.Items = append(list.Items, item)
 		}
@@ -58,57 +57,57 @@ func (c *FakeAllowedRegistries) List(ctx context.Context, opts v1.ListOptions) (
 }
 
 // Watch returns a watch.Interface that watches the requested allowedRegistries.
-func (c *FakeAllowedRegistries) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
+func (c *FakeAllowedRegistries) Watch(ctx context.Context, opts metav1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
 		InvokesWatch(testing.NewWatchAction(allowedregistriesResource, c.ns, opts))
 
 }
 
 // Create takes the representation of a allowedRegistry and creates it.  Returns the server's representation of the allowedRegistry, and an error, if there is any.
-func (c *FakeAllowedRegistries) Create(ctx context.Context, allowedRegistry *kubermaticv1.AllowedRegistry, opts v1.CreateOptions) (result *kubermaticv1.AllowedRegistry, err error) {
+func (c *FakeAllowedRegistries) Create(ctx context.Context, allowedRegistry *v1.AllowedRegistry, opts metav1.CreateOptions) (result *v1.AllowedRegistry, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(allowedregistriesResource, c.ns, allowedRegistry), &kubermaticv1.AllowedRegistry{})
+		Invokes(testing.NewCreateAction(allowedregistriesResource, c.ns, allowedRegistry), &v1.AllowedRegistry{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*kubermaticv1.AllowedRegistry), err
+	return obj.(*v1.AllowedRegistry), err
 }
 
 // Update takes the representation of a allowedRegistry and updates it. Returns the server's representation of the allowedRegistry, and an error, if there is any.
-func (c *FakeAllowedRegistries) Update(ctx context.Context, allowedRegistry *kubermaticv1.AllowedRegistry, opts v1.UpdateOptions) (result *kubermaticv1.AllowedRegistry, err error) {
+func (c *FakeAllowedRegistries) Update(ctx context.Context, allowedRegistry *v1.AllowedRegistry, opts metav1.UpdateOptions) (result *v1.AllowedRegistry, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(allowedregistriesResource, c.ns, allowedRegistry), &kubermaticv1.AllowedRegistry{})
+		Invokes(testing.NewUpdateAction(allowedregistriesResource, c.ns, allowedRegistry), &v1.AllowedRegistry{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*kubermaticv1.AllowedRegistry), err
+	return obj.(*v1.AllowedRegistry), err
 }
 
 // Delete takes name of the allowedRegistry and deletes it. Returns an error if one occurs.
-func (c *FakeAllowedRegistries) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
+func (c *FakeAllowedRegistries) Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(allowedregistriesResource, c.ns, name, opts), &kubermaticv1.AllowedRegistry{})
+		Invokes(testing.NewDeleteActionWithOptions(allowedregistriesResource, c.ns, name, opts), &v1.AllowedRegistry{})
 
 	return err
 }
 
 // DeleteCollection deletes a collection of objects.
-func (c *FakeAllowedRegistries) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
+func (c *FakeAllowedRegistries) DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error {
 	action := testing.NewDeleteCollectionAction(allowedregistriesResource, c.ns, listOpts)
 
-	_, err := c.Fake.Invokes(action, &kubermaticv1.AllowedRegistryList{})
+	_, err := c.Fake.Invokes(action, &v1.AllowedRegistryList{})
 	return err
 }
 
 // Patch applies the patch and returns the patched allowedRegistry.
-func (c *FakeAllowedRegistries) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *kubermaticv1.AllowedRegistry, err error) {
+func (c *FakeAllowedRegistries) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts metav1.PatchOptions, subresources ...string) (result *v1.AllowedRegistry, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(allowedregistriesResource, c.ns, name, pt, data, subresources...), &kubermaticv1.AllowedRegistry{})
+		Invokes(testing.NewPatchSubresourceAction(allowedregistriesResource, c.ns, name, pt, data, subresources...), &v1.AllowedRegistry{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*kubermaticv1.AllowedRegistry), err
+	return obj.(*v1.AllowedRegistry), err
 }

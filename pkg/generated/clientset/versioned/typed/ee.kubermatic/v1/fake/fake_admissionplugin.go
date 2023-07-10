@@ -5,10 +5,9 @@ package fake
 import (
 	"context"
 
-	eekubermaticv1 "k8c.io/api/v3/pkg/apis/ee.kubermatic/v1"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	v1 "k8c.io/api/v3/pkg/apis/ee.kubermatic/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
-	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -20,25 +19,25 @@ type FakeAdmissionPlugins struct {
 	ns   string
 }
 
-var admissionpluginsResource = schema.GroupVersionResource{Group: "ee.kubermatic.k8c.io", Version: "v1", Resource: "admissionplugins"}
+var admissionpluginsResource = v1.SchemeGroupVersion.WithResource("admissionplugins")
 
-var admissionpluginsKind = schema.GroupVersionKind{Group: "ee.kubermatic.k8c.io", Version: "v1", Kind: "AdmissionPlugin"}
+var admissionpluginsKind = v1.SchemeGroupVersion.WithKind("AdmissionPlugin")
 
 // Get takes name of the admissionPlugin, and returns the corresponding admissionPlugin object, and an error if there is any.
-func (c *FakeAdmissionPlugins) Get(ctx context.Context, name string, options v1.GetOptions) (result *eekubermaticv1.AdmissionPlugin, err error) {
+func (c *FakeAdmissionPlugins) Get(ctx context.Context, name string, options metav1.GetOptions) (result *v1.AdmissionPlugin, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(admissionpluginsResource, c.ns, name), &eekubermaticv1.AdmissionPlugin{})
+		Invokes(testing.NewGetAction(admissionpluginsResource, c.ns, name), &v1.AdmissionPlugin{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*eekubermaticv1.AdmissionPlugin), err
+	return obj.(*v1.AdmissionPlugin), err
 }
 
 // List takes label and field selectors, and returns the list of AdmissionPlugins that match those selectors.
-func (c *FakeAdmissionPlugins) List(ctx context.Context, opts v1.ListOptions) (result *eekubermaticv1.AdmissionPluginList, err error) {
+func (c *FakeAdmissionPlugins) List(ctx context.Context, opts metav1.ListOptions) (result *v1.AdmissionPluginList, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewListAction(admissionpluginsResource, admissionpluginsKind, c.ns, opts), &eekubermaticv1.AdmissionPluginList{})
+		Invokes(testing.NewListAction(admissionpluginsResource, admissionpluginsKind, c.ns, opts), &v1.AdmissionPluginList{})
 
 	if obj == nil {
 		return nil, err
@@ -48,8 +47,8 @@ func (c *FakeAdmissionPlugins) List(ctx context.Context, opts v1.ListOptions) (r
 	if label == nil {
 		label = labels.Everything()
 	}
-	list := &eekubermaticv1.AdmissionPluginList{ListMeta: obj.(*eekubermaticv1.AdmissionPluginList).ListMeta}
-	for _, item := range obj.(*eekubermaticv1.AdmissionPluginList).Items {
+	list := &v1.AdmissionPluginList{ListMeta: obj.(*v1.AdmissionPluginList).ListMeta}
+	for _, item := range obj.(*v1.AdmissionPluginList).Items {
 		if label.Matches(labels.Set(item.Labels)) {
 			list.Items = append(list.Items, item)
 		}
@@ -58,57 +57,57 @@ func (c *FakeAdmissionPlugins) List(ctx context.Context, opts v1.ListOptions) (r
 }
 
 // Watch returns a watch.Interface that watches the requested admissionPlugins.
-func (c *FakeAdmissionPlugins) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
+func (c *FakeAdmissionPlugins) Watch(ctx context.Context, opts metav1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
 		InvokesWatch(testing.NewWatchAction(admissionpluginsResource, c.ns, opts))
 
 }
 
 // Create takes the representation of a admissionPlugin and creates it.  Returns the server's representation of the admissionPlugin, and an error, if there is any.
-func (c *FakeAdmissionPlugins) Create(ctx context.Context, admissionPlugin *eekubermaticv1.AdmissionPlugin, opts v1.CreateOptions) (result *eekubermaticv1.AdmissionPlugin, err error) {
+func (c *FakeAdmissionPlugins) Create(ctx context.Context, admissionPlugin *v1.AdmissionPlugin, opts metav1.CreateOptions) (result *v1.AdmissionPlugin, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(admissionpluginsResource, c.ns, admissionPlugin), &eekubermaticv1.AdmissionPlugin{})
+		Invokes(testing.NewCreateAction(admissionpluginsResource, c.ns, admissionPlugin), &v1.AdmissionPlugin{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*eekubermaticv1.AdmissionPlugin), err
+	return obj.(*v1.AdmissionPlugin), err
 }
 
 // Update takes the representation of a admissionPlugin and updates it. Returns the server's representation of the admissionPlugin, and an error, if there is any.
-func (c *FakeAdmissionPlugins) Update(ctx context.Context, admissionPlugin *eekubermaticv1.AdmissionPlugin, opts v1.UpdateOptions) (result *eekubermaticv1.AdmissionPlugin, err error) {
+func (c *FakeAdmissionPlugins) Update(ctx context.Context, admissionPlugin *v1.AdmissionPlugin, opts metav1.UpdateOptions) (result *v1.AdmissionPlugin, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(admissionpluginsResource, c.ns, admissionPlugin), &eekubermaticv1.AdmissionPlugin{})
+		Invokes(testing.NewUpdateAction(admissionpluginsResource, c.ns, admissionPlugin), &v1.AdmissionPlugin{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*eekubermaticv1.AdmissionPlugin), err
+	return obj.(*v1.AdmissionPlugin), err
 }
 
 // Delete takes name of the admissionPlugin and deletes it. Returns an error if one occurs.
-func (c *FakeAdmissionPlugins) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
+func (c *FakeAdmissionPlugins) Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(admissionpluginsResource, c.ns, name, opts), &eekubermaticv1.AdmissionPlugin{})
+		Invokes(testing.NewDeleteActionWithOptions(admissionpluginsResource, c.ns, name, opts), &v1.AdmissionPlugin{})
 
 	return err
 }
 
 // DeleteCollection deletes a collection of objects.
-func (c *FakeAdmissionPlugins) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
+func (c *FakeAdmissionPlugins) DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error {
 	action := testing.NewDeleteCollectionAction(admissionpluginsResource, c.ns, listOpts)
 
-	_, err := c.Fake.Invokes(action, &eekubermaticv1.AdmissionPluginList{})
+	_, err := c.Fake.Invokes(action, &v1.AdmissionPluginList{})
 	return err
 }
 
 // Patch applies the patch and returns the patched admissionPlugin.
-func (c *FakeAdmissionPlugins) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *eekubermaticv1.AdmissionPlugin, err error) {
+func (c *FakeAdmissionPlugins) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts metav1.PatchOptions, subresources ...string) (result *v1.AdmissionPlugin, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(admissionpluginsResource, c.ns, name, pt, data, subresources...), &eekubermaticv1.AdmissionPlugin{})
+		Invokes(testing.NewPatchSubresourceAction(admissionpluginsResource, c.ns, name, pt, data, subresources...), &v1.AdmissionPlugin{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*eekubermaticv1.AdmissionPlugin), err
+	return obj.(*v1.AdmissionPlugin), err
 }

@@ -5,10 +5,9 @@ package fake
 import (
 	"context"
 
-	eekubermaticv1 "k8c.io/api/v3/pkg/apis/ee.kubermatic/v1"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	v1 "k8c.io/api/v3/pkg/apis/ee.kubermatic/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
-	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -20,25 +19,25 @@ type FakeResourceQuotas struct {
 	ns   string
 }
 
-var resourcequotasResource = schema.GroupVersionResource{Group: "ee.kubermatic.k8c.io", Version: "v1", Resource: "resourcequotas"}
+var resourcequotasResource = v1.SchemeGroupVersion.WithResource("resourcequotas")
 
-var resourcequotasKind = schema.GroupVersionKind{Group: "ee.kubermatic.k8c.io", Version: "v1", Kind: "ResourceQuota"}
+var resourcequotasKind = v1.SchemeGroupVersion.WithKind("ResourceQuota")
 
 // Get takes name of the resourceQuota, and returns the corresponding resourceQuota object, and an error if there is any.
-func (c *FakeResourceQuotas) Get(ctx context.Context, name string, options v1.GetOptions) (result *eekubermaticv1.ResourceQuota, err error) {
+func (c *FakeResourceQuotas) Get(ctx context.Context, name string, options metav1.GetOptions) (result *v1.ResourceQuota, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(resourcequotasResource, c.ns, name), &eekubermaticv1.ResourceQuota{})
+		Invokes(testing.NewGetAction(resourcequotasResource, c.ns, name), &v1.ResourceQuota{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*eekubermaticv1.ResourceQuota), err
+	return obj.(*v1.ResourceQuota), err
 }
 
 // List takes label and field selectors, and returns the list of ResourceQuotas that match those selectors.
-func (c *FakeResourceQuotas) List(ctx context.Context, opts v1.ListOptions) (result *eekubermaticv1.ResourceQuotaList, err error) {
+func (c *FakeResourceQuotas) List(ctx context.Context, opts metav1.ListOptions) (result *v1.ResourceQuotaList, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewListAction(resourcequotasResource, resourcequotasKind, c.ns, opts), &eekubermaticv1.ResourceQuotaList{})
+		Invokes(testing.NewListAction(resourcequotasResource, resourcequotasKind, c.ns, opts), &v1.ResourceQuotaList{})
 
 	if obj == nil {
 		return nil, err
@@ -48,8 +47,8 @@ func (c *FakeResourceQuotas) List(ctx context.Context, opts v1.ListOptions) (res
 	if label == nil {
 		label = labels.Everything()
 	}
-	list := &eekubermaticv1.ResourceQuotaList{ListMeta: obj.(*eekubermaticv1.ResourceQuotaList).ListMeta}
-	for _, item := range obj.(*eekubermaticv1.ResourceQuotaList).Items {
+	list := &v1.ResourceQuotaList{ListMeta: obj.(*v1.ResourceQuotaList).ListMeta}
+	for _, item := range obj.(*v1.ResourceQuotaList).Items {
 		if label.Matches(labels.Set(item.Labels)) {
 			list.Items = append(list.Items, item)
 		}
@@ -58,57 +57,57 @@ func (c *FakeResourceQuotas) List(ctx context.Context, opts v1.ListOptions) (res
 }
 
 // Watch returns a watch.Interface that watches the requested resourceQuotas.
-func (c *FakeResourceQuotas) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
+func (c *FakeResourceQuotas) Watch(ctx context.Context, opts metav1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
 		InvokesWatch(testing.NewWatchAction(resourcequotasResource, c.ns, opts))
 
 }
 
 // Create takes the representation of a resourceQuota and creates it.  Returns the server's representation of the resourceQuota, and an error, if there is any.
-func (c *FakeResourceQuotas) Create(ctx context.Context, resourceQuota *eekubermaticv1.ResourceQuota, opts v1.CreateOptions) (result *eekubermaticv1.ResourceQuota, err error) {
+func (c *FakeResourceQuotas) Create(ctx context.Context, resourceQuota *v1.ResourceQuota, opts metav1.CreateOptions) (result *v1.ResourceQuota, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(resourcequotasResource, c.ns, resourceQuota), &eekubermaticv1.ResourceQuota{})
+		Invokes(testing.NewCreateAction(resourcequotasResource, c.ns, resourceQuota), &v1.ResourceQuota{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*eekubermaticv1.ResourceQuota), err
+	return obj.(*v1.ResourceQuota), err
 }
 
 // Update takes the representation of a resourceQuota and updates it. Returns the server's representation of the resourceQuota, and an error, if there is any.
-func (c *FakeResourceQuotas) Update(ctx context.Context, resourceQuota *eekubermaticv1.ResourceQuota, opts v1.UpdateOptions) (result *eekubermaticv1.ResourceQuota, err error) {
+func (c *FakeResourceQuotas) Update(ctx context.Context, resourceQuota *v1.ResourceQuota, opts metav1.UpdateOptions) (result *v1.ResourceQuota, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(resourcequotasResource, c.ns, resourceQuota), &eekubermaticv1.ResourceQuota{})
+		Invokes(testing.NewUpdateAction(resourcequotasResource, c.ns, resourceQuota), &v1.ResourceQuota{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*eekubermaticv1.ResourceQuota), err
+	return obj.(*v1.ResourceQuota), err
 }
 
 // Delete takes name of the resourceQuota and deletes it. Returns an error if one occurs.
-func (c *FakeResourceQuotas) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
+func (c *FakeResourceQuotas) Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(resourcequotasResource, c.ns, name, opts), &eekubermaticv1.ResourceQuota{})
+		Invokes(testing.NewDeleteActionWithOptions(resourcequotasResource, c.ns, name, opts), &v1.ResourceQuota{})
 
 	return err
 }
 
 // DeleteCollection deletes a collection of objects.
-func (c *FakeResourceQuotas) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
+func (c *FakeResourceQuotas) DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error {
 	action := testing.NewDeleteCollectionAction(resourcequotasResource, c.ns, listOpts)
 
-	_, err := c.Fake.Invokes(action, &eekubermaticv1.ResourceQuotaList{})
+	_, err := c.Fake.Invokes(action, &v1.ResourceQuotaList{})
 	return err
 }
 
 // Patch applies the patch and returns the patched resourceQuota.
-func (c *FakeResourceQuotas) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *eekubermaticv1.ResourceQuota, err error) {
+func (c *FakeResourceQuotas) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts metav1.PatchOptions, subresources ...string) (result *v1.ResourceQuota, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(resourcequotasResource, c.ns, name, pt, data, subresources...), &eekubermaticv1.ResourceQuota{})
+		Invokes(testing.NewPatchSubresourceAction(resourcequotasResource, c.ns, name, pt, data, subresources...), &v1.ResourceQuota{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*eekubermaticv1.ResourceQuota), err
+	return obj.(*v1.ResourceQuota), err
 }

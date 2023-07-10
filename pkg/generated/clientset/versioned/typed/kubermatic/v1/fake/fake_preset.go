@@ -5,10 +5,9 @@ package fake
 import (
 	"context"
 
-	kubermaticv1 "k8c.io/api/v3/pkg/apis/kubermatic/v1"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	v1 "k8c.io/api/v3/pkg/apis/kubermatic/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
-	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -20,25 +19,25 @@ type FakePresets struct {
 	ns   string
 }
 
-var presetsResource = schema.GroupVersionResource{Group: "kubermatic.k8c.io", Version: "v1", Resource: "presets"}
+var presetsResource = v1.SchemeGroupVersion.WithResource("presets")
 
-var presetsKind = schema.GroupVersionKind{Group: "kubermatic.k8c.io", Version: "v1", Kind: "Preset"}
+var presetsKind = v1.SchemeGroupVersion.WithKind("Preset")
 
 // Get takes name of the preset, and returns the corresponding preset object, and an error if there is any.
-func (c *FakePresets) Get(ctx context.Context, name string, options v1.GetOptions) (result *kubermaticv1.Preset, err error) {
+func (c *FakePresets) Get(ctx context.Context, name string, options metav1.GetOptions) (result *v1.Preset, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(presetsResource, c.ns, name), &kubermaticv1.Preset{})
+		Invokes(testing.NewGetAction(presetsResource, c.ns, name), &v1.Preset{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*kubermaticv1.Preset), err
+	return obj.(*v1.Preset), err
 }
 
 // List takes label and field selectors, and returns the list of Presets that match those selectors.
-func (c *FakePresets) List(ctx context.Context, opts v1.ListOptions) (result *kubermaticv1.PresetList, err error) {
+func (c *FakePresets) List(ctx context.Context, opts metav1.ListOptions) (result *v1.PresetList, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewListAction(presetsResource, presetsKind, c.ns, opts), &kubermaticv1.PresetList{})
+		Invokes(testing.NewListAction(presetsResource, presetsKind, c.ns, opts), &v1.PresetList{})
 
 	if obj == nil {
 		return nil, err
@@ -48,8 +47,8 @@ func (c *FakePresets) List(ctx context.Context, opts v1.ListOptions) (result *ku
 	if label == nil {
 		label = labels.Everything()
 	}
-	list := &kubermaticv1.PresetList{ListMeta: obj.(*kubermaticv1.PresetList).ListMeta}
-	for _, item := range obj.(*kubermaticv1.PresetList).Items {
+	list := &v1.PresetList{ListMeta: obj.(*v1.PresetList).ListMeta}
+	for _, item := range obj.(*v1.PresetList).Items {
 		if label.Matches(labels.Set(item.Labels)) {
 			list.Items = append(list.Items, item)
 		}
@@ -58,57 +57,57 @@ func (c *FakePresets) List(ctx context.Context, opts v1.ListOptions) (result *ku
 }
 
 // Watch returns a watch.Interface that watches the requested presets.
-func (c *FakePresets) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
+func (c *FakePresets) Watch(ctx context.Context, opts metav1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
 		InvokesWatch(testing.NewWatchAction(presetsResource, c.ns, opts))
 
 }
 
 // Create takes the representation of a preset and creates it.  Returns the server's representation of the preset, and an error, if there is any.
-func (c *FakePresets) Create(ctx context.Context, preset *kubermaticv1.Preset, opts v1.CreateOptions) (result *kubermaticv1.Preset, err error) {
+func (c *FakePresets) Create(ctx context.Context, preset *v1.Preset, opts metav1.CreateOptions) (result *v1.Preset, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(presetsResource, c.ns, preset), &kubermaticv1.Preset{})
+		Invokes(testing.NewCreateAction(presetsResource, c.ns, preset), &v1.Preset{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*kubermaticv1.Preset), err
+	return obj.(*v1.Preset), err
 }
 
 // Update takes the representation of a preset and updates it. Returns the server's representation of the preset, and an error, if there is any.
-func (c *FakePresets) Update(ctx context.Context, preset *kubermaticv1.Preset, opts v1.UpdateOptions) (result *kubermaticv1.Preset, err error) {
+func (c *FakePresets) Update(ctx context.Context, preset *v1.Preset, opts metav1.UpdateOptions) (result *v1.Preset, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(presetsResource, c.ns, preset), &kubermaticv1.Preset{})
+		Invokes(testing.NewUpdateAction(presetsResource, c.ns, preset), &v1.Preset{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*kubermaticv1.Preset), err
+	return obj.(*v1.Preset), err
 }
 
 // Delete takes name of the preset and deletes it. Returns an error if one occurs.
-func (c *FakePresets) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
+func (c *FakePresets) Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(presetsResource, c.ns, name, opts), &kubermaticv1.Preset{})
+		Invokes(testing.NewDeleteActionWithOptions(presetsResource, c.ns, name, opts), &v1.Preset{})
 
 	return err
 }
 
 // DeleteCollection deletes a collection of objects.
-func (c *FakePresets) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
+func (c *FakePresets) DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error {
 	action := testing.NewDeleteCollectionAction(presetsResource, c.ns, listOpts)
 
-	_, err := c.Fake.Invokes(action, &kubermaticv1.PresetList{})
+	_, err := c.Fake.Invokes(action, &v1.PresetList{})
 	return err
 }
 
 // Patch applies the patch and returns the patched preset.
-func (c *FakePresets) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *kubermaticv1.Preset, err error) {
+func (c *FakePresets) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts metav1.PatchOptions, subresources ...string) (result *v1.Preset, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(presetsResource, c.ns, name, pt, data, subresources...), &kubermaticv1.Preset{})
+		Invokes(testing.NewPatchSubresourceAction(presetsResource, c.ns, name, pt, data, subresources...), &v1.Preset{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*kubermaticv1.Preset), err
+	return obj.(*v1.Preset), err
 }

@@ -5,10 +5,9 @@ package fake
 import (
 	"context"
 
-	kubermaticv1 "k8c.io/api/v3/pkg/apis/kubermatic/v1"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	v1 "k8c.io/api/v3/pkg/apis/kubermatic/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
-	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -20,25 +19,25 @@ type FakeGrafanaOrgs struct {
 	ns   string
 }
 
-var grafanaorgsResource = schema.GroupVersionResource{Group: "kubermatic.k8c.io", Version: "v1", Resource: "grafanaorgs"}
+var grafanaorgsResource = v1.SchemeGroupVersion.WithResource("grafanaorgs")
 
-var grafanaorgsKind = schema.GroupVersionKind{Group: "kubermatic.k8c.io", Version: "v1", Kind: "GrafanaOrg"}
+var grafanaorgsKind = v1.SchemeGroupVersion.WithKind("GrafanaOrg")
 
 // Get takes name of the grafanaOrg, and returns the corresponding grafanaOrg object, and an error if there is any.
-func (c *FakeGrafanaOrgs) Get(ctx context.Context, name string, options v1.GetOptions) (result *kubermaticv1.GrafanaOrg, err error) {
+func (c *FakeGrafanaOrgs) Get(ctx context.Context, name string, options metav1.GetOptions) (result *v1.GrafanaOrg, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(grafanaorgsResource, c.ns, name), &kubermaticv1.GrafanaOrg{})
+		Invokes(testing.NewGetAction(grafanaorgsResource, c.ns, name), &v1.GrafanaOrg{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*kubermaticv1.GrafanaOrg), err
+	return obj.(*v1.GrafanaOrg), err
 }
 
 // List takes label and field selectors, and returns the list of GrafanaOrgs that match those selectors.
-func (c *FakeGrafanaOrgs) List(ctx context.Context, opts v1.ListOptions) (result *kubermaticv1.GrafanaOrgList, err error) {
+func (c *FakeGrafanaOrgs) List(ctx context.Context, opts metav1.ListOptions) (result *v1.GrafanaOrgList, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewListAction(grafanaorgsResource, grafanaorgsKind, c.ns, opts), &kubermaticv1.GrafanaOrgList{})
+		Invokes(testing.NewListAction(grafanaorgsResource, grafanaorgsKind, c.ns, opts), &v1.GrafanaOrgList{})
 
 	if obj == nil {
 		return nil, err
@@ -48,8 +47,8 @@ func (c *FakeGrafanaOrgs) List(ctx context.Context, opts v1.ListOptions) (result
 	if label == nil {
 		label = labels.Everything()
 	}
-	list := &kubermaticv1.GrafanaOrgList{ListMeta: obj.(*kubermaticv1.GrafanaOrgList).ListMeta}
-	for _, item := range obj.(*kubermaticv1.GrafanaOrgList).Items {
+	list := &v1.GrafanaOrgList{ListMeta: obj.(*v1.GrafanaOrgList).ListMeta}
+	for _, item := range obj.(*v1.GrafanaOrgList).Items {
 		if label.Matches(labels.Set(item.Labels)) {
 			list.Items = append(list.Items, item)
 		}
@@ -58,69 +57,69 @@ func (c *FakeGrafanaOrgs) List(ctx context.Context, opts v1.ListOptions) (result
 }
 
 // Watch returns a watch.Interface that watches the requested grafanaOrgs.
-func (c *FakeGrafanaOrgs) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
+func (c *FakeGrafanaOrgs) Watch(ctx context.Context, opts metav1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
 		InvokesWatch(testing.NewWatchAction(grafanaorgsResource, c.ns, opts))
 
 }
 
 // Create takes the representation of a grafanaOrg and creates it.  Returns the server's representation of the grafanaOrg, and an error, if there is any.
-func (c *FakeGrafanaOrgs) Create(ctx context.Context, grafanaOrg *kubermaticv1.GrafanaOrg, opts v1.CreateOptions) (result *kubermaticv1.GrafanaOrg, err error) {
+func (c *FakeGrafanaOrgs) Create(ctx context.Context, grafanaOrg *v1.GrafanaOrg, opts metav1.CreateOptions) (result *v1.GrafanaOrg, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(grafanaorgsResource, c.ns, grafanaOrg), &kubermaticv1.GrafanaOrg{})
+		Invokes(testing.NewCreateAction(grafanaorgsResource, c.ns, grafanaOrg), &v1.GrafanaOrg{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*kubermaticv1.GrafanaOrg), err
+	return obj.(*v1.GrafanaOrg), err
 }
 
 // Update takes the representation of a grafanaOrg and updates it. Returns the server's representation of the grafanaOrg, and an error, if there is any.
-func (c *FakeGrafanaOrgs) Update(ctx context.Context, grafanaOrg *kubermaticv1.GrafanaOrg, opts v1.UpdateOptions) (result *kubermaticv1.GrafanaOrg, err error) {
+func (c *FakeGrafanaOrgs) Update(ctx context.Context, grafanaOrg *v1.GrafanaOrg, opts metav1.UpdateOptions) (result *v1.GrafanaOrg, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(grafanaorgsResource, c.ns, grafanaOrg), &kubermaticv1.GrafanaOrg{})
+		Invokes(testing.NewUpdateAction(grafanaorgsResource, c.ns, grafanaOrg), &v1.GrafanaOrg{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*kubermaticv1.GrafanaOrg), err
+	return obj.(*v1.GrafanaOrg), err
 }
 
 // UpdateStatus was generated because the type contains a Status member.
 // Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeGrafanaOrgs) UpdateStatus(ctx context.Context, grafanaOrg *kubermaticv1.GrafanaOrg, opts v1.UpdateOptions) (*kubermaticv1.GrafanaOrg, error) {
+func (c *FakeGrafanaOrgs) UpdateStatus(ctx context.Context, grafanaOrg *v1.GrafanaOrg, opts metav1.UpdateOptions) (*v1.GrafanaOrg, error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(grafanaorgsResource, "status", c.ns, grafanaOrg), &kubermaticv1.GrafanaOrg{})
+		Invokes(testing.NewUpdateSubresourceAction(grafanaorgsResource, "status", c.ns, grafanaOrg), &v1.GrafanaOrg{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*kubermaticv1.GrafanaOrg), err
+	return obj.(*v1.GrafanaOrg), err
 }
 
 // Delete takes name of the grafanaOrg and deletes it. Returns an error if one occurs.
-func (c *FakeGrafanaOrgs) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
+func (c *FakeGrafanaOrgs) Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(grafanaorgsResource, c.ns, name, opts), &kubermaticv1.GrafanaOrg{})
+		Invokes(testing.NewDeleteActionWithOptions(grafanaorgsResource, c.ns, name, opts), &v1.GrafanaOrg{})
 
 	return err
 }
 
 // DeleteCollection deletes a collection of objects.
-func (c *FakeGrafanaOrgs) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
+func (c *FakeGrafanaOrgs) DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error {
 	action := testing.NewDeleteCollectionAction(grafanaorgsResource, c.ns, listOpts)
 
-	_, err := c.Fake.Invokes(action, &kubermaticv1.GrafanaOrgList{})
+	_, err := c.Fake.Invokes(action, &v1.GrafanaOrgList{})
 	return err
 }
 
 // Patch applies the patch and returns the patched grafanaOrg.
-func (c *FakeGrafanaOrgs) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *kubermaticv1.GrafanaOrg, err error) {
+func (c *FakeGrafanaOrgs) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts metav1.PatchOptions, subresources ...string) (result *v1.GrafanaOrg, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(grafanaorgsResource, c.ns, name, pt, data, subresources...), &kubermaticv1.GrafanaOrg{})
+		Invokes(testing.NewPatchSubresourceAction(grafanaorgsResource, c.ns, name, pt, data, subresources...), &v1.GrafanaOrg{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*kubermaticv1.GrafanaOrg), err
+	return obj.(*v1.GrafanaOrg), err
 }

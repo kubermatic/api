@@ -21,7 +21,7 @@ presubmits:
       preset-goproxy: "true"
     spec:
       containers:
-        - image: quay.io/kubermatic/build:go-1.20-node-18-3
+        - image: quay.io/kubermatic/build:go-1.20-node-18-8
           command:
             - make
           args:
@@ -39,7 +39,7 @@ presubmits:
       preset-goproxy: "true"
     spec:
       containers:
-        - image: quay.io/kubermatic/build:go-1.20-node-18-3
+        - image: quay.io/kubermatic/build:go-1.20-node-18-8
           command:
             - make
           args:
@@ -55,7 +55,7 @@ presubmits:
     clone_uri: "ssh://git@github.com/kubermatic/api.git"
     spec:
       containers:
-        - image: quay.io/kubermatic/build:go-1.20-node-18-3
+        - image: quay.io/kubermatic/build:go-1.20-node-18-8
           command:
             - make
           args:

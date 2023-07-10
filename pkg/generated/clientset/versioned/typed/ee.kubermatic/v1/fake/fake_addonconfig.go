@@ -5,10 +5,9 @@ package fake
 import (
 	"context"
 
-	eekubermaticv1 "k8c.io/api/v3/pkg/apis/ee.kubermatic/v1"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	v1 "k8c.io/api/v3/pkg/apis/ee.kubermatic/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
-	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -20,25 +19,25 @@ type FakeAddonConfigs struct {
 	ns   string
 }
 
-var addonconfigsResource = schema.GroupVersionResource{Group: "ee.kubermatic.k8c.io", Version: "v1", Resource: "addonconfigs"}
+var addonconfigsResource = v1.SchemeGroupVersion.WithResource("addonconfigs")
 
-var addonconfigsKind = schema.GroupVersionKind{Group: "ee.kubermatic.k8c.io", Version: "v1", Kind: "AddonConfig"}
+var addonconfigsKind = v1.SchemeGroupVersion.WithKind("AddonConfig")
 
 // Get takes name of the addonConfig, and returns the corresponding addonConfig object, and an error if there is any.
-func (c *FakeAddonConfigs) Get(ctx context.Context, name string, options v1.GetOptions) (result *eekubermaticv1.AddonConfig, err error) {
+func (c *FakeAddonConfigs) Get(ctx context.Context, name string, options metav1.GetOptions) (result *v1.AddonConfig, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(addonconfigsResource, c.ns, name), &eekubermaticv1.AddonConfig{})
+		Invokes(testing.NewGetAction(addonconfigsResource, c.ns, name), &v1.AddonConfig{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*eekubermaticv1.AddonConfig), err
+	return obj.(*v1.AddonConfig), err
 }
 
 // List takes label and field selectors, and returns the list of AddonConfigs that match those selectors.
-func (c *FakeAddonConfigs) List(ctx context.Context, opts v1.ListOptions) (result *eekubermaticv1.AddonConfigList, err error) {
+func (c *FakeAddonConfigs) List(ctx context.Context, opts metav1.ListOptions) (result *v1.AddonConfigList, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewListAction(addonconfigsResource, addonconfigsKind, c.ns, opts), &eekubermaticv1.AddonConfigList{})
+		Invokes(testing.NewListAction(addonconfigsResource, addonconfigsKind, c.ns, opts), &v1.AddonConfigList{})
 
 	if obj == nil {
 		return nil, err
@@ -48,8 +47,8 @@ func (c *FakeAddonConfigs) List(ctx context.Context, opts v1.ListOptions) (resul
 	if label == nil {
 		label = labels.Everything()
 	}
-	list := &eekubermaticv1.AddonConfigList{ListMeta: obj.(*eekubermaticv1.AddonConfigList).ListMeta}
-	for _, item := range obj.(*eekubermaticv1.AddonConfigList).Items {
+	list := &v1.AddonConfigList{ListMeta: obj.(*v1.AddonConfigList).ListMeta}
+	for _, item := range obj.(*v1.AddonConfigList).Items {
 		if label.Matches(labels.Set(item.Labels)) {
 			list.Items = append(list.Items, item)
 		}
@@ -58,57 +57,57 @@ func (c *FakeAddonConfigs) List(ctx context.Context, opts v1.ListOptions) (resul
 }
 
 // Watch returns a watch.Interface that watches the requested addonConfigs.
-func (c *FakeAddonConfigs) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
+func (c *FakeAddonConfigs) Watch(ctx context.Context, opts metav1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
 		InvokesWatch(testing.NewWatchAction(addonconfigsResource, c.ns, opts))
 
 }
 
 // Create takes the representation of a addonConfig and creates it.  Returns the server's representation of the addonConfig, and an error, if there is any.
-func (c *FakeAddonConfigs) Create(ctx context.Context, addonConfig *eekubermaticv1.AddonConfig, opts v1.CreateOptions) (result *eekubermaticv1.AddonConfig, err error) {
+func (c *FakeAddonConfigs) Create(ctx context.Context, addonConfig *v1.AddonConfig, opts metav1.CreateOptions) (result *v1.AddonConfig, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(addonconfigsResource, c.ns, addonConfig), &eekubermaticv1.AddonConfig{})
+		Invokes(testing.NewCreateAction(addonconfigsResource, c.ns, addonConfig), &v1.AddonConfig{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*eekubermaticv1.AddonConfig), err
+	return obj.(*v1.AddonConfig), err
 }
 
 // Update takes the representation of a addonConfig and updates it. Returns the server's representation of the addonConfig, and an error, if there is any.
-func (c *FakeAddonConfigs) Update(ctx context.Context, addonConfig *eekubermaticv1.AddonConfig, opts v1.UpdateOptions) (result *eekubermaticv1.AddonConfig, err error) {
+func (c *FakeAddonConfigs) Update(ctx context.Context, addonConfig *v1.AddonConfig, opts metav1.UpdateOptions) (result *v1.AddonConfig, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(addonconfigsResource, c.ns, addonConfig), &eekubermaticv1.AddonConfig{})
+		Invokes(testing.NewUpdateAction(addonconfigsResource, c.ns, addonConfig), &v1.AddonConfig{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*eekubermaticv1.AddonConfig), err
+	return obj.(*v1.AddonConfig), err
 }
 
 // Delete takes name of the addonConfig and deletes it. Returns an error if one occurs.
-func (c *FakeAddonConfigs) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
+func (c *FakeAddonConfigs) Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(addonconfigsResource, c.ns, name, opts), &eekubermaticv1.AddonConfig{})
+		Invokes(testing.NewDeleteActionWithOptions(addonconfigsResource, c.ns, name, opts), &v1.AddonConfig{})
 
 	return err
 }
 
 // DeleteCollection deletes a collection of objects.
-func (c *FakeAddonConfigs) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
+func (c *FakeAddonConfigs) DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error {
 	action := testing.NewDeleteCollectionAction(addonconfigsResource, c.ns, listOpts)
 
-	_, err := c.Fake.Invokes(action, &eekubermaticv1.AddonConfigList{})
+	_, err := c.Fake.Invokes(action, &v1.AddonConfigList{})
 	return err
 }
 
 // Patch applies the patch and returns the patched addonConfig.
-func (c *FakeAddonConfigs) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *eekubermaticv1.AddonConfig, err error) {
+func (c *FakeAddonConfigs) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts metav1.PatchOptions, subresources ...string) (result *v1.AddonConfig, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(addonconfigsResource, c.ns, name, pt, data, subresources...), &eekubermaticv1.AddonConfig{})
+		Invokes(testing.NewPatchSubresourceAction(addonconfigsResource, c.ns, name, pt, data, subresources...), &v1.AddonConfig{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*eekubermaticv1.AddonConfig), err
+	return obj.(*v1.AddonConfig), err
 }

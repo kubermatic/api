@@ -5,10 +5,9 @@ package fake
 import (
 	"context"
 
-	eekubermaticv1 "k8c.io/api/v3/pkg/apis/ee.kubermatic/v1"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	v1 "k8c.io/api/v3/pkg/apis/ee.kubermatic/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
-	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -20,25 +19,25 @@ type FakeConstraintTemplates struct {
 	ns   string
 }
 
-var constrainttemplatesResource = schema.GroupVersionResource{Group: "ee.kubermatic.k8c.io", Version: "v1", Resource: "constrainttemplates"}
+var constrainttemplatesResource = v1.SchemeGroupVersion.WithResource("constrainttemplates")
 
-var constrainttemplatesKind = schema.GroupVersionKind{Group: "ee.kubermatic.k8c.io", Version: "v1", Kind: "ConstraintTemplate"}
+var constrainttemplatesKind = v1.SchemeGroupVersion.WithKind("ConstraintTemplate")
 
 // Get takes name of the constraintTemplate, and returns the corresponding constraintTemplate object, and an error if there is any.
-func (c *FakeConstraintTemplates) Get(ctx context.Context, name string, options v1.GetOptions) (result *eekubermaticv1.ConstraintTemplate, err error) {
+func (c *FakeConstraintTemplates) Get(ctx context.Context, name string, options metav1.GetOptions) (result *v1.ConstraintTemplate, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(constrainttemplatesResource, c.ns, name), &eekubermaticv1.ConstraintTemplate{})
+		Invokes(testing.NewGetAction(constrainttemplatesResource, c.ns, name), &v1.ConstraintTemplate{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*eekubermaticv1.ConstraintTemplate), err
+	return obj.(*v1.ConstraintTemplate), err
 }
 
 // List takes label and field selectors, and returns the list of ConstraintTemplates that match those selectors.
-func (c *FakeConstraintTemplates) List(ctx context.Context, opts v1.ListOptions) (result *eekubermaticv1.ConstraintTemplateList, err error) {
+func (c *FakeConstraintTemplates) List(ctx context.Context, opts metav1.ListOptions) (result *v1.ConstraintTemplateList, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewListAction(constrainttemplatesResource, constrainttemplatesKind, c.ns, opts), &eekubermaticv1.ConstraintTemplateList{})
+		Invokes(testing.NewListAction(constrainttemplatesResource, constrainttemplatesKind, c.ns, opts), &v1.ConstraintTemplateList{})
 
 	if obj == nil {
 		return nil, err
@@ -48,8 +47,8 @@ func (c *FakeConstraintTemplates) List(ctx context.Context, opts v1.ListOptions)
 	if label == nil {
 		label = labels.Everything()
 	}
-	list := &eekubermaticv1.ConstraintTemplateList{ListMeta: obj.(*eekubermaticv1.ConstraintTemplateList).ListMeta}
-	for _, item := range obj.(*eekubermaticv1.ConstraintTemplateList).Items {
+	list := &v1.ConstraintTemplateList{ListMeta: obj.(*v1.ConstraintTemplateList).ListMeta}
+	for _, item := range obj.(*v1.ConstraintTemplateList).Items {
 		if label.Matches(labels.Set(item.Labels)) {
 			list.Items = append(list.Items, item)
 		}
@@ -58,57 +57,57 @@ func (c *FakeConstraintTemplates) List(ctx context.Context, opts v1.ListOptions)
 }
 
 // Watch returns a watch.Interface that watches the requested constraintTemplates.
-func (c *FakeConstraintTemplates) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
+func (c *FakeConstraintTemplates) Watch(ctx context.Context, opts metav1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
 		InvokesWatch(testing.NewWatchAction(constrainttemplatesResource, c.ns, opts))
 
 }
 
 // Create takes the representation of a constraintTemplate and creates it.  Returns the server's representation of the constraintTemplate, and an error, if there is any.
-func (c *FakeConstraintTemplates) Create(ctx context.Context, constraintTemplate *eekubermaticv1.ConstraintTemplate, opts v1.CreateOptions) (result *eekubermaticv1.ConstraintTemplate, err error) {
+func (c *FakeConstraintTemplates) Create(ctx context.Context, constraintTemplate *v1.ConstraintTemplate, opts metav1.CreateOptions) (result *v1.ConstraintTemplate, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(constrainttemplatesResource, c.ns, constraintTemplate), &eekubermaticv1.ConstraintTemplate{})
+		Invokes(testing.NewCreateAction(constrainttemplatesResource, c.ns, constraintTemplate), &v1.ConstraintTemplate{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*eekubermaticv1.ConstraintTemplate), err
+	return obj.(*v1.ConstraintTemplate), err
 }
 
 // Update takes the representation of a constraintTemplate and updates it. Returns the server's representation of the constraintTemplate, and an error, if there is any.
-func (c *FakeConstraintTemplates) Update(ctx context.Context, constraintTemplate *eekubermaticv1.ConstraintTemplate, opts v1.UpdateOptions) (result *eekubermaticv1.ConstraintTemplate, err error) {
+func (c *FakeConstraintTemplates) Update(ctx context.Context, constraintTemplate *v1.ConstraintTemplate, opts metav1.UpdateOptions) (result *v1.ConstraintTemplate, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(constrainttemplatesResource, c.ns, constraintTemplate), &eekubermaticv1.ConstraintTemplate{})
+		Invokes(testing.NewUpdateAction(constrainttemplatesResource, c.ns, constraintTemplate), &v1.ConstraintTemplate{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*eekubermaticv1.ConstraintTemplate), err
+	return obj.(*v1.ConstraintTemplate), err
 }
 
 // Delete takes name of the constraintTemplate and deletes it. Returns an error if one occurs.
-func (c *FakeConstraintTemplates) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
+func (c *FakeConstraintTemplates) Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(constrainttemplatesResource, c.ns, name, opts), &eekubermaticv1.ConstraintTemplate{})
+		Invokes(testing.NewDeleteActionWithOptions(constrainttemplatesResource, c.ns, name, opts), &v1.ConstraintTemplate{})
 
 	return err
 }
 
 // DeleteCollection deletes a collection of objects.
-func (c *FakeConstraintTemplates) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
+func (c *FakeConstraintTemplates) DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error {
 	action := testing.NewDeleteCollectionAction(constrainttemplatesResource, c.ns, listOpts)
 
-	_, err := c.Fake.Invokes(action, &eekubermaticv1.ConstraintTemplateList{})
+	_, err := c.Fake.Invokes(action, &v1.ConstraintTemplateList{})
 	return err
 }
 
 // Patch applies the patch and returns the patched constraintTemplate.
-func (c *FakeConstraintTemplates) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *eekubermaticv1.ConstraintTemplate, err error) {
+func (c *FakeConstraintTemplates) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts metav1.PatchOptions, subresources ...string) (result *v1.ConstraintTemplate, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(constrainttemplatesResource, c.ns, name, pt, data, subresources...), &eekubermaticv1.ConstraintTemplate{})
+		Invokes(testing.NewPatchSubresourceAction(constrainttemplatesResource, c.ns, name, pt, data, subresources...), &v1.ConstraintTemplate{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*eekubermaticv1.ConstraintTemplate), err
+	return obj.(*v1.ConstraintTemplate), err
 }

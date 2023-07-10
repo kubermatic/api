@@ -5,10 +5,9 @@ package fake
 import (
 	"context"
 
-	eekubermaticv1 "k8c.io/api/v3/pkg/apis/ee.kubermatic/v1"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	v1 "k8c.io/api/v3/pkg/apis/ee.kubermatic/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	labels "k8s.io/apimachinery/pkg/labels"
-	schema "k8s.io/apimachinery/pkg/runtime/schema"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
 	testing "k8s.io/client-go/testing"
@@ -20,25 +19,25 @@ type FakeUsers struct {
 	ns   string
 }
 
-var usersResource = schema.GroupVersionResource{Group: "ee.kubermatic.k8c.io", Version: "v1", Resource: "users"}
+var usersResource = v1.SchemeGroupVersion.WithResource("users")
 
-var usersKind = schema.GroupVersionKind{Group: "ee.kubermatic.k8c.io", Version: "v1", Kind: "User"}
+var usersKind = v1.SchemeGroupVersion.WithKind("User")
 
 // Get takes name of the user, and returns the corresponding user object, and an error if there is any.
-func (c *FakeUsers) Get(ctx context.Context, name string, options v1.GetOptions) (result *eekubermaticv1.User, err error) {
+func (c *FakeUsers) Get(ctx context.Context, name string, options metav1.GetOptions) (result *v1.User, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewGetAction(usersResource, c.ns, name), &eekubermaticv1.User{})
+		Invokes(testing.NewGetAction(usersResource, c.ns, name), &v1.User{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*eekubermaticv1.User), err
+	return obj.(*v1.User), err
 }
 
 // List takes label and field selectors, and returns the list of Users that match those selectors.
-func (c *FakeUsers) List(ctx context.Context, opts v1.ListOptions) (result *eekubermaticv1.UserList, err error) {
+func (c *FakeUsers) List(ctx context.Context, opts metav1.ListOptions) (result *v1.UserList, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewListAction(usersResource, usersKind, c.ns, opts), &eekubermaticv1.UserList{})
+		Invokes(testing.NewListAction(usersResource, usersKind, c.ns, opts), &v1.UserList{})
 
 	if obj == nil {
 		return nil, err
@@ -48,8 +47,8 @@ func (c *FakeUsers) List(ctx context.Context, opts v1.ListOptions) (result *eeku
 	if label == nil {
 		label = labels.Everything()
 	}
-	list := &eekubermaticv1.UserList{ListMeta: obj.(*eekubermaticv1.UserList).ListMeta}
-	for _, item := range obj.(*eekubermaticv1.UserList).Items {
+	list := &v1.UserList{ListMeta: obj.(*v1.UserList).ListMeta}
+	for _, item := range obj.(*v1.UserList).Items {
 		if label.Matches(labels.Set(item.Labels)) {
 			list.Items = append(list.Items, item)
 		}
@@ -58,69 +57,69 @@ func (c *FakeUsers) List(ctx context.Context, opts v1.ListOptions) (result *eeku
 }
 
 // Watch returns a watch.Interface that watches the requested users.
-func (c *FakeUsers) Watch(ctx context.Context, opts v1.ListOptions) (watch.Interface, error) {
+func (c *FakeUsers) Watch(ctx context.Context, opts metav1.ListOptions) (watch.Interface, error) {
 	return c.Fake.
 		InvokesWatch(testing.NewWatchAction(usersResource, c.ns, opts))
 
 }
 
 // Create takes the representation of a user and creates it.  Returns the server's representation of the user, and an error, if there is any.
-func (c *FakeUsers) Create(ctx context.Context, user *eekubermaticv1.User, opts v1.CreateOptions) (result *eekubermaticv1.User, err error) {
+func (c *FakeUsers) Create(ctx context.Context, user *v1.User, opts metav1.CreateOptions) (result *v1.User, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewCreateAction(usersResource, c.ns, user), &eekubermaticv1.User{})
+		Invokes(testing.NewCreateAction(usersResource, c.ns, user), &v1.User{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*eekubermaticv1.User), err
+	return obj.(*v1.User), err
 }
 
 // Update takes the representation of a user and updates it. Returns the server's representation of the user, and an error, if there is any.
-func (c *FakeUsers) Update(ctx context.Context, user *eekubermaticv1.User, opts v1.UpdateOptions) (result *eekubermaticv1.User, err error) {
+func (c *FakeUsers) Update(ctx context.Context, user *v1.User, opts metav1.UpdateOptions) (result *v1.User, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewUpdateAction(usersResource, c.ns, user), &eekubermaticv1.User{})
+		Invokes(testing.NewUpdateAction(usersResource, c.ns, user), &v1.User{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*eekubermaticv1.User), err
+	return obj.(*v1.User), err
 }
 
 // UpdateStatus was generated because the type contains a Status member.
 // Add a +genclient:noStatus comment above the type to avoid generating UpdateStatus().
-func (c *FakeUsers) UpdateStatus(ctx context.Context, user *eekubermaticv1.User, opts v1.UpdateOptions) (*eekubermaticv1.User, error) {
+func (c *FakeUsers) UpdateStatus(ctx context.Context, user *v1.User, opts metav1.UpdateOptions) (*v1.User, error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewUpdateSubresourceAction(usersResource, "status", c.ns, user), &eekubermaticv1.User{})
+		Invokes(testing.NewUpdateSubresourceAction(usersResource, "status", c.ns, user), &v1.User{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*eekubermaticv1.User), err
+	return obj.(*v1.User), err
 }
 
 // Delete takes name of the user and deletes it. Returns an error if one occurs.
-func (c *FakeUsers) Delete(ctx context.Context, name string, opts v1.DeleteOptions) error {
+func (c *FakeUsers) Delete(ctx context.Context, name string, opts metav1.DeleteOptions) error {
 	_, err := c.Fake.
-		Invokes(testing.NewDeleteActionWithOptions(usersResource, c.ns, name, opts), &eekubermaticv1.User{})
+		Invokes(testing.NewDeleteActionWithOptions(usersResource, c.ns, name, opts), &v1.User{})
 
 	return err
 }
 
 // DeleteCollection deletes a collection of objects.
-func (c *FakeUsers) DeleteCollection(ctx context.Context, opts v1.DeleteOptions, listOpts v1.ListOptions) error {
+func (c *FakeUsers) DeleteCollection(ctx context.Context, opts metav1.DeleteOptions, listOpts metav1.ListOptions) error {
 	action := testing.NewDeleteCollectionAction(usersResource, c.ns, listOpts)
 
-	_, err := c.Fake.Invokes(action, &eekubermaticv1.UserList{})
+	_, err := c.Fake.Invokes(action, &v1.UserList{})
 	return err
 }
 
 // Patch applies the patch and returns the patched user.
-func (c *FakeUsers) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts v1.PatchOptions, subresources ...string) (result *eekubermaticv1.User, err error) {
+func (c *FakeUsers) Patch(ctx context.Context, name string, pt types.PatchType, data []byte, opts metav1.PatchOptions, subresources ...string) (result *v1.User, err error) {
 	obj, err := c.Fake.
-		Invokes(testing.NewPatchSubresourceAction(usersResource, c.ns, name, pt, data, subresources...), &eekubermaticv1.User{})
+		Invokes(testing.NewPatchSubresourceAction(usersResource, c.ns, name, pt, data, subresources...), &v1.User{})
 
 	if obj == nil {
 		return nil, err
 	}
-	return obj.(*eekubermaticv1.User), err
+	return obj.(*v1.User), err
 }
