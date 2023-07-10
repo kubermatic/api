@@ -30,15 +30,17 @@ const (
 )
 
 // +genclient
+// +kubebuilder:resource:scope=Cluster
 // +kubebuilder:object:generate=true
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
+// +kubebuilder:printcolumn:JSONPath=".spec.cluster.name",name="Cluster",type="string"
+// +kubebuilder:printcolumn:JSONPath=".spec.addon",name="Addon",type="string"
 // +kubebuilder:printcolumn:JSONPath=".metadata.creationTimestamp",name="Age",type="date"
 
 // Addon specifies a cluster addon. Addons can be installed into user clusters
 // to provide additional manifests for CNIs, CSIs or other applications, which makes
 // addons a necessary component to create functioning user clusters.
-// Addon objects must be created inside cluster namespaces.
 type Addon struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -63,7 +65,7 @@ type AddonSpec struct {
 	// Name defines the name of the addon to install
 	Name string `json:"name"`
 	// Cluster is the reference to the cluster the addon should be installed in
-	Cluster corev1.ObjectReference `json:"cluster"`
+	Cluster ClusterReference `json:"cluster"`
 	// Variables is free form data to use for parsing the manifest templates
 	// +kubebuilder:pruning:PreserveUnknownFields
 	Variables *runtime.RawExtension `json:"variables,omitempty"`
@@ -79,17 +81,6 @@ type AddonSpec struct {
 	IsDefault bool `json:"isDefault,omitempty"`
 }
 
-// +kubebuilder:object:generate=true
-// +kubebuilder:object:root=true
-
-// AddonList is a list of addons.
-type AddonList struct {
-	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata,omitempty"`
-
-	Items []Addon `json:"items"`
-}
-
 // AddonStatus contains information about the reconciliation status.
 type AddonStatus struct {
 	Conditions map[AddonConditionType]AddonCondition `json:"conditions,omitempty"`
@@ -103,4 +94,15 @@ type AddonCondition struct {
 	// Last time the condition transitioned from one status to another.
 	// +optional
 	LastTransitionTime metav1.Time `json:"lastTransitionTime,omitempty"`
+}
+
+// +kubebuilder:object:generate=true
+// +kubebuilder:object:root=true
+
+// AddonList is a list of addons.
+type AddonList struct {
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata,omitempty"`
+
+	Items []Addon `json:"items"`
 }

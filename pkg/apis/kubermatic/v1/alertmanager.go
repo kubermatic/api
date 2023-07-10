@@ -22,9 +22,11 @@ import (
 )
 
 // +genclient
+// +kubebuilder:resource:scope=Cluster
 // +kubebuilder:object:generate=true
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
+// +kubebuilder:printcolumn:JSONPath=".spec.cluster.name",name="Cluster",type="string"
 // +kubebuilder:printcolumn:JSONPath=".metadata.creationTimestamp",name="Age",type="date"
 
 type Alertmanager struct {
@@ -36,19 +38,11 @@ type Alertmanager struct {
 }
 
 type AlertmanagerSpec struct {
+	// Cluster is the reference to the cluster that this Alertmanager belongs to.
+	Cluster ClusterReference `json:"cluster"`
 	// ConfigSecret refers to the Secret in the same namespace as the Alertmanager object,
 	// which contains configuration for this Alertmanager.
 	ConfigSecret corev1.LocalObjectReference `json:"configSecret"`
-}
-
-// +kubebuilder:object:generate=true
-// +kubebuilder:object:root=true
-
-type AlertmanagerList struct {
-	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata,omitempty"`
-
-	Items []Alertmanager `json:"items"`
 }
 
 // AlertmanagerStatus stores status information about the AlertManager.
@@ -65,4 +59,14 @@ type AlertmanagerConfigurationStatus struct {
 	// ErrorMessage contains a default error message in case the configuration could not be applied.
 	// Will be reset if the error was resolved and condition becomes True
 	ErrorMessage string `json:"errorMessage,omitempty"`
+}
+
+// +kubebuilder:object:generate=true
+// +kubebuilder:object:root=true
+
+type AlertmanagerList struct {
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata,omitempty"`
+
+	Items []Alertmanager `json:"items"`
 }

@@ -33,7 +33,7 @@ const (
 	// AlwaysCondition represent an always true matching condition used while checking provider incompatibilities.
 	ConditionAlways ConditionType = "always"
 	// ExternalCloudProviderCondition is an incompatibility condition that represents the usage of the external Cloud Provider.
-	ConditionExternalCloudProvider ConditionType = ClusterFeatureExternalCloudProvider
+	ConditionExternalCloudProvider ConditionType = kubermaticv1.ClusterFeatureExternalCloudProvider
 	// InTreeCloudProviderCondition is an incompatibility condition that represents the usage of the in-tree Cloud Provider.
 	ConditionInTreeCloudProvider ConditionType = "inTreeProvider"
 )

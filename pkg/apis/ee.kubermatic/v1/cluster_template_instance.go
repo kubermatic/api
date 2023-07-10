@@ -16,16 +16,16 @@ limitations under the License.
 
 package v1
 
-import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+import (
+	kubermaticv1 "k8c.io/api/v3/pkg/apis/kubermatic/v1"
 
-// ClusterTemplateInstanceOwnerAnnotationKey represents the user cluster owner.
-const ClusterTemplateInstanceOwnerAnnotationKey = "owner"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+)
 
 // +genclient
 // +kubebuilder:resource:scope=Cluster
 // +kubebuilder:object:generate=true
 // +kubebuilder:object:root=true
-// +kubebuilder:printcolumn:JSONPath=".spec.projectID",name="ProjectID",type="string"
 // +kubebuilder:printcolumn:JSONPath=".spec.clusterTemplateID",name="ClusterTemplateID",type="string"
 // +kubebuilder:printcolumn:JSONPath=".spec.replicas",name="Replicas",type="integer"
 // +kubebuilder:printcolumn:JSONPath=".metadata.creationTimestamp",name="Age",type="date"
@@ -35,15 +35,7 @@ type ClusterTemplateInstance struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec ClusterTemplateInstanceSpec `json:"spec,omitempty"`
-}
-
-// ClusterTemplateInstanceSpec specifies the data for cluster instances.
-type ClusterTemplateInstanceSpec struct {
-	ProjectID           string `json:"projectID"`
-	ClusterTemplateID   string `json:"clusterTemplateID"`
-	ClusterTemplateName string `json:"clusterTemplateName"`
-	Replicas            int64  `json:"replicas"`
+	kubermaticv1.ClusterTemplateInstance `json:",inline"`
 }
 
 // +kubebuilder:object:generate=true

@@ -21,10 +21,10 @@ import (
 )
 
 const (
-	TemplateScopeUserCluster    = "user"
-	TemplateScopeProjectCluster = "project"
-	TemplateScopeGlobalCluster  = "global"
-	TemplateScopeSeed           = "seed"
+	ClusterTemplateScopeUserCluster    = "user"
+	ClusterTemplateScopeProjectCluster = "project"
+	ClusterTemplateScopeGlobalCluster  = "global"
+	ClusterTemplateScopeSeed           = "seed"
 )
 
 const (
@@ -56,6 +56,15 @@ type ClusterTemplate struct {
 	Spec                   ClusterSpec             `json:"spec,omitempty"`
 }
 
+// ClusterTemplateSSHKey is the object for holding SSH key.
+type ClusterTemplateSSHKey struct {
+	// ID is the name of the UserSSHKey object that is supposed to be assigned
+	// to any ClusterTemplateInstance created based on this template.
+	ID string `json:"id"`
+	// Name is the human readable SSH key name.
+	Name string `json:"name"`
+}
+
 // +kubebuilder:object:generate=true
 // +kubebuilder:object:root=true
 
@@ -65,13 +74,4 @@ type ClusterTemplateList struct {
 	metav1.ListMeta `json:"metadata,omitempty"`
 
 	Items []ClusterTemplate `json:"items"`
-}
-
-// ClusterTemplateSSHKey is the object for holding SSH key.
-type ClusterTemplateSSHKey struct {
-	// ID is the name of the UserSSHKey object that is supposed to be assigned
-	// to any ClusterTemplateInstance created based on this template.
-	ID string `json:"id"`
-	// Name is the human readable SSH key name.
-	Name string `json:"name"`
 }

@@ -82,6 +82,14 @@ type ConstraintTemplateListerExpansion interface{}
 // ConstraintTemplateNamespaceLister.
 type ConstraintTemplateNamespaceListerExpansion interface{}
 
+// DashboardConfigurationListerExpansion allows custom methods to be added to
+// DashboardConfigurationLister.
+type DashboardConfigurationListerExpansion interface{}
+
+// DashboardConfigurationNamespaceListerExpansion allows custom methods to be added to
+// DashboardConfigurationNamespaceLister.
+type DashboardConfigurationNamespaceListerExpansion interface{}
+
 // DatacenterListerExpansion allows custom methods to be added to
 // DatacenterLister.
 type DatacenterListerExpansion interface{}
@@ -146,21 +154,21 @@ type KubermaticConfigurationListerExpansion interface{}
 // KubermaticConfigurationNamespaceLister.
 type KubermaticConfigurationNamespaceListerExpansion interface{}
 
-// KubermaticSettingListerExpansion allows custom methods to be added to
-// KubermaticSettingLister.
-type KubermaticSettingListerExpansion interface{}
+// MLAClusterConfigurationListerExpansion allows custom methods to be added to
+// MLAClusterConfigurationLister.
+type MLAClusterConfigurationListerExpansion interface{}
 
-// KubermaticSettingNamespaceListerExpansion allows custom methods to be added to
-// KubermaticSettingNamespaceLister.
-type KubermaticSettingNamespaceListerExpansion interface{}
+// MLAClusterConfigurationNamespaceListerExpansion allows custom methods to be added to
+// MLAClusterConfigurationNamespaceLister.
+type MLAClusterConfigurationNamespaceListerExpansion interface{}
 
-// MLAAdminSettingListerExpansion allows custom methods to be added to
-// MLAAdminSettingLister.
-type MLAAdminSettingListerExpansion interface{}
+// MLARuleGroupListerExpansion allows custom methods to be added to
+// MLARuleGroupLister.
+type MLARuleGroupListerExpansion interface{}
 
-// MLAAdminSettingNamespaceListerExpansion allows custom methods to be added to
-// MLAAdminSettingNamespaceLister.
-type MLAAdminSettingNamespaceListerExpansion interface{}
+// MLARuleGroupNamespaceListerExpansion allows custom methods to be added to
+// MLARuleGroupNamespaceLister.
+type MLARuleGroupNamespaceListerExpansion interface{}
 
 // PresetListerExpansion allows custom methods to be added to
 // PresetLister.
@@ -178,13 +186,13 @@ type ResourceQuotaListerExpansion interface{}
 // ResourceQuotaNamespaceLister.
 type ResourceQuotaNamespaceListerExpansion interface{}
 
-// RuleGroupListerExpansion allows custom methods to be added to
-// RuleGroupLister.
-type RuleGroupListerExpansion interface{}
+// SSHKeyBindingListerExpansion allows custom methods to be added to
+// SSHKeyBindingLister.
+type SSHKeyBindingListerExpansion interface{}
 
-// RuleGroupNamespaceListerExpansion allows custom methods to be added to
-// RuleGroupNamespaceLister.
-type RuleGroupNamespaceListerExpansion interface{}
+// SSHKeyBindingNamespaceListerExpansion allows custom methods to be added to
+// SSHKeyBindingNamespaceLister.
+type SSHKeyBindingNamespaceListerExpansion interface{}
 
 // UserListerExpansion allows custom methods to be added to
 // UserLister.

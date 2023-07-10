@@ -21,8 +21,10 @@ import (
 )
 
 // +genclient
+// +kubebuilder:resource:scope=Cluster
 // +kubebuilder:object:generate=true
 // +kubebuilder:object:root=true
+// +kubebuilder:printcolumn:JSONPath=".spec.cluster.name",name="Cluster",type="string"
 // +kubebuilder:printcolumn:JSONPath=".metadata.creationTimestamp",name="Age",type="date"
 
 // IPAMAllocation is the object representing an allocation from an IPAMPool
@@ -37,6 +39,8 @@ type IPAMAllocation struct {
 // IPAMAllocationSpec specifies an allocation from an IPAMPool
 // made for a particular KKP user cluster.
 type IPAMAllocationSpec struct {
+	// Cluster is the reference to the cluster that this Constraint belongs to.
+	Cluster ClusterReference `json:"cluster"`
 	// Type is the allocation type that is being used.
 	Type IPAMPoolAllocationType `json:"type"`
 	// DC is the datacenter of the allocation.

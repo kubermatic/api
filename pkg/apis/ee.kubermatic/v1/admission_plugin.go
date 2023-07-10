@@ -23,10 +23,11 @@ import (
 )
 
 // +genclient
+// +kubebuilder:resource:scope=Cluster
 // +kubebuilder:object:generate=true
 // +kubebuilder:object:root=true
+// +kubebuilder:printcolumn:JSONPath=".spec.pluginName",name="Plugin",type="string"
 // +kubebuilder:printcolumn:JSONPath=".metadata.creationTimestamp",name="Age",type="date"
-// +kubebuilder:resource:scope=Cluster
 
 // AdmissionPlugin is the type representing a AdmissionPlugin.
 type AdmissionPlugin struct {

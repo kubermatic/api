@@ -13,7 +13,7 @@ spec:
     listKind: ConstraintList
     plural: constraints
     singular: constraint
-  scope: Namespaced
+  scope: Cluster
   versions:
     - additionalPrinterColumns:
         - jsonPath: .metadata.creationTimestamp
@@ -27,6 +27,15 @@ spec:
             apiVersion:
               description: 'APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
               type: string
+            cluster:
+              description: Cluster is the reference to the cluster that this Constraint belongs to.
+              properties:
+                name:
+                  description: Name of the Cluster object.
+                  type: string
+              required:
+                - name
+              type: object
             constraintType:
               description: ConstraintType specifies the type of gatekeeper constraint that the constraint applies to
               type: string
@@ -197,6 +206,7 @@ spec:
                   type: array
               type: object
           required:
+            - cluster
             - constraintType
           type: object
       served: true

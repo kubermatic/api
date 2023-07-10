@@ -20,23 +20,11 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// +kubebuilder:object:generate=true
-// +kubebuilder:object:root=true
-// +kubebuilder:printcolumn:JSONPath=".metadata.creationTimestamp",name="Age",type="date"
-
-// PresetList is the type representing a PresetList.
-type PresetList struct {
-	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata,omitempty"`
-
-	// List of presets
-	Items []Preset `json:"items"`
-}
-
 // +genclient
 // +kubebuilder:resource:scope=Cluster
 // +kubebuilder:object:generate=true
 // +kubebuilder:object:root=true
+// +kubebuilder:printcolumn:JSONPath=".metadata.creationTimestamp",name="Age",type="date"
 
 // Presets are preconfigured cloud provider credentials that can be applied
 // to new clusters. This frees end users from having to know the actual
@@ -389,4 +377,15 @@ func (s AKSPreset) IsValid() bool {
 		len(s.SubscriptionID) > 0 &&
 		len(s.ClientID) > 0 &&
 		len(s.ClientSecret) > 0
+}
+
+// +kubebuilder:object:generate=true
+// +kubebuilder:object:root=true
+
+// PresetList is the type representing a PresetList.
+type PresetList struct {
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata,omitempty"`
+
+	Items []Preset `json:"items"`
 }

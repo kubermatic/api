@@ -33,6 +33,15 @@ spec:
               type: object
             spec:
               properties:
+                cluster:
+                  description: Cluster is the reference to the cluster that this Alertmanager belongs to.
+                  properties:
+                    name:
+                      description: Name of the Cluster object.
+                      type: string
+                  required:
+                    - name
+                  type: object
                 configSecret:
                   description: ConfigSecret refers to the Secret in the same namespace as the Alertmanager object, which contains configuration for this Alertmanager.
                   properties:
@@ -42,6 +51,7 @@ spec:
                   type: object
                   x-kubernetes-map-type: atomic
               required:
+                - cluster
                 - configSecret
               type: object
             status:

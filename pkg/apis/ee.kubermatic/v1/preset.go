@@ -17,6 +17,8 @@ limitations under the License.
 package v1
 
 import (
+	kubermaticv1 "k8c.io/api/v3/pkg/apis/kubermatic/v1"
+
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -134,7 +136,7 @@ type AzurePreset struct {
 	SecurityGroup     string `json:"securityGroup,omitempty"`
 	// LoadBalancerSKU sets the LB type that will be used for the Azure cluster;
 	// if empty, "basic" will be used.
-	LoadBalancerSKU AzureLBSKU `json:"loadBalancerSKU"` //nolint:tagliatelle
+	LoadBalancerSKU kubermaticv1.AzureLBSKU `json:"loadBalancerSKU"` //nolint:tagliatelle
 }
 
 func (s AzurePreset) IsValid() bool {

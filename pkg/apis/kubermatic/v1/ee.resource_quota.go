@@ -39,9 +39,10 @@ const (
 // +kubebuilder:object:generate=true
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
-// +kubebuilder:printcolumn:JSONPath=".metadata.creationTimestamp",name="Age",type="date"
+// +kubebuilder:printcolumn:JSONPath=".spec.cluster.name",name="Cluster",type="string"
 // +kubebuilder:printcolumn:JSONPath=".spec.subject.name",name="Subject Name",type="string"
 // +kubebuilder:printcolumn:JSONPath=".spec.subject.kind",name="Subject Kind",type="string"
+// +kubebuilder:printcolumn:JSONPath=".metadata.creationTimestamp",name="Age",type="date"
 
 // ResourceQuota specifies the amount of cluster resources a project can use.
 //

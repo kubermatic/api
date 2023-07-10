@@ -52,6 +52,10 @@ func (c *FakeKubermaticV1) ConstraintTemplates(namespace string) v1.ConstraintTe
 	return &FakeConstraintTemplates{c, namespace}
 }
 
+func (c *FakeKubermaticV1) DashboardConfigurations(namespace string) v1.DashboardConfigurationInterface {
+	return &FakeDashboardConfigurations{c, namespace}
+}
+
 func (c *FakeKubermaticV1) Datacenters(namespace string) v1.DatacenterInterface {
 	return &FakeDatacenters{c, namespace}
 }
@@ -84,12 +88,12 @@ func (c *FakeKubermaticV1) KubermaticConfigurations(namespace string) v1.Kuberma
 	return &FakeKubermaticConfigurations{c, namespace}
 }
 
-func (c *FakeKubermaticV1) KubermaticSettings(namespace string) v1.KubermaticSettingInterface {
-	return &FakeKubermaticSettings{c, namespace}
+func (c *FakeKubermaticV1) MLAClusterConfigurations(namespace string) v1.MLAClusterConfigurationInterface {
+	return &FakeMLAClusterConfigurations{c, namespace}
 }
 
-func (c *FakeKubermaticV1) MLAAdminSettings(namespace string) v1.MLAAdminSettingInterface {
-	return &FakeMLAAdminSettings{c, namespace}
+func (c *FakeKubermaticV1) MLARuleGroups(namespace string) v1.MLARuleGroupInterface {
+	return &FakeMLARuleGroups{c, namespace}
 }
 
 func (c *FakeKubermaticV1) Presets(namespace string) v1.PresetInterface {
@@ -100,8 +104,8 @@ func (c *FakeKubermaticV1) ResourceQuotas(namespace string) v1.ResourceQuotaInte
 	return &FakeResourceQuotas{c, namespace}
 }
 
-func (c *FakeKubermaticV1) RuleGroups(namespace string) v1.RuleGroupInterface {
-	return &FakeRuleGroups{c, namespace}
+func (c *FakeKubermaticV1) SSHKeyBindings(namespace string) v1.SSHKeyBindingInterface {
+	return &FakeSSHKeyBindings{c, namespace}
 }
 
 func (c *FakeKubermaticV1) Users(namespace string) v1.UserInterface {

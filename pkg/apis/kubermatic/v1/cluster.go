@@ -17,8 +17,6 @@ limitations under the License.
 package v1
 
 import (
-	"encoding/base64"
-	"errors"
 	"fmt"
 	"strings"
 
@@ -84,7 +82,7 @@ const (
 // +kubebuilder:printcolumn:JSONPath=".status.userEmail",name="Owner",type="string"
 // +kubebuilder:printcolumn:JSONPath=".spec.version",name="Version",type="string"
 // +kubebuilder:printcolumn:JSONPath=".spec.cloud.providerName",name="Provider",type="string"
-// +kubebuilder:printcolumn:JSONPath=".spec.cloud.dc",name="Datacenter",type="string"
+// +kubebuilder:printcolumn:JSONPath=".spec.cloud.datacenter",name="Datacenter",type="string"
 // +kubebuilder:printcolumn:JSONPath=".status.phase",name="Phase",type="string"
 // +kubebuilder:printcolumn:JSONPath=".spec.pause",name="Paused",type="boolean"
 // +kubebuilder:printcolumn:JSONPath=".metadata.creationTimestamp",name="Age",type="date"
@@ -188,21 +186,12 @@ type ClusterSpec struct {
 	// `Events` based on several configured buckets.
 	EventRateLimitConfig *EventRateLimitConfig `json:"eventRateLimitConfig,omitempty"`
 
-	// Optional: Deploys the UserSSHKeyAgent to the user cluster. This field is immutable.
-	// If enabled, the agent will be deployed and used to sync user ssh keys attached by users to the cluster.
-	// No SSH keys will be synced after node creation if this is disabled.
-	EnableUserSSHKeyAgent *bool `json:"enableUserSSHKeyAgent,omitempty"`
-
 	// Optional: Enables operating-system-manager (OSM), which is responsible for creating and managing worker node configuration.
 	// This field is enabled(true) by default.
 	EnableOperatingSystemManager *bool `json:"enableOperatingSystemManager,omitempty"`
 
 	// KubernetesDashboard holds the configuration for the kubernetes-dashboard component.
 	KubernetesDashboard *KubernetesDashboard `json:"kubernetesDashboard,omitempty"`
-
-	// Optional: AuditLogging configures Kubernetes API audit logging (https://kubernetes.io/docs/tasks/debug-application-cluster/audit/)
-	// for the user cluster.
-	AuditLogging *AuditLoggingSettings `json:"auditLogging,omitempty"`
 
 	// Optional: OPAIntegration is a preview feature that enables OPA integration for the cluster.
 	// Enabling it causes OPA Gatekeeper and its resources to be deployed on the user cluster.
@@ -218,13 +207,11 @@ type ClusterSpec struct {
 	// Optional: ApplicationSettings contains the settings relative to the application feature.
 	ApplicationSettings *ApplicationSettings `json:"applicationSettings,omitempty"`
 
-	// Optional: Configures encryption-at-rest for Kubernetes API data. This needs the `encryptionAtRest` feature gate.
-	EncryptionConfiguration *EncryptionConfiguration `json:"encryptionConfiguration,omitempty"`
-
 	// If this is set to true, the cluster will not be reconciled by KKP.
 	// This indicates that the user needs to do some action to resolve the pause.
 	// +kubebuilder:default=false
 	Pause bool `json:"pause,omitempty"`
+
 	// PauseReason is the reason why the cluster is not being managed. This field is for informational
 	// purpose only and can be set by a user or a controller to communicate the reason for pausing the cluster.
 	PauseReason string `json:"pauseReason,omitempty"`
@@ -300,10 +287,6 @@ const (
 	// KubeSystemNetworkPolicies enables the deployment of network policies to kube-system namespace that
 	// restrict traffic from all pods in the namespace.
 	KubeSystemNetworkPolicies = "kubeSystemNetworkPolicies"
-
-	// ClusterFeatureEncryptionAtRest enables the experimental "encryption-at-rest" feature, which allows encrypting
-	// Kubernetes data in etcd with a user-provided encryption key or KMS service.
-	ClusterFeatureEncryptionAtRest = "encryptionAtRest"
 )
 
 // UpdateWindow allows defining windows for maintenance tasks related to OS updates.
@@ -357,10 +340,7 @@ type SecretboxKey struct {
 	SecretRef *corev1.SecretKeySelector `json:"secretRef,omitempty"`
 }
 
-// This ENUM contains the misspelling CloudControllerReconcilledSuccessfully (double L);
-// this is so that KKP can slowly migrate and in KKP 2.22 we will remove the misspelling.
-
-// +kubebuilder:validation:Enum=SeedResourcesUpToDate;ClusterControllerReconciledSuccessfully;AddonControllerReconciledSuccessfully;AddonInstallerControllerReconciledSuccessfully;BackupControllerReconciledSuccessfully;CloudControllerReconciledSuccessfully;CloudControllerReconcilledSuccessfully;UpdateControllerReconciledSuccessfully;MonitoringControllerReconciledSuccessfully;MachineDeploymentReconciledSuccessfully;MLAControllerReconciledSuccessfully;ClusterInitialized;EtcdClusterInitialized;CSIKubeletMigrationCompleted;ClusterUpdateSuccessful;ClusterUpdateInProgress;CSIKubeletMigrationSuccess;CSIKubeletMigrationInProgress;EncryptionControllerReconciledSuccessfully;IPAMControllerReconciledSuccessfully;
+// +kubebuilder:validation:Enum=SeedResourcesUpToDate;ClusterControllerReconciledSuccessfully;AddonControllerReconciledSuccessfully;AddonInstallerControllerReconciledSuccessfully;BackupControllerReconciledSuccessfully;CloudControllerReconciledSuccessfully;UpdateControllerReconciledSuccessfully;MonitoringControllerReconciledSuccessfully;MachineDeploymentReconciledSuccessfully;MLAControllerReconciledSuccessfully;ClusterInitialized;EtcdClusterInitialized;CSIKubeletMigrationCompleted;ClusterUpdateSuccessful;ClusterUpdateInProgress;CSIKubeletMigrationSuccess;CSIKubeletMigrationInProgress;EncryptionControllerReconciledSuccessfully;IPAMControllerReconciledSuccessfully;
 
 // ClusterConditionType is used to indicate the type of a cluster condition. For all condition
 // types, the `true` value must indicate success. All condition types must be registered within
@@ -492,13 +472,6 @@ type ClusterStatus struct {
 	// InheritedLabels are labels the cluster inherited from the project. They are read-only for users.
 	// +optional
 	InheritedLabels map[string]string `json:"inheritedLabels,omitempty"`
-
-	// Encryption describes the status of the encryption-at-rest feature for encrypted data in etcd.
-	// +optional
-	Encryption *ClusterEncryptionStatus `json:"encryption,omitempty"`
-
-	// ResourceUsage shows the current usage of resources for the cluster.
-	ResourceUsage *ResourceDetails `json:"resourceUsage,omitempty"`
 }
 
 // ClusterVersionsStatus contains information regarding the current and desired versions
@@ -533,31 +506,6 @@ const (
 	ClusterStatusErrorInvalidConfiguration ClusterStatusError = "InvalidConfiguration"
 	ClusterStatusErrorUnsupportedChange    ClusterStatusError = "UnsupportedChange"
 	ClusterStatusErrorReconcile            ClusterStatusError = "ReconcileError"
-)
-
-// ClusterEncryptionStatus holds status information about the encryption-at-rest feature on the user cluster.
-type ClusterEncryptionStatus struct {
-	// The current "primary" key used to encrypt data written to etcd. Secondary keys that can be used for decryption
-	// (but not encryption) might be configured in the ClusterSpec.
-	ActiveKey string `json:"activeKey"`
-
-	// List of resources currently encrypted.
-	EncryptedResources []string `json:"encryptedResources"`
-
-	// The current phase of the encryption process. Can be one of `Pending`, `Failed`, `Active` or `EncryptionNeeded`.
-	// The `encryption_controller` logic will process the cluster based on the current phase and issue necessary changes
-	// to make sure encryption on the cluster is active and updated with what the ClusterSpec defines.
-	Phase ClusterEncryptionPhase `json:"phase,omitempty"`
-}
-
-// +kubebuilder:validation:Enum=Pending;Failed;Active;EncryptionNeeded
-type ClusterEncryptionPhase string
-
-const (
-	ClusterEncryptionPhasePending          ClusterEncryptionPhase = "Pending"
-	ClusterEncryptionPhaseFailed           ClusterEncryptionPhase = "Failed"
-	ClusterEncryptionPhaseActive           ClusterEncryptionPhase = "Active"
-	ClusterEncryptionPhaseEncryptionNeeded ClusterEncryptionPhase = "EncryptionNeeded"
 )
 
 type OIDCSettings struct {
@@ -866,7 +814,7 @@ type IPVSConfiguration struct {
 type CloudSpec struct {
 	// DatacenterName states the name of a cloud provider "datacenter" (defined in `Seed` resources)
 	// this cluster should be deployed into.
-	DatacenterName string `json:"dc"`
+	DatacenterName string `json:"datacenter"`
 
 	// ProviderName is the name of the cloud provider used for this cluster.
 	// This must match the given provider spec (e.g. if the providerName is
@@ -1315,9 +1263,9 @@ const (
 
 // ExtendedClusterHealth stores health information of a cluster.
 type ExtendedClusterHealth struct {
-	Apiserver                    HealthStatus  `json:"apiserver,omitempty"`
-	Scheduler                    HealthStatus  `json:"scheduler,omitempty"`
-	Controller                   HealthStatus  `json:"controller,omitempty"`
+	KubernetesApiserver          HealthStatus  `json:"kubernetesApiserver,omitempty"`
+	KubernetesScheduler          HealthStatus  `json:"kubernetesScheduler,omitempty"`
+	KubernetesControllerManager  HealthStatus  `json:"kubernetesControllerManager,omitempty"`
 	MachineController            HealthStatus  `json:"machineController,omitempty"`
 	Etcd                         HealthStatus  `json:"etcd,omitempty"`
 	CloudProviderInfrastructure  HealthStatus  `json:"cloudProviderInfrastructure,omitempty"`
@@ -1338,9 +1286,9 @@ type ExtendedClusterHealth struct {
 // ControlPlaneHealthy returns if all Kubernetes control plane components are healthy.
 func (h *ExtendedClusterHealth) ControlPlaneHealthy() bool {
 	return h.Etcd == HealthStatusUp &&
-		h.Controller == HealthStatusUp &&
-		h.Apiserver == HealthStatusUp &&
-		h.Scheduler == HealthStatusUp
+		h.KubernetesControllerManager == HealthStatusUp &&
+		h.KubernetesApiserver == HealthStatusUp &&
+		h.KubernetesScheduler == HealthStatusUp
 }
 
 // AllHealthy returns true if all components are healthy. Gatekeeper components not included as they are optional and not
@@ -1356,50 +1304,6 @@ func (h *ExtendedClusterHealth) AllHealthy() bool {
 func (h *ExtendedClusterHealth) ApplicationControllerHealthy() bool {
 	return h.AllHealthy() &&
 		h.ApplicationController == HealthStatusUp
-}
-
-type Bytes []byte
-
-// MarshalJSON adds base64 json encoding to the Bytes type.
-func (bs Bytes) MarshalJSON() ([]byte, error) {
-	return []byte(fmt.Sprintf("\"%s\"", base64.StdEncoding.EncodeToString(bs))), nil
-}
-
-// UnmarshalJSON adds base64 json decoding to the Bytes type.
-func (bs *Bytes) UnmarshalJSON(src []byte) error {
-	if len(src) < 2 {
-		return errors.New("base64 string expected")
-	}
-	if src[0] != '"' || src[len(src)-1] != '"' {
-		return errors.New("\" quotations expected")
-	}
-	if len(src) == 2 {
-		*bs = nil
-		return nil
-	}
-	var err error
-	*bs, err = base64.StdEncoding.DecodeString(string(src[1 : len(src)-1]))
-	return err
-}
-
-// Base64 converts a Bytes instance to a base64 string.
-func (bs Bytes) Base64() string {
-	if []byte(bs) == nil {
-		return ""
-	}
-	return base64.StdEncoding.EncodeToString([]byte(bs))
-}
-
-// NewBytes creates a Bytes instance from a base64 string, returning nil for an empty base64 string.
-func NewBytes(b64 string) Bytes {
-	if b64 == "" {
-		return Bytes(nil)
-	}
-	bs, err := base64.StdEncoding.DecodeString(b64)
-	if err != nil {
-		panic(fmt.Sprintf("Invalid base64 string %q", b64))
-	}
-	return Bytes(bs)
 }
 
 // TODO: Remove this in KKP 3.x and replace it with a field in the ClusterStatus.
@@ -1455,15 +1359,4 @@ func (cluster *Cluster) GetSecretName() string {
 		return fmt.Sprintf("%s-vmware-cloud-director-%s", credentialPrefix, clusterName)
 	}
 	return ""
-}
-
-// IsEncryptionConfigurationEnabled returns whether encryption-at-rest is configured on this cluster.
-func (cluster *Cluster) IsEncryptionEnabled() bool {
-	return cluster.Spec.Features[ClusterFeatureEncryptionAtRest] && cluster.Spec.EncryptionConfiguration != nil && cluster.Spec.EncryptionConfiguration.Enabled
-}
-
-// IsEncryptionActive returns whether encryption-at-rest is active on this cluster. This can still be
-// the case when encryption configuration has been disabled, as encrypted resources require a decryption.
-func (cluster *Cluster) IsEncryptionActive() bool {
-	return cluster.Status.Conditions[ClusterConditionEncryptionInitialized].Status == corev1.ConditionTrue
 }

@@ -28,6 +28,7 @@ import (
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:JSONPath=".spec.cluster.name",name="Cluster",type="string"
+// +kubebuilder:printcolumn:JSONPath=".spec.addon",name="Addon",type="string"
 // +kubebuilder:printcolumn:JSONPath=".metadata.creationTimestamp",name="Age",type="date"
 
 // Addon specifies a cluster addon. Addons can be installed into user clusters

@@ -22,6 +22,8 @@ type ConstraintExpansion interface{}
 
 type ConstraintTemplateExpansion interface{}
 
+type DashboardConfigurationExpansion interface{}
+
 type EtcdBackupConfigExpansion interface{}
 
 type EtcdRestoreExpansion interface{}
@@ -36,15 +38,15 @@ type IPAMPoolExpansion interface{}
 
 type KubermaticConfigurationExpansion interface{}
 
-type KubermaticSettingExpansion interface{}
+type MLAClusterConfigurationExpansion interface{}
 
-type MLAAdminSettingExpansion interface{}
+type MLARuleGroupExpansion interface{}
 
 type PresetExpansion interface{}
 
 type ResourceQuotaExpansion interface{}
 
-type RuleGroupExpansion interface{}
+type SSHKeyBindingExpansion interface{}
 
 type SeedExpansion interface{}
 

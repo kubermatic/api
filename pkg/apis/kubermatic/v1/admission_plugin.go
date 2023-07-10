@@ -22,23 +22,12 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// +kubebuilder:object:generate=true
-// +kubebuilder:object:root=true
-// +kubebuilder:printcolumn:JSONPath=".metadata.creationTimestamp",name="Age",type="date"
-
-// AdmissionPluginList is the type representing a AdmissionPluginList.
-type AdmissionPluginList struct {
-	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata,omitempty"`
-
-	// List of Admission Plugins
-	Items []AdmissionPlugin `json:"items"`
-}
-
 // +genclient
 // +kubebuilder:resource:scope=Cluster
 // +kubebuilder:object:generate=true
 // +kubebuilder:object:root=true
+// +kubebuilder:printcolumn:JSONPath=".spec.pluginName",name="Plugin",type="string"
+// +kubebuilder:printcolumn:JSONPath=".metadata.creationTimestamp",name="Age",type="date"
 
 // AdmissionPlugin is the type representing a AdmissionPlugin.
 type AdmissionPlugin struct {
@@ -52,6 +41,18 @@ type AdmissionPlugin struct {
 type AdmissionPluginSpec struct {
 	PluginName string `json:"pluginName"`
 
-	// FromVersion flag can be empty. It means the plugin fit to all k8s versions
+	// FromVersion flag can be empty. It means the plugin fits to all k8s versions
 	FromVersion *semver.Semver `json:"fromVersion,omitempty"`
+}
+
+// +kubebuilder:object:generate=true
+// +kubebuilder:object:root=true
+
+// AdmissionPluginList is the type representing a AdmissionPluginList.
+type AdmissionPluginList struct {
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata,omitempty"`
+
+	// List of Admission Plugins
+	Items []AdmissionPlugin `json:"items"`
 }

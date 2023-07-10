@@ -56,6 +56,7 @@ const (
 // +kubebuilder:resource:categories=kkpee
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
+// +kubebuilder:printcolumn:JSONPath=".spec.cluster.name",name="Cluster",type="string"
 // +kubebuilder:printcolumn:JSONPath=".metadata.creationTimestamp",name="Age",type="date"
 
 // EtcdBackupConfig specifies the configuration for a usercluster etcd backup.
@@ -75,8 +76,8 @@ type EtcdBackupConfigSpec struct {
 	// The name of the backup file in S3 will be <cluster>-<backup name>
 	// If a schedule is set (see below), -<timestamp> will be appended.
 	Name string `json:"name"`
-	// Cluster is the reference to the cluster whose etcd will be backed up
-	Cluster corev1.ObjectReference `json:"cluster"`
+	// Cluster is the reference to the cluster whose etcd will be backed up.
+	Cluster ClusterReference `json:"cluster"`
 	// Schedule is a cron expression defining when to perform
 	// the backup. If not set, the backup is performed exactly
 	// once, immediately.

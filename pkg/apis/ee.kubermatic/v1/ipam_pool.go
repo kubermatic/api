@@ -17,19 +17,9 @@ limitations under the License.
 package v1
 
 import (
+	kubermaticv1 "k8c.io/api/v3/pkg/apis/kubermatic/v1"
+
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-)
-
-// +kubebuilder:validation:Enum=prefix;range
-
-// IPAMPoolAllocationType defines the type of allocation to be used.
-type IPAMPoolAllocationType string
-
-const (
-	// IPAMPoolAllocationTypePrefix corresponds to prefix allocation type.
-	IPAMPoolAllocationTypePrefix IPAMPoolAllocationType = "prefix"
-	// IPAMPoolAllocationTypeRange corresponds to range allocation type.
-	IPAMPoolAllocationTypeRange IPAMPoolAllocationType = "range"
 )
 
 // +genclient
@@ -44,44 +34,7 @@ type IPAMPool struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec IPAMPoolSpec `json:"spec,omitempty"`
-}
-
-// IPAMPoolSpec specifies the  Multi-Cluster IP Address Management (IPAM)
-// configuration for KKP user clusters.
-type IPAMPoolSpec struct {
-	// Datacenters contains a map of datacenters (DCs) for the allocation.
-	Datacenters map[string]IPAMPoolDatacenterSettings `json:"datacenters"`
-}
-
-// IPAMPoolDatacenterSettings contains IPAM Pool configuration for a datacenter.
-type IPAMPoolDatacenterSettings struct {
-	// Type is the allocation type to be used.
-	Type IPAMPoolAllocationType `json:"type"`
-
-	// PoolCIDR is the pool CIDR to be used for the allocation.
-	PoolCIDR SubnetCIDR `json:"poolCidr"`
-
-	// +kubebuilder:validation:Minimum:=1
-	// +kubebuilder:validation:Maximum:=128
-	// AllocationPrefix is the prefix for the allocation.
-	// Used when "type=prefix".
-	AllocationPrefix int `json:"allocationPrefix,omitempty"`
-
-	// Optional: ExcludePrefixes is used to exclude particular subnets for the allocation.
-	// NOTE: must be the same length as allocationPrefix.
-	// Can be used when "type=prefix".
-	ExcludePrefixes []SubnetCIDR `json:"excludePrefixes,omitempty"`
-
-	// +kubebuilder:validation:Minimum:=1
-	// AllocationRange is the range for the allocation.
-	// Used when "type=range".
-	AllocationRange int `json:"allocationRange,omitempty"`
-
-	// Optional: ExcludeRanges is used to exclude particular IPs or IP ranges for the allocation.
-	// Examples: "192.168.1.100-192.168.1.110", "192.168.1.255".
-	// Can be used when "type=range".
-	ExcludeRanges []string `json:"excludeRanges,omitempty"`
+	kubermaticv1.IPAMPool `json:",inline"`
 }
 
 // +kubebuilder:object:generate=true

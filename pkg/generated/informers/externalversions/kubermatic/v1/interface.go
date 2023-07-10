@@ -28,6 +28,8 @@ type Interface interface {
 	Constraints() ConstraintInformer
 	// ConstraintTemplates returns a ConstraintTemplateInformer.
 	ConstraintTemplates() ConstraintTemplateInformer
+	// DashboardConfigurations returns a DashboardConfigurationInformer.
+	DashboardConfigurations() DashboardConfigurationInformer
 	// Datacenters returns a DatacenterInformer.
 	Datacenters() DatacenterInformer
 	// EtcdBackupConfigs returns a EtcdBackupConfigInformer.
@@ -44,16 +46,16 @@ type Interface interface {
 	IPAMPools() IPAMPoolInformer
 	// KubermaticConfigurations returns a KubermaticConfigurationInformer.
 	KubermaticConfigurations() KubermaticConfigurationInformer
-	// KubermaticSettings returns a KubermaticSettingInformer.
-	KubermaticSettings() KubermaticSettingInformer
-	// MLAAdminSettings returns a MLAAdminSettingInformer.
-	MLAAdminSettings() MLAAdminSettingInformer
+	// MLAClusterConfigurations returns a MLAClusterConfigurationInformer.
+	MLAClusterConfigurations() MLAClusterConfigurationInformer
+	// MLARuleGroups returns a MLARuleGroupInformer.
+	MLARuleGroups() MLARuleGroupInformer
 	// Presets returns a PresetInformer.
 	Presets() PresetInformer
 	// ResourceQuotas returns a ResourceQuotaInformer.
 	ResourceQuotas() ResourceQuotaInformer
-	// RuleGroups returns a RuleGroupInformer.
-	RuleGroups() RuleGroupInformer
+	// SSHKeyBindings returns a SSHKeyBindingInformer.
+	SSHKeyBindings() SSHKeyBindingInformer
 	// Users returns a UserInformer.
 	Users() UserInformer
 	// UserSSHKeys returns a UserSSHKeyInformer.
@@ -121,6 +123,11 @@ func (v *version) ConstraintTemplates() ConstraintTemplateInformer {
 	return &constraintTemplateInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
+// DashboardConfigurations returns a DashboardConfigurationInformer.
+func (v *version) DashboardConfigurations() DashboardConfigurationInformer {
+	return &dashboardConfigurationInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+}
+
 // Datacenters returns a DatacenterInformer.
 func (v *version) Datacenters() DatacenterInformer {
 	return &datacenterInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
@@ -161,14 +168,14 @@ func (v *version) KubermaticConfigurations() KubermaticConfigurationInformer {
 	return &kubermaticConfigurationInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
-// KubermaticSettings returns a KubermaticSettingInformer.
-func (v *version) KubermaticSettings() KubermaticSettingInformer {
-	return &kubermaticSettingInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+// MLAClusterConfigurations returns a MLAClusterConfigurationInformer.
+func (v *version) MLAClusterConfigurations() MLAClusterConfigurationInformer {
+	return &mLAClusterConfigurationInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
-// MLAAdminSettings returns a MLAAdminSettingInformer.
-func (v *version) MLAAdminSettings() MLAAdminSettingInformer {
-	return &mLAAdminSettingInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+// MLARuleGroups returns a MLARuleGroupInformer.
+func (v *version) MLARuleGroups() MLARuleGroupInformer {
+	return &mLARuleGroupInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // Presets returns a PresetInformer.
@@ -181,9 +188,9 @@ func (v *version) ResourceQuotas() ResourceQuotaInformer {
 	return &resourceQuotaInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
-// RuleGroups returns a RuleGroupInformer.
-func (v *version) RuleGroups() RuleGroupInformer {
-	return &ruleGroupInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
+// SSHKeyBindings returns a SSHKeyBindingInformer.
+func (v *version) SSHKeyBindings() SSHKeyBindingInformer {
+	return &sSHKeyBindingInformer{factory: v.factory, namespace: v.namespace, tweakListOptions: v.tweakListOptions}
 }
 
 // Users returns a UserInformer.

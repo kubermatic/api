@@ -20,10 +20,11 @@ import (
 	"fmt"
 
 	kubermaticeev1 "k8c.io/api/v3/pkg/apis/ee.kubermatic/v1"
+	kubermaticv1 "k8c.io/api/v3/pkg/apis/kubermatic/v1"
 )
 
 // ClusterCloudProviderName returns the provider name for the given CloudSpec.
-func ClusterCloudProviderName(spec kubermaticeev1.CloudSpec) (kubermaticeev1.CloudProvider, error) {
+func ClusterCloudProviderName(spec kubermaticv1.CloudSpec) (kubermaticeev1.CloudProvider, error) {
 	var providers []kubermaticeev1.CloudProvider
 	if spec.AWS != nil {
 		providers = append(providers, kubermaticeev1.CloudProviderAWS)

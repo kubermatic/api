@@ -23,9 +23,11 @@ import (
 )
 
 // +genclient
-// +kubebuilder:object:generate=true
+// +kubebuilder:resource:scope=Cluster
 // +kubebuilder:resource:categories=kkpee
+// +kubebuilder:object:generate=true
 // +kubebuilder:object:root=true
+// +kubebuilder:printcolumn:JSONPath=".spec.cluster.name",name="Cluster",type="string"
 // +kubebuilder:printcolumn:JSONPath=".metadata.creationTimestamp",name="Age",type="date"
 
 // Constraint specifies a kubermatic wrapper for the gatekeeper constraints.
@@ -40,6 +42,8 @@ type Constraint struct {
 
 // ConstraintSpec specifies the data for the constraint.
 type ConstraintSpec struct {
+	// Cluster is the reference to the cluster that this Constraint belongs to.
+	Cluster ClusterReference `json:"cluster"`
 	// ConstraintType specifies the type of gatekeeper constraint that the constraint applies to
 	ConstraintType string `json:"constraintType"`
 	// Disabled  is the flag for disabling OPA constraints
